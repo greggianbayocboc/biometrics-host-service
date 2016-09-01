@@ -79,7 +79,6 @@ dependencies {
     compile group: 'org.springframework.security', name: 'spring-security-data', version:'4.0.3.RELEASE'
     compile group: 'org.springframework.security', name: 'spring-security-messaging', version:'4.0.3.RELEASE'
     compile group: 'org.tuckey', name: 'urlrewritefilter', version:'4.0.4'
-    compile group: 'com.mysema.querydsl', name: 'querydsl-jpa', version:'3.7.0'
     compile group: 'io.dropwizard.metrics', name: 'metrics-core', version:'3.1.2'
     compile group: 'io.dropwizard.metrics', name: 'metrics-annotation', version:'3.1.2'
     compile group: 'io.dropwizard.metrics', name: 'metrics-ehcache', version:'3.1.2'
@@ -101,17 +100,17 @@ dependencies {
     compile group: 'commons-lang', name: 'commons-lang', version:'2.6'
     compile group: 'joda-time', name: 'joda-time', version:'2.8.2'
     compile group: 'joda-time', name: 'joda-time-hibernate', version:'1.4'
-    compile(group: 'org.hibernate', name: 'hibernate-ehcache', version:'4.3.11.Final') {
+    compile(group: 'org.hibernate', name: 'hibernate-ehcache', version:'5.0.9.Final') {
         exclude(module: 'ehcache-core')
     }
-    compile group: 'org.hibernate', name: 'hibernate-envers', version:'4.3.11.Final'
-    compile group: 'org.hibernate', name: 'hibernate-validator', version:'4.3.2.Final'
-    compile group: 'org.jadira.usertype', name: 'usertype.core', version:'4.0.0.GA'
+    compile group: 'org.hibernate', name: 'hibernate-envers', version:'5.0.9.Final'
+    compile group: 'org.hibernate', name: 'hibernate-validator', version:'5.2.4.Final'
+    compile group: 'org.jadira.usertype', name: 'usertype.core', version:'5.0.0.GA'
     compile(group: 'org.liquibase', name: 'liquibase-core', version:'3.4.2') {
         exclude(module: 'jetty-servlet')
     }
     compile group: 'org.postgresql', name: 'postgresql', version:'9.4-1206-jdbc41'
-    compile(group: 'com.zaxxer', name: 'HikariCP', version:'2.4.3') {
+    compile(group: 'com.zaxxer', name: 'HikariCP', version:'2.4.7') {
         exclude(module: 'tools')
     }
     compile group: 'org.apache.commons', name: 'commons-collections4', version:'4.1'
@@ -126,9 +125,9 @@ dependencies {
     compile group: 'com.mashape.unirest', name: 'unirest-java', version:'1.4.7'
     compile group: 'net.sf.jasperreports', name: 'jasperreports', version:'6.2.0'
 
-
-
-    querydslapt group: 'com.mysema.querydsl', name: 'querydsl-apt', version:'3.7.2'
+    compile group: 'com.querydsl', name: 'querydsl-jpa', version: '4.1.3'
+    compile group: 'com.querydsl', name: 'querydsl-core', version: '4.1.3'
+    querydslapt group: 'com.querydsl', name: 'querydsl-apt', version: '4.1.3'
 
 
     // Declare the dependency for your favourite test framework you want to use in your tests.
@@ -137,3 +136,80 @@ dependencies {
     // 'test.useTestNG()' to your build script.
     testCompile 'junit:junit:4.12'
 }
+
+
+node {
+    // Version of node to use.
+    version = '4.5.0'
+
+    // Version of npm to use.
+    npmVersion = '2.15.9'
+
+    // Base URL for fetching node distributions (change if you have a mirror).
+    distBaseUrl = 'https://nodejs.org/dist'
+
+    // If true, it will download node using above parameters.
+    // If false, it will try to use globally installed node.
+    download = true
+
+    // Set the work directory for unpacking node
+    workDir = file("${project.projectDir}/tmp/")
+
+    // Set the work directory where node_modules should be located
+    nodeModulesDir = file("${project.projectDir}/frontend/")
+}
+
+
+npmInstall {
+    execOverrides {
+        it.workingDir = file("${project.projectDir}/frontend/")
+    }
+}
+
+
+
+
+task generateQueryDSL(type: JavaCompile, group: 'build', description: 'Generates the QueryDSL query types') {
+    source = sourceSets.main.java
+    classpath = configurations.compile + configurations.querydslapt
+    options.compilerArgs = [
+            "-proc:only",
+            "-processor", "com.querydsl.apt.jpa.JPAAnnotationProcessor"
+    ]
+    destinationDir = sourceSets.generated.java.srcDirs.iterator().next()
+}
+
+
+compileJava {
+    dependsOn generateQueryDSL
+    source generateQueryDSL.destinationDir
+}
+
+compileGeneratedJava {
+    dependsOn generateQueryDSL
+    options.warnings = false
+    classpath += sourceSets.main.runtimeClasspath
+}
+
+
+clean {
+    delete sourceSets.generated.java.srcDirs
+}
+
+idea {
+    module {
+        sourceDirs += file('src/main/generated/')
+    }
+}
+
+// see https://docs.gradle.org/current/userguide/writing_build_scripts.html
+
+
+// load profiles
+// gradle -Pprofile=prod
+if (project.hasProperty('profile') && project.getProperty('profile') == 'prod') {
+    apply from: './profile-prod.gradle'
+}  else {
+    apply from: './profile-dev.gradle'
+}
+

@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+    <head>
+        <title>Vizdacore Shop Account Activation</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    </head>
+    <body>
+        <p>
+            Hey !!!
+        </p>
+        <p>
+            To Activate Your Account on [Vizdacore Shop], please click/copy and paste the following link on your browser's address bar
+        </p>
+        <p>
+            <a th:href="@{|${baseUrl}/activate?key=${user.activationKey}|}"
+               th:text="|${baseUrl}/activate?key=${user.activationKey}|">Activation Link</a>
+        </p>
+        <p>
+            <span>Regards, </span>
+            <br/>
+            <em>Vizdacore Shop</em>
+        </p>
+    </body>
+</html>

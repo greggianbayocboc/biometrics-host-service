@@ -2,3 +2,7 @@
 /.gradle/
 /.idea/
 /dtr_payroll.iml
+/src/main/resources/public/
+/tmp/
+/src/main/resources/rebel.xml
+*.log

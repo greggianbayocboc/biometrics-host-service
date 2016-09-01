@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!DOCTYPE urlrewrite
+        PUBLIC "-//tuckey.org//DTD UrlRewrite 4.0//EN"
+        "http://www.tuckey.org/res/dtds/urlrewrite4.0.dtd">
+
+<urlrewrite>
+    <rule>
+       <!-- <condition type="request-uri" operator="notequal">^/$</condition>
+        <condition type="request-uri" operator="notequal">^/info$</condition>
+        <condition type="request-uri" operator="notequal">^/health$</condition>
+        <condition type="request-uri" operator="notequal">^/env$</condition>
+        <condition type="request-uri" operator="notequal">^/beans$</condition>
+        <condition type="request-uri" operator="notequal">^/trace$</condition>
+        <condition type="request-uri" operator="notequal">^/dump$</condition>
+        <condition type="request-uri" operator="notequal">^/shutdown$</condition>
+        <condition type="request-uri" operator="notequal">^/metrics/.*$</condition>
+        <condition type="request-uri" operator="notequal">^/api/v1/.*$</condition>
+        <condition type="request-uri" operator="notequal">^/oauth/.*$</condition>
+        <condition type="request-uri" operator="notequal">^/assets/.*$</condition>
+        <condition type="request-uri" operator="notequal">^/images/.*$</condition>
+        <condition type="request-uri" operator="notequal">^/fonts/.*$</condition>
+        <condition type="request-uri" operator="notequal">^/index.html*$</condition>-->
+
+        <condition type="request-uri" operator="notequal">^/$</condition>
+        <condition type="request-uri" operator="notequal">^/assets$</condition>
+        <condition type="request-uri" operator="notequal">^/images$</condition>
+        <condition type="request-uri" operator="notequal">^/materialicons/.*$</condition>
+        <condition type="request-uri" operator="notequal">^/favicon.ico</condition>
+        <condition type="request-uri" operator="notequal">^/restapi/.*$</condition>
+        <condition type="request-uri" operator="notequal">^/metrics/.*$</condition>
+        <condition type="request-uri" operator="notequal">^/api/.*$</condition>
+        <condition type="request-uri" operator="notequal">^/oauth/.*$</condition>
+        <condition type="request-uri" operator="notequal">^/assets/.*$</condition>
+        <condition type="request-uri" operator="notequal">^/images/.*$</condition>
+        <condition type="request-uri" operator="notequal">^/fonts/.*$</condition>
+        <condition type="request-uri" operator="notequal">^/fa/.*$</condition>
+        <condition type="request-uri" operator="notequal">^/sld$</condition>
+        <condition type="request-uri" operator="notequal">^/d3/.*$</condition>
+        <condition type="request-uri" operator="notequal">^/sldcode/.*$</condition>
+        <condition type="request-uri" operator="notequal">^/index.html*$</condition>
+
+
+
+        <to>/index.html</to>
+    </rule>
+
+    <!-- Force HTTPS prod only -->
+    <!--
+    <rule match-type="regex">
+        <condition type="header" operator="notequal" name="X-Forwarded-Proto">^HTTPS$</condition>
+        <from>^.*$</from>
+        <to type="permanent-redirect" last="true">https://%{server-name}%{request-uri}</to>
+    </rule>
+    -->
+</urlrewrite>

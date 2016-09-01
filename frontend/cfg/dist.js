@@ -32,7 +32,7 @@ var config = _.merge({
         new webpack.NoErrorsPlugin(),
         new HtmlWebpackPlugin(
             {
-                filename: '/../../dist/index.html',
+                filename: '../../dist/index.html',
                 template: path.join(__dirname, '../src/template.html'),
                 inject:'body'
             }

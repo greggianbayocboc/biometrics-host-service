@@ -1,14 +1,139 @@
+buildscript {
+    repositories {
+        mavenCentral()
+        maven {
+            url "https://plugins.gradle.org/m2/"
+        }
+    }
+    dependencies {
+        classpath("org.springframework.boot:spring-boot-gradle-plugin:1.4.0.RELEASE")
+        classpath("com.moowork.gradle:gradle-node-plugin:0.12")
+    }
+}
+
+apply plugin: 'java'
+apply plugin: 'maven'
+apply plugin: 'idea'
+apply plugin: 'eclipse'
+apply plugin: 'spring-boot'
+apply plugin: 'com.moowork.node'
+
+
+
 group 'com.hisd3.'
 version '1.0-SNAPSHOT'
 
 apply plugin: 'java'
 
-sourceCompatibility = 1.5
+sourceCompatibility = 1.8
+
+jar {
+    baseName = 'HISD3DTR'
+    version =  version
+    archiveName = 'HISD3DTR.jar'
+    manifest {
+        attributes 'Implementation-Title' : 'HISD3 Daily Time Record',
+                'Implementation-Version': version
+    }
+}
 
 repositories {
     mavenCentral()
+    mavenLocal()
 }
 
+//Query DSL integration
+//https://gist.github.com/EdwardBeckett/5377401
+
+sourceSets {
+    generated {
+        java {
+            srcDirs = ['src/main/generated']
+        }
+    }
+}
+
+
+configurations {
+    querydslapt
+}
+
+
+
 dependencies {
-    testCompile group: 'junit', name: 'junit', version: '4.11'
+    compile("org.springframework.boot:spring-boot-starter-web:1.4.0.RELEASE")
+    compile group: 'org.springframework', name: 'spring-context-support', version:'4.2.4.RELEASE'
+    compile group: 'org.springframework.boot', name: 'spring-boot-actuator', version:'1.4.0.RELEASE'
+    compile group: 'org.springframework.boot', name: 'spring-boot-autoconfigure', version:'1.4.0.RELEASE'
+    compile(group: 'org.springframework.boot', name: 'spring-boot-starter-web', version:'1.4.0.RELEASE') {
+        exclude(module: 'spring-boot-starter-tomcat')
+    }
+    compile group: 'org.springframework.boot', name: 'spring-boot-starter-thymeleaf', version:'1.4.0.RELEASE'
+    compile group: 'org.springframework.boot', name: 'spring-boot-starter-data-jpa', version:'1.4.0.RELEASE'
+    // compile group: 'org.hibernate',            name: 'hibernate-core',               version: '5.0.6.Final'
+    compile group: 'org.springframework.boot', name: 'spring-boot-starter-data-rest', version:'1.4.0.RELEASE'
+    compile group: 'org.springframework.boot', name: 'spring-boot-starter-mail', version:'1.4.0.RELEASE'
+    compile group: 'org.springframework.boot', name: 'spring-boot-starter-security', version:'1.4.0.RELEASE'
+    compile group: 'org.springframework.boot', name: 'spring-boot-starter-logging', version:'1.4.0.RELEASE'
+    compile group: 'org.springframework.boot', name: 'spring-boot-starter-websocket', version:'1.4.0.RELEASE'
+    compile group: 'org.springframework.security', name: 'spring-security-data', version:'4.0.3.RELEASE'
+    compile group: 'org.springframework.security', name: 'spring-security-messaging', version:'4.0.3.RELEASE'
+    compile group: 'org.tuckey', name: 'urlrewritefilter', version:'4.0.4'
+    compile group: 'com.mysema.querydsl', name: 'querydsl-jpa', version:'3.7.0'
+    compile group: 'io.dropwizard.metrics', name: 'metrics-core', version:'3.1.2'
+    compile group: 'io.dropwizard.metrics', name: 'metrics-annotation', version:'3.1.2'
+    compile group: 'io.dropwizard.metrics', name: 'metrics-ehcache', version:'3.1.2'
+    compile group: 'io.dropwizard.metrics', name: 'metrics-graphite', version:'3.1.2'
+    compile group: 'io.dropwizard.metrics', name: 'metrics-healthchecks', version:'3.1.2'
+    compile group: 'io.dropwizard.metrics', name: 'metrics-json', version:'3.1.2'
+    compile group: 'io.dropwizard.metrics', name: 'metrics-jvm', version:'3.1.2'
+    compile group: 'io.dropwizard.metrics', name: 'metrics-servlet', version:'3.1.2'
+    compile(group: 'io.dropwizard.metrics', name: 'metrics-servlets', version:'3.1.2') {
+        exclude(module: 'metrics-healthchecks')
+    }
+    compile(group: 'com.ryantenney.metrics', name: 'metrics-spring', version:'3.1.2') {
+        exclude(module: 'metrics-annotation')
+        exclude(module: 'metrics-core')
+        exclude(module: 'metrics-healthchecks')
+    }
+    compile group: 'javax.inject', name: 'javax.inject', version:'1'
+    compile group: 'commons-io', name: 'commons-io', version:'2.4'
+    compile group: 'commons-lang', name: 'commons-lang', version:'2.6'
+    compile group: 'joda-time', name: 'joda-time', version:'2.8.2'
+    compile group: 'joda-time', name: 'joda-time-hibernate', version:'1.4'
+    compile(group: 'org.hibernate', name: 'hibernate-ehcache', version:'4.3.11.Final') {
+        exclude(module: 'ehcache-core')
+    }
+    compile group: 'org.hibernate', name: 'hibernate-envers', version:'4.3.11.Final'
+    compile group: 'org.hibernate', name: 'hibernate-validator', version:'4.3.2.Final'
+    compile group: 'org.jadira.usertype', name: 'usertype.core', version:'4.0.0.GA'
+    compile(group: 'org.liquibase', name: 'liquibase-core', version:'3.4.2') {
+        exclude(module: 'jetty-servlet')
+    }
+    compile group: 'org.postgresql', name: 'postgresql', version:'9.4-1206-jdbc41'
+    compile(group: 'com.zaxxer', name: 'HikariCP', version:'2.4.3') {
+        exclude(module: 'tools')
+    }
+    compile group: 'org.apache.commons', name: 'commons-collections4', version:'4.1'
+    compile(group: 'io.springfox', name: 'springfox-swagger2', version:'2.3.1') {
+        exclude(module: 'mapstruct')
+    }
+    compile group: 'com.fasterxml.jackson.datatype', name: 'jackson-datatype-hibernate4', version:'2.6.4'
+    compile group: 'com.fasterxml.jackson.datatype', name: 'jackson-datatype-hppc', version:'2.6.4'
+    compile group: 'com.fasterxml.jackson.datatype', name: 'jackson-datatype-joda', version:'2.6.4'
+    compile group: 'com.fasterxml.jackson.datatype', name: 'jackson-datatype-json-org', version:'2.6.4'
+    compile group: 'com.fasterxml', name: 'classmate', version:'1.3.0'
+    compile group: 'com.mashape.unirest', name: 'unirest-java', version:'1.4.7'
+    compile group: 'net.sf.jasperreports', name: 'jasperreports', version:'6.2.0'
+
+
+
+    querydslapt group: 'com.mysema.querydsl', name: 'querydsl-apt', version:'3.7.2'
+
+
+    // Declare the dependency for your favourite test framework you want to use in your tests.
+    // TestNG is also supported by the Gradle Test task. Just change the
+    // testCompile dependency to testCompile 'org.testng:testng:6.8.1' and add
+    // 'test.useTestNG()' to your build script.
+    testCompile 'junit:junit:4.12'
 }

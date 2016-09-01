@@ -1,0 +1,53 @@
+
+
+
+
+//production
+dependencies {
+    compile group: 'org.springframework.boot', name: 'spring-boot-starter-undertow', version: '1.3.3.RELEASE'
+}
+
+
+
+
+
+npm_run_dist {
+    execOverrides {
+        it.workingDir = file("${project.projectDir}/frontend/")
+    }
+}
+
+
+
+
+
+task cleanPublicFolder(type: Delete){
+    description 'Clean files from public'
+    delete "${project.projectDir}/src/main/resources/public/"
+}
+
+
+task copyDist(type: Copy){
+    dependsOn npm_run_dist
+    description 'Copy Files from frontend to public'
+    def publicDir = file("${project.projectDir}/src/main/resources/public/")
+    publicDir.mkdirs()
+
+    from  "${project.projectDir}/frontend/dist/"
+    into  "${project.projectDir}/src/main/resources/public/"
+}
+
+
+task compileFrontEnd{
+    dependsOn copyDist
+}
+
+
+compileFrontEnd.dependsOn cleanPublicFolder
+
+processResources{
+    dependsOn compileFrontEnd
+}
+
+
+

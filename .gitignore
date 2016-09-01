@@ -6,3 +6,4 @@
 /tmp/
 /src/main/resources/rebel.xml
 *.log
+/src/main/generated/

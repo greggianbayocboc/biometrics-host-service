@@ -14,6 +14,7 @@
    * Open terminal and go to frontend folder `cd frontend`
    * Install node module dependencies `npm install`
    * Run the client server debugging mode `npm start`
+   * It will help during dev to install Redux Dev Tools and ReacttJS Tools from Google Chrome Store
 
  3. To deploy app with optimized resources
    * go to source root

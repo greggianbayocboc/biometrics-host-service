@@ -85,6 +85,9 @@ public class ZKemKeeperService {
                     }
                 }
             }
+
+            Object disconnect = Dispatch.call(mf, "disconnect").toJavaObject();
+
         }
 
         return items;

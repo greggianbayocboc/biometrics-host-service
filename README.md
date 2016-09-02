@@ -3,7 +3,6 @@
  This app during development is divided into 2 server components
 
 1. Backend Server
-
   * Please open the app folder in your preferred ide.
  This is a gradle project so import it as a Gradle Module
   * Set your IDE Run/Debug configuration to run Application.main method.

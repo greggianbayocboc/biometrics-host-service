@@ -9,7 +9,6 @@
   * Set your IDE Run/Debug configuration to run Application.main method.
   * We recommend IntelliJ as your Java IDE
 
-
 2. Client Side server for debugging
   * Please install Ruby, Python and Saas Ruby Gem
   * Open terminal and go to frontend folder `cd frontend`

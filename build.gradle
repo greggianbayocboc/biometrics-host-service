@@ -106,7 +106,7 @@ dependencies {
     compile group: 'org.hibernate', name: 'hibernate-envers', version:'5.0.9.Final'
     compile group: 'org.hibernate', name: 'hibernate-validator', version:'5.2.4.Final'
     compile group: 'org.jadira.usertype', name: 'usertype.core', version:'5.0.0.GA'
-    compile(group: 'org.liquibase', name: 'liquibase-core', version:'3.4.2') {
+    compile(group: 'org.liquibase', name: 'liquibase-core', version:'3.5.1') {
         exclude(module: 'jetty-servlet')
     }
     compile group: 'org.postgresql', name: 'postgresql', version:'9.4-1206-jdbc41'

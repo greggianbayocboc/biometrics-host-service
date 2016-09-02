@@ -28,7 +28,5 @@ public interface UserRepository extends JpaRepository<User, Long>,QueryDslPredic
 
     User findOneByEmail(String email);
 
-    @Query(value = "Select  a from User a where  a.login not in ('system','admin@vizdacore.com')",
-    countQuery = "Select  count(a)  from User a where  a.login not in ('system','admin@vizdacore.com')")
-    Page<User> getOrdinaryUser(Pageable pageable);
+
 }

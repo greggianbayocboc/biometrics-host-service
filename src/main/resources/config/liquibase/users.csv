@@ -1,3 +1,3 @@
 id;login;password;first_name;last_name;email;activated;lang_key;created_by
-1;system;$2a$10$vmNevgLl7oOZjilrlDbyyOLS1DAb0AsY8BHGcB59pmlTuZNR66FLa;System;System;system@vizdacore.com;true;en;system
-2;admin;$2a$10$OU2RPjVUdyA7zrKlNipFHO3Ynw1YVNwxGBTmycA4CEmZ/KmxTMNjW;Administrator;Administrator;admin@vizdacore.com;true;en;system
+1;system;$2a$06$a2i7NIGY1K4sHqKm2Yfzv.XHDDTwvlvc2OIpvlxWevql5kNEY3Jxu;System;System;system@hisd3.com;true;en;system
+2;admin;$2a$06$yZRHZ03GjKeybshWPL.EkuKF2SSnweKp0yvfbPTKczRK.IFnlYWR.;Administrator;Administrator;admin@hisd3.com;true;en;system

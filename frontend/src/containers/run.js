@@ -17,11 +17,23 @@ import {
     Router,
     IndexRedirect
 }  from 'react-router';
+import {requireAuthentication} from '../utils/AuthUtils'
+
 
 
 require('../fonts/sourcesanspro/css/fonts.css');
 require('font-awesome/css/font-awesome.css');
 require('../styles/bootstrap-less/bootstrap/bootstrap.less');
+
+
+
+
+import Index from '../components/Index'
+import Login from '../components/Login'
+import AccessDenied from '../components/AccessDenied'
+import SecurePage from '../components/SecurePage'
+
+
 
 var initialState={
 
@@ -34,7 +46,10 @@ var Routes = (
     <Provider store={store}>
             <Router history={enhanceHistory}>
                 <Route path ="/" component={App}>
-
+                      <IndexRoute component={Index}/>
+                      <Route path ="login" component={Login}/>
+                      <Route path ="accessdenied" component={AccessDenied}/>
+                      <Route path ="secure" component={requireAuthentication(SecurePage,'ROLE_USER')}/>
                 </Route>
             </Router>
     </Provider>

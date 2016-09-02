@@ -16,7 +16,7 @@ var config = _.merge({
         filename: 'app[hash].js',
         publicPath: publicPath
     },
-    entry: path.join(__dirname, '../src/components/run'),
+    entry: path.join(__dirname, '../src/containers/run'),
     debug: false,
     cache: false,
     devtool: 'sourcemap',

@@ -7,6 +7,7 @@
  This is a gradle project so import it as a Gradle Module
   * Set your IDE Run/Debug configuration to run Application.main method.
   * We recommend IntelliJ as your Java IDE
+  * Dont forget to install Postgres ... see application.yml
 
 2. Client Side server for debugging
   * Please install Ruby, Python and Saas Ruby Gem

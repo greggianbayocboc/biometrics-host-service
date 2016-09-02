@@ -1,1 +1,2 @@
 ./gradlew -Pprofile=prod   build
+-Djava.library.path=C:\projects\sdks\jacob-1.18

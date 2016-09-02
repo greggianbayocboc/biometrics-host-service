@@ -9,8 +9,8 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter
 /**
  * Created by albertoclarit on 9/2/16.
  */
-@EnableWebMvc
-@Configuration
+//@EnableWebMvc
+//@Configuration
 public class WebMvcConfig  extends WebMvcConfigurerAdapter {
 
 

@@ -7,6 +7,7 @@
    * Please open the app folder in your preferred ide.
  This is a gradle project so import it as a Gradle Module
    * Set your IDE Run/Debug configuration to run Application.main method.
+   * We recommend IntelliJ as your Java IDE
 
 
  2. Client Side server for debugging

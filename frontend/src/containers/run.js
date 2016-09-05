@@ -23,7 +23,7 @@ import {requireAuthentication} from '../utils/AuthUtils'
 
 require('../fonts/sourcesanspro/css/fonts.css');
 require('font-awesome/css/font-awesome.css');
-require('../styles/bootstrap-less/bootstrap/bootstrap.less');
+require('../styles/css/main.css');
 
 
 

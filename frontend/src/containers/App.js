@@ -10,6 +10,12 @@ import { routerActions } from 'react-router-redux'
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 
+import { Grid, Row, Col, MainContainer } from '@sketchpixy/rubix';
+
+import Sidebar from '../common/sidebar';
+import Header from '../common/header';
+import Footer from '../common/footer';
+
 require('react-progress-2/main.css');
 
  class   App extends React.Component{
@@ -29,10 +35,23 @@ require('react-progress-2/main.css');
 
     render(){
 
-        return (<div className="container">
-                <Progress.Component/>
-                      {this.props.children}
-                </div>);
+        return (
+          <MainContainer {...this.props}>
+            <Progress.Component/>
+            <Sidebar />
+            <Header />
+            <div id='body'>
+              <Grid>
+                <Row>
+                  <Col xs={12}>
+                  {this.props.children}
+                  </Col>
+                </Row>
+              </Grid>
+            </div>
+            <Footer />
+          </MainContainer>
+              );
     }
 }
 

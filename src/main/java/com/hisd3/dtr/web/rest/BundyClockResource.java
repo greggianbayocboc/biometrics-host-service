@@ -1,7 +1,8 @@
 package com.hisd3.dtr.web.rest;
 
-import com.hisd3.dtr.zkemkeeper.BundyClockLogItem;
+import com.hisd3.dtr.zkemkeeper.dto.BundyClockLogItem;
 import com.hisd3.dtr.zkemkeeper.ZKemKeeperService;
+import com.hisd3.dtr.zkemkeeper.dto.BundyClockUserItems;
 import org.apache.commons.lang.SystemUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
@@ -52,6 +53,19 @@ public class BundyClockResource {
        return new ResponseEntity<List<BundyClockLogItem>>(zKemKeeperService.getBundyClockLogItems(),
                HttpStatus.OK);
 
+    }
+
+    @RequestMapping("/getusers")
+    public ResponseEntity<List<BundyClockUserItems>>getusers(){
+
+        if(!SystemUtils.IS_OS_WINDOWS){
+            HttpHeaders httpHeaders = new HttpHeaders();
+            httpHeaders.set("message", "This resource is only for Windows");
+
+            return  new ResponseEntity<List<BundyClockUserItems>>(httpHeaders, HttpStatus.CONFLICT);
+        }
+
+        return new ResponseEntity<List<BundyClockUserItems>>(zKemKeeperService.getUserAllUser(),HttpStatus.OK);
     }
 
 

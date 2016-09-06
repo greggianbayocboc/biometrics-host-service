@@ -1,4 +1,4 @@
-package com.hisd3.dtr.zkemkeeper;
+package com.hisd3.dtr.zkemkeeper.dto;
 
 /**
  * Created by albertoclarit on 9/2/16.

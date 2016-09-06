@@ -8,7 +8,12 @@ import {
   SidebarDivider
 } from '@sketchpixy/rubix';
 
-class ApplicationSidebar extends React.Component {
+import { bindActionCreators } from 'redux';
+import { connect } from 'react-redux';
+import * as AuthActions from '../actions/authactions';
+import { routerActions } from 'react-router-redux';
+
+class DTRSidebar extends React.Component {
   handleChange(e) {
     this._nav.search(e.target.value);
   }
@@ -19,9 +24,8 @@ class ApplicationSidebar extends React.Component {
         <Grid>
           <Row>
             <Col xs={12}>
-              <FormControl type='text' placeholder='Search...' onChange={::this.handleChange} className='sidebar-search' style={{border: 'none', background: 'none', margin: '10px 0 0 0', borderBottom: '1px solid #666', color: 'white'}} />
               <div className='sidebar-nav-container'>
-                <SidebarNav style={{marginBottom: 0}} ref={(c) => this._nav = c}>
+                <SidebarNav>
 
                   { /** Pages Section */ }
                   <div className='sidebar-header'>PAGES</div>
@@ -35,7 +39,7 @@ class ApplicationSidebar extends React.Component {
   }
 }
 
-class DummySidebar extends React.Component {
+class PayrollSidebar extends React.Component {
   render() {
     return (
       <Grid>
@@ -50,10 +54,14 @@ class DummySidebar extends React.Component {
   }
 }
 
-export default class SidebarContainer extends React.Component {
+class SidebarContainer extends React.Component {
+  constructor(props){
+      super(props);
+  }
+
   render() {
     return (
-      <div id='sidebar' {...this.props}>
+      <div id='sidebar'>
         <div id='avatar'>
           <Grid>
             <Row className='fg-white'>
@@ -61,7 +69,7 @@ export default class SidebarContainer extends React.Component {
                 <img src='../../public/imgs/app/avatars/avatar0.png' width='40' height='40' />
               </Col>
               <Col xs={8} collapseLeft id='avatar-col'>
-                <div style={{top: 23, fontSize: 16, lineHeight: 1, position: 'relative'}}>Anna Sanchez</div>
+                <div style={{top: 23, fontSize: 16, lineHeight: 1, position: 'relative'}}>{this.props.auth.account.firstName} {this.props.auth.account.lastName}</div>
                 <div>
                   <Progress id='demo-progress' value={30} color='#ffffff'/>
                   <a href='#'>
@@ -78,13 +86,28 @@ export default class SidebarContainer extends React.Component {
         </SidebarControls>
         <div id='sidebar-container'>
           <Sidebar sidebar={0}>
-            <ApplicationSidebar />
+            <DTRSidebar />
           </Sidebar>
           <Sidebar sidebar={1}>
-            <DummySidebar />
+            <PayrollSidebar />
           </Sidebar>
         </div>
       </div>
     );
   }
 }
+
+function mapStateToProps(state) {
+    return {
+        auth:state.auth
+    }
+}
+
+function mapDispatchToProps(dispatch) {
+    return {
+        routerActions: bindActionCreators(routerActions, dispatch),
+        authActions:bindActionCreators(AuthActions, dispatch)
+    }
+}
+
+export default connect(mapStateToProps,mapDispatchToProps)(SidebarContainer);

@@ -34,38 +34,22 @@ class Brand extends React.Component {
     return (
       <Navbar.Header {...this.props}>
         <Navbar.Brand tabIndex='-1'>
-          <a href='#'>
-            <img src='../../public/imgs/common/logo.png' alt='rubix' width='111' height='28' />
-          </a>
+          <a href='/'>HISD3</a>
         </Navbar.Brand>
       </Navbar.Header>
     );
   }
 }
 
-class HeaderNavigation extends React.Component {
+class Header extends React.Component {
   constructor(props){
       super(props);
   }
 
   logout=()=>{
       this.props.authActions.logout();
-  };
-  
-  render() {
-    return (
-      <Nav pullRight>
-        <Nav>
-          <NavItem className='logout' href='javascript:{this.logout}' onClick={this.logout}>
-            <Icon bundle='fontello' glyph='off-1' />
-          </NavItem>
-        </Nav>
-      </Nav>
-    );
   }
-}
 
-class Header extends React.Component {
   render() {
     return (
       <Grid id='navbar'>
@@ -80,7 +64,13 @@ class Header extends React.Component {
                   <Brand />
                 </Col>
                 <Col xs={3} sm={8} collapseRight className='text-right'>
-                  <HeaderNavigation />
+                  <Nav pullRight>
+                    <Nav>
+                      <NavItem className='logout' onClick={this.logout}>
+                        <Icon bundle='fontello' glyph='off-1' />
+                      </NavItem>
+                    </Nav>
+                  </Nav>
                 </Col>
               </Row>
             </Navbar>
@@ -96,7 +86,6 @@ function mapStateToProps(state) {
         auth:state.auth
     }
 }
-
 
 function mapDispatchToProps(dispatch) {
     return {

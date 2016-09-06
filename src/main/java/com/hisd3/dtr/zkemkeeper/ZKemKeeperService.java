@@ -1,11 +1,12 @@
 package com.hisd3.dtr.zkemkeeper;
 
+import com.hisd3.dtr.zkemkeeper.dto.BundyClockLogItem;
+import com.hisd3.dtr.zkemkeeper.dto.BundyClockUserItems;
 import com.jacob.activeX.ActiveXComponent;
 import com.jacob.com.Dispatch;
 import com.jacob.com.Variant;
 import org.apache.commons.lang.BooleanUtils;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.bind.RelaxedPropertyResolver;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -88,6 +89,59 @@ public class ZKemKeeperService {
 
             Object disconnect = Dispatch.call(mf, "disconnect").toJavaObject();
 
+        }
+
+        return items;
+    }
+
+    public List<BundyClockUserItems> getUserAllUser(){
+        List<BundyClockUserItems> items = new ArrayList<>();
+
+        ActiveXComponent mf = new ActiveXComponent("zkemkeeper.ZKEM.1");
+
+        Boolean connect_net = (Boolean)Dispatch.call(mf, "connect_Net", host, 4370).toJavaObject();
+        Boolean enableDevice = (Boolean)Dispatch.call(mf, "enableDevice",1, false).toJavaObject();
+
+        if(BooleanUtils.isTrue(connect_net)){
+            if(BooleanUtils.isTrue(enableDevice)){
+                Boolean readAllUserId =(Boolean) Dispatch.call(mf, "ReadAllUserID", 1).toJavaObject();
+
+                if(BooleanUtils.isTrue(readAllUserId)){
+
+                    Variant dwEnrollNumber = new Variant("", true);
+                    Variant Name = new Variant("", true);
+                    Variant Password = new Variant("",true);
+                    Variant Privilege = new Variant((int)0, true);
+                    Variant dwEnable = new Variant((boolean)true, true);
+
+
+                    while ((boolean)Dispatch.call(mf, "SSR_GetAllUserInfo",1,
+                            dwEnrollNumber,
+                            Name,
+                            Password,
+                            Privilege,
+                            dwEnable).toJavaObject()){
+
+
+                        BundyClockUserItems item = new BundyClockUserItems();
+
+                        item.setDwEnrollNumber(dwEnrollNumber.getStringRef());
+                        item.setName(Name.getStringRef());
+                        item.setPassword(Password.getStringRef());
+                        item.setPrivilege(Privilege.getIntRef());
+                        item.setDwEnable(dwEnable.getBooleanRef());
+
+                        items.add(item);
+
+
+                    }
+
+
+                }
+
+            }
+
+            Object disconnect = Dispatch.call(mf, "disconnect").toJavaObject();
         }
 
         return items;

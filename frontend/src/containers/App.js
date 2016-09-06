@@ -24,22 +24,24 @@ require('react-progress-2/main.css');
         super(props);
     }
 
-
-
     componentDidMount(){
-
-            this.props.actions.ping();
-
-
-        }
+        this.props.actions.ping();
+    }
 
     render(){
-
         return (
           <MainContainer {...this.props}>
             <Progress.Component/>
-            <Sidebar />
-            <Header />
+            {
+              this.props.auth.isAuthenticated ? (
+                <Sidebar />
+              ): null
+            }
+            {
+              this.props.auth.isAuthenticated ? (
+                <Header />
+              ): null
+            }
             <div id='body'>
               <Grid>
                 <Row>
@@ -54,7 +56,6 @@ require('react-progress-2/main.css');
               );
     }
 }
-
 
 function mapStateToProps(state) {
 
@@ -71,6 +72,5 @@ function mapDispatchToProps(dispatch) {
         routerActions: bindActionCreators(routerActions, dispatch)
     }
 }
-
 
 export default connect(mapStateToProps,mapDispatchToProps)(App);

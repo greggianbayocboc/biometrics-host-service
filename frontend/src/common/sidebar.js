@@ -14,10 +14,6 @@ import * as AuthActions from '../actions/authactions';
 import { routerActions } from 'react-router-redux';
 
 class DTRSidebar extends React.Component {
-  handleChange(e) {
-    this._nav.search(e.target.value);
-  }
-
   render() {
     return (
       <div>
@@ -26,9 +22,12 @@ class DTRSidebar extends React.Component {
             <Col xs={12}>
               <div className='sidebar-nav-container'>
                 <SidebarNav>
-
-                  { /** Pages Section */ }
-                  <div className='sidebar-header'>PAGES</div>
+                  <div className='sidebar-header'>Daily Time Record</div>
+                  <li tabIndex="-1" className="sidebar-nav-item">
+                    <a tabIndex="-1"><span className="icon-fontello-gauge rubix-icon">
+                      </span><span className="name">Secure Page</span>
+                    </a>
+                  </li>
                 </SidebarNav>
               </div>
             </Col>
@@ -59,6 +58,14 @@ class SidebarContainer extends React.Component {
       super(props);
   }
 
+  goSecure = ()=>{
+      this.props.routerActions.push("/secure");
+  }
+
+  goEmployee = ()=>{
+      this.props.routerActions.push("/employee");
+  }
+
   render() {
     return (
       <div id='sidebar'>
@@ -70,12 +77,6 @@ class SidebarContainer extends React.Component {
               </Col>
               <Col xs={8} collapseLeft id='avatar-col'>
                 <div style={{top: 23, fontSize: 16, lineHeight: 1, position: 'relative'}}>{this.props.auth.account.firstName} {this.props.auth.account.lastName}</div>
-                <div>
-                  <Progress id='demo-progress' value={30} color='#ffffff'/>
-                  <a href='#'>
-                    <Icon id='demo-icon' bundle='fontello' glyph='lock-5' />
-                  </a>
-                </div>
               </Col>
             </Row>
           </Grid>
@@ -86,10 +87,54 @@ class SidebarContainer extends React.Component {
         </SidebarControls>
         <div id='sidebar-container'>
           <Sidebar sidebar={0}>
-            <DTRSidebar />
+            <div>
+              <Grid>
+                <Row>
+                  <Col xs={12}>
+                    <div className='sidebar-nav-container'>
+                      <SidebarNav>
+                        <div className='sidebar-header'>Daily Time Record</div>
+                        <li tabIndex="-1" className="sidebar-nav-item">
+                          <a tabIndex="-1" onClick={this.goSecure}><span className="icon-fontello-lock rubix-icon">
+                            </span><span className="name">Secure Page</span>
+                          </a>
+                        </li>
+                        <li tabIndex="-1" className="sidebar-nav-item">
+                          <a tabIndex="-1" onClick={this.goEmployee}><span className="icon-fontello-users rubix-icon">
+                            </span><span className="name">Employee</span>
+                          </a>
+                        </li>
+                      </SidebarNav>
+                    </div>
+                  </Col>
+                </Row>
+              </Grid>
+            </div>
           </Sidebar>
           <Sidebar sidebar={1}>
-            <PayrollSidebar />
+          <div>
+            <Grid>
+              <Row>
+                <Col xs={12}>
+                  <div className='sidebar-nav-container'>
+                    <SidebarNav>
+                      <div className='sidebar-header'>Payroll</div>
+                      <li tabIndex="-1" className="sidebar-nav-item">
+                        <a tabIndex="-1" onClick={this.goSecure}><span className="icon-fontello-lock rubix-icon">
+                          </span><span className="name">Sample page</span>
+                        </a>
+                      </li>
+                      <li tabIndex="-1" className="sidebar-nav-item">
+                        <a tabIndex="-1" onClick={this.goEmployee}><span className="icon-fontello-users rubix-icon">
+                          </span><span className="name">Sample page</span>
+                        </a>
+                      </li>
+                    </SidebarNav>
+                  </div>
+                </Col>
+              </Row>
+            </Grid>
+          </div>
           </Sidebar>
         </div>
       </div>

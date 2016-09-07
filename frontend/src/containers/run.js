@@ -33,7 +33,7 @@ import Login from '../components/Login'
 import AccessDenied from '../components/AccessDenied'
 import SecurePage from '../components/SecurePage'
 import Employee from '../components/Employee'
-
+import Settings from '../components/Settings'
 
 
 var initialState={
@@ -51,7 +51,8 @@ var Routes = (
                       <Route path ="login" component={Login}/>
                       <Route path ="accessdenied" component={AccessDenied}/>
                       <Route path ="secure" component={requireAuthentication(SecurePage,'ROLE_USER')}/>
-                      <Route path ="employee" component={requireAuthentication(Employee,'ROLE_USER')}/>
+                      <Route path ="employee" component={requireAuthentication(Employee,'ROLE_ADMIN')}/>
+                      <Route path ="settings" component={requireAuthentication(Employee,'ROLE_ADMIN')}/>
                 </Route>
             </Router>
     </Provider>

@@ -22,32 +22,25 @@ import {
   Grid,
   Row,
   Radio,
-  Col } from '@sketchpixy/rubix';
+  Col
+} from '@sketchpixy/rubix';
 
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import * as AuthActions from '../actions/authactions';
 import { routerActions } from 'react-router-redux';
 
-class Brand extends React.Component {
-  render() {
-    return (
-      <Navbar.Header {...this.props}>
-        <Navbar.Brand tabIndex='-1'>
-          <a href='/'>HISD3</a>
-        </Navbar.Brand>
-      </Navbar.Header>
-    );
-  }
-}
-
 class Header extends React.Component {
   constructor(props){
-      super(props);
+    super(props);
   }
 
   logout=()=>{
-      this.props.authActions.logout();
+    this.props.authActions.logout();
+  }
+
+  goHome = ()=>{
+    this.props.routerActions.push("/");
   }
 
   render() {
@@ -61,7 +54,11 @@ class Header extends React.Component {
                   <SidebarBtn />
                 </Col>
                 <Col xs={6} sm={4}>
-                  <Brand />
+                  <Navbar.Header>
+                    <Navbar.Brand tabIndex='-1'>
+                      <a href="javascript:void(0)" onClick={this.goHome}>HISD3</a>
+                    </Navbar.Brand>
+                  </Navbar.Header>
                 </Col>
                 <Col xs={3} sm={8} collapseRight className='text-right'>
                   <Nav pullRight>
@@ -82,16 +79,16 @@ class Header extends React.Component {
 }
 
 function mapStateToProps(state) {
-    return {
-        auth:state.auth
-    }
+  return {
+    auth:state.auth
+  }
 }
 
 function mapDispatchToProps(dispatch) {
-    return {
-        routerActions: bindActionCreators(routerActions, dispatch),
-        authActions:bindActionCreators(AuthActions, dispatch)
-    }
+  return {
+    routerActions: bindActionCreators(routerActions, dispatch),
+    authActions:bindActionCreators(AuthActions, dispatch)
+  }
 }
 
 export default connect(mapStateToProps,mapDispatchToProps)(Header);

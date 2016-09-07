@@ -66,6 +66,10 @@ class SidebarContainer extends React.Component {
       this.props.routerActions.push("/employee");
   }
 
+  goSettings = ()=>{
+      this.props.routerActions.push("/settings");
+  }
+
   render() {
     return (
       <div id='sidebar'>
@@ -83,7 +87,7 @@ class SidebarContainer extends React.Component {
         </div>
         <SidebarControls>
           <SidebarControlBtn bundle='fontello' glyph='calendar' sidebar={0} />
-          <SidebarControlBtn bundle='fontello' glyph='chart' sidebar={1} />
+          <SidebarControlBtn bundle='fontello' glyph='user' sidebar={1} />
         </SidebarControls>
         <div id='sidebar-container'>
           <Sidebar sidebar={0}>
@@ -104,6 +108,11 @@ class SidebarContainer extends React.Component {
                             </span><span className="name">Employee</span>
                           </a>
                         </li>
+                        <li tabIndex="-1" className="sidebar-nav-item">
+                          <a tabIndex="-1" onClick={this.goSettings}><span className="icon-fontello-cog rubix-icon">
+                          </span><span className="name">Settings</span>
+                          </a>
+                        </li>
                       </SidebarNav>
                     </div>
                   </Col>
@@ -118,15 +127,10 @@ class SidebarContainer extends React.Component {
                 <Col xs={12}>
                   <div className='sidebar-nav-container'>
                     <SidebarNav>
-                      <div className='sidebar-header'>Payroll</div>
+                      <div className='sidebar-header'>Account</div>
                       <li tabIndex="-1" className="sidebar-nav-item">
-                        <a tabIndex="-1" onClick={this.goSecure}><span className="icon-fontello-lock rubix-icon">
-                          </span><span className="name">Sample page</span>
-                        </a>
-                      </li>
-                      <li tabIndex="-1" className="sidebar-nav-item">
-                        <a tabIndex="-1" onClick={this.goEmployee}><span className="icon-fontello-users rubix-icon">
-                          </span><span className="name">Sample page</span>
+                        <a tabIndex="-1" onClick={this.goSecure}><span className="icon-fontello-cogs rubix-icon">
+                        </span><span className="name">Account Settings</span>
                         </a>
                       </li>
                     </SidebarNav>

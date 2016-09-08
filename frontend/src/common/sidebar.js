@@ -13,53 +13,9 @@ import { connect } from 'react-redux';
 import * as AuthActions from '../actions/authactions';
 import { routerActions } from 'react-router-redux';
 
-class DTRSidebar extends React.Component {
-  render() {
-    return (
-      <div>
-        <Grid>
-          <Row>
-            <Col xs={12}>
-              <div className='sidebar-nav-container'>
-                <SidebarNav>
-                  <div className='sidebar-header'>Daily Time Record</div>
-                  <li tabIndex="-1" className="sidebar-nav-item">
-                    <a tabIndex="-1"><span className="icon-fontello-gauge rubix-icon">
-                      </span><span className="name">Secure Page</span>
-                    </a>
-                  </li>
-                </SidebarNav>
-              </div>
-            </Col>
-          </Row>
-        </Grid>
-      </div>
-    );
-  }
-}
-
-class PayrollSidebar extends React.Component {
-  render() {
-    return (
-      <Grid>
-        <Row>
-          <Col xs={12}>
-            <div className='sidebar-header'>DUMMY SIDEBAR</div>
-            <LoremIpsum query='1p' />
-          </Col>
-        </Row>
-      </Grid>
-    );
-  }
-}
-
 class SidebarContainer extends React.Component {
   constructor(props){
       super(props);
-  }
-
-  goSecure = ()=>{
-      this.props.routerActions.push("/secure");
   }
 
   goEmployee = ()=>{
@@ -98,11 +54,6 @@ class SidebarContainer extends React.Component {
                     <div className='sidebar-nav-container'>
                       <SidebarNav>
                         <div className='sidebar-header'>Daily Time Record</div>
-                        <li tabIndex="-1" className="sidebar-nav-item">
-                          <a tabIndex="-1" onClick={this.goSecure}><span className="icon-fontello-lock rubix-icon">
-                            </span><span className="name">Secure Page</span>
-                          </a>
-                        </li>
                         <li tabIndex="-1" className="sidebar-nav-item">
                           <a tabIndex="-1" onClick={this.goEmployee}><span className="icon-fontello-users rubix-icon">
                             </span><span className="name">Employee</span>

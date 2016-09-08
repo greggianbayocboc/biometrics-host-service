@@ -4,11 +4,27 @@ import { routerActions } from 'react-router-redux'
 import Progress from "react-progress-2";
 
 
-export let loadBundyclockLogs= ()=>{
+// export let loadBundyclockLogs= ()=>{
+//
+//   return dispatch => {
+//
+//      get('/api/bundyclock/getlogs').then((response)=>{
+//
+//        var records = response.data;
+//
+//        dispatch(loadBundyclockLogsSuccess(records));
+//
+//      });
+//
+//
+//   };
+// };
+
+export let loadBundyclockLogsById= (enrollno)=>{
 
   return dispatch => {
 
-     get('/api/bundyclock/getlogs').then((response)=>{
+     get('/api/bundyclock/getlogsbyenrollno?enrollno=' + enrollno).then((response)=>{
 
        var records = response.data;
 

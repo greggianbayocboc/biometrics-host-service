@@ -2,6 +2,7 @@ import React from 'react';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 import * as employeeActions from '../actions/employeeActions';
+import * as profileActions from '../actions/profileActions';
 import {routerActions} from 'react-router-redux';
 import {Table, Button} from '@sketchpixy/rubix';
 class Employee extends React.Component{
@@ -14,8 +15,9 @@ class Employee extends React.Component{
   componentDidMount(){
     this.props.employeeActions.getEmployeeActions();
   }
-    onSelectedRow=(enrollno, index)=>{
-        console.log('id ' + enrollno + ' index ' + index);
+    onSelectedRow=(enrollno, name)=>{
+      this.props.profileActions.loadBundyclockLogsById(enrollno, name);
+      this.props.routerActions.push("/profile");
     }
 
 
@@ -27,7 +29,7 @@ class Employee extends React.Component{
                 <td>{item.dwEnrollNumber}</td>
                 <td>{item.name}</td>
                 <td>{item.privilege}</td>
-                <td><Button className='btn btn-primary' onClick={()=>{this.onSelectedRow(item.dwEnrollNumber, i)}}>View Profile</Button></td>
+                <td><Button className='btn btn-primary' onClick={()=>{this.onSelectedRow(item.dwEnrollNumber, item.name)}}>View Profile</Button></td>
               </tr>
 
           );
@@ -58,8 +60,8 @@ class Employee extends React.Component{
 }
 function mapStateToProps(state) {
   return {
-
-      employee: state.employee
+      employee: state.employee,
+      bundyclock:state.bundyclock
   }
 }
 
@@ -69,7 +71,8 @@ function mapStateToProps(state) {
 function mapDispatchToProps(dispatch){
   return {
       routerActions: bindActionCreators(routerActions, dispatch),
-    employeeActions : bindActionCreators(employeeActions, dispatch)
+      employeeActions : bindActionCreators(employeeActions, dispatch),
+      profileActions:bindActionCreators(profileActions, dispatch)
   }
 }
 

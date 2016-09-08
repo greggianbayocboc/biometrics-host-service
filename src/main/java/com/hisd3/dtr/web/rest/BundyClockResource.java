@@ -9,6 +9,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
@@ -38,7 +39,7 @@ public class BundyClockResource {
         return null;
     }
 
-    @RequestMapping("/getlogs")
+/*    @RequestMapping("/getlogs")
     public ResponseEntity<List<BundyClockLogItem>>getLogs(){
 
         if(!SystemUtils.IS_OS_WINDOWS){
@@ -52,6 +53,25 @@ public class BundyClockResource {
 
        return new ResponseEntity<List<BundyClockLogItem>>(zKemKeeperService.getBundyClockLogItems(),
                HttpStatus.OK);
+
+    }*/
+
+
+
+    @RequestMapping("/getlogsbyenrollno/{enrollno}")
+    public ResponseEntity<List<BundyClockLogItem>>getLogsByEnrollNo(@RequestParam String enrollno){
+
+        if(!SystemUtils.IS_OS_WINDOWS){
+
+            HttpHeaders responseHeaders = new HttpHeaders();
+            responseHeaders.set("message", "This resource is only for Windows");
+
+            return new  ResponseEntity<List<BundyClockLogItem>>(responseHeaders,HttpStatus.CONFLICT);
+        }
+
+
+        return new ResponseEntity<List<BundyClockLogItem>>(zKemKeeperService.getBundyClockLogItems(enrollno),
+                HttpStatus.OK);
 
     }
 

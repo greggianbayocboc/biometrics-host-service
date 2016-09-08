@@ -5,6 +5,7 @@ import com.hisd3.dtr.zkemkeeper.dto.BundyClockUserItems;
 import com.jacob.activeX.ActiveXComponent;
 import com.jacob.com.Dispatch;
 import com.jacob.com.Variant;
+import org.apache.commons.codec.binary.StringUtils;
 import org.apache.commons.lang.BooleanUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -24,7 +25,7 @@ public class ZKemKeeperService {
     @Value("${zkemkeeper.host}")
     String host;
 
-    public List<BundyClockLogItem> getBundyClockLogItems(){
+    public List<BundyClockLogItem> getBundyClockLogItems(String enrollno){
         List<BundyClockLogItem> items = new ArrayList<>();
 
         ActiveXComponent mf = new ActiveXComponent("zkemkeeper.ZKEM.1");
@@ -69,20 +70,39 @@ public class ZKemKeeperService {
                             dwWorkCode).toJavaObject()){
 
 
-                        BundyClockLogItem item = new BundyClockLogItem();
-                        item.setDwEnrollNumber(dwEnrollNumber.getStringRef());
-                        item.setDwVerifyMode(dwVerifyMode.getIntRef());
-                        item.setDwInoutMode(dwInoutMode.getIntRef());
-                        item.setDwYear(dwYear.getIntRef());
-                        item.setDwMonth(dwMonth.getIntRef());
-                        item.setDwDay(dwDay.getIntRef());
-                        item.setDwHour(dwHour.getIntRef());
-                        item.setDwMinute(dwMinute.getIntRef());
-                        item.setDwSecindm(dwSecindm.getIntRef());
-                        item.setDwWorkCode(dwWorkCode.getIntRef());
+                        if(StringUtils.equals(dwEnrollNumber.getStringRef(), enrollno)){
+
+                            BundyClockLogItem item = new BundyClockLogItem();
+                            item.setDwEnrollNumber(dwEnrollNumber.getStringRef());
+                            item.setDwVerifyMode(dwVerifyMode.getIntRef());
+                            item.setDwInoutMode(dwInoutMode.getIntRef());
+                            item.setDwYear(dwYear.getIntRef());
+                            item.setDwMonth(dwMonth.getIntRef());
+                            item.setDwDay(dwDay.getIntRef());
+                            item.setDwHour(dwHour.getIntRef());
+                            item.setDwMinute(dwMinute.getIntRef());
+                            item.setDwSecindm(dwSecindm.getIntRef());
+                            item.setDwWorkCode(dwWorkCode.getIntRef());
+
+                            items.add(item);
+
+                        }else {
+                            BundyClockLogItem item = new BundyClockLogItem();
+                            item.setDwEnrollNumber(dwEnrollNumber.getStringRef());
+                            item.setDwVerifyMode(dwVerifyMode.getIntRef());
+                            item.setDwInoutMode(dwInoutMode.getIntRef());
+                            item.setDwYear(dwYear.getIntRef());
+                            item.setDwMonth(dwMonth.getIntRef());
+                            item.setDwDay(dwDay.getIntRef());
+                            item.setDwHour(dwHour.getIntRef());
+                            item.setDwMinute(dwMinute.getIntRef());
+                            item.setDwSecindm(dwSecindm.getIntRef());
+                            item.setDwWorkCode(dwWorkCode.getIntRef());
+
+                            items.add(item);
+                        }
 
 
-                        items.add(item);
                     }
                 }
             }

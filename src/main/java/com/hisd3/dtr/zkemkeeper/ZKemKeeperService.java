@@ -1,5 +1,6 @@
 package com.hisd3.dtr.zkemkeeper;
 
+import com.hisd3.dtr.web.rest.BundyClockResource;
 import com.hisd3.dtr.zkemkeeper.dto.BundyClockLogItem;
 import com.hisd3.dtr.zkemkeeper.dto.BundyClockUserItems;
 import com.jacob.activeX.ActiveXComponent;
@@ -7,6 +8,7 @@ import com.jacob.com.Dispatch;
 import com.jacob.com.Variant;
 import org.apache.commons.codec.binary.StringUtils;
 import org.apache.commons.lang.BooleanUtils;
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
@@ -31,7 +33,7 @@ public class ZKemKeeperService {
         ActiveXComponent mf = new ActiveXComponent("zkemkeeper.ZKEM.1");
         Boolean connect_net = (Boolean)Dispatch.call(mf, "connect_Net", host, 4370).toJavaObject();
         Boolean enableDevice = (Boolean)Dispatch.call(mf, "enableDevice",1, false).toJavaObject();
-
+        Logger log = Logger.getLogger(BundyClockResource.class.getName());
 
        // Variant resultRef = new Variant((int)0, true);
         //Object getDeviceStatus = Dispatch.call(mf, "getDeviceStatus",1,6, resultRef).toJavaObject();
@@ -40,7 +42,9 @@ public class ZKemKeeperService {
 
 
         if(BooleanUtils.isTrue(connect_net)){
+
             if(BooleanUtils.isTrue(enableDevice)){
+
                 Boolean readGeneralLogData = (Boolean)Dispatch.call(mf, "readGeneralLogData",1).toJavaObject();
                 if(BooleanUtils.isTrue(readGeneralLogData)){
 
@@ -69,9 +73,7 @@ public class ZKemKeeperService {
                             dwSecindm,
                             dwWorkCode).toJavaObject()){
 
-
-                        if(StringUtils.equals(dwEnrollNumber.getStringRef(), enrollno)){
-
+                        if(StringUtils.equals(dwEnrollNumber.getStringRef(), enrollno)) {
                             BundyClockLogItem item = new BundyClockLogItem();
                             item.setDwEnrollNumber(dwEnrollNumber.getStringRef());
                             item.setDwVerifyMode(dwVerifyMode.getIntRef());
@@ -84,23 +86,10 @@ public class ZKemKeeperService {
                             item.setDwSecindm(dwSecindm.getIntRef());
                             item.setDwWorkCode(dwWorkCode.getIntRef());
 
-                            items.add(item);
-
-                        }else {
-                            BundyClockLogItem item = new BundyClockLogItem();
-                            item.setDwEnrollNumber(dwEnrollNumber.getStringRef());
-                            item.setDwVerifyMode(dwVerifyMode.getIntRef());
-                            item.setDwInoutMode(dwInoutMode.getIntRef());
-                            item.setDwYear(dwYear.getIntRef());
-                            item.setDwMonth(dwMonth.getIntRef());
-                            item.setDwDay(dwDay.getIntRef());
-                            item.setDwHour(dwHour.getIntRef());
-                            item.setDwMinute(dwMinute.getIntRef());
-                            item.setDwSecindm(dwSecindm.getIntRef());
-                            item.setDwWorkCode(dwWorkCode.getIntRef());
 
                             items.add(item);
                         }
+
 
 
                     }

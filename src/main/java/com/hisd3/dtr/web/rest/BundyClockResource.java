@@ -58,8 +58,8 @@ public class BundyClockResource {
 
 
 
-    @RequestMapping("/getlogsbyenrollno/{enrollno}")
-    public ResponseEntity<List<BundyClockLogItem>>getLogsByEnrollNo(@RequestParam String enrollno){
+    @RequestMapping("/getlogsbyenrollno")
+    public ResponseEntity<List<BundyClockLogItem>>getLogs(@RequestParam String enrollno){
 
         if(!SystemUtils.IS_OS_WINDOWS){
 

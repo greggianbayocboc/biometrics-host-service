@@ -15,6 +15,7 @@ class Employee extends React.Component{
     componentDidMount(){
         this.props.employeeActions.getEmployeeActions();
     }
+    
     onSelectedRow=(enrollno, name)=>{
         this.props.profileActions.loadBundyclockLogsById(enrollno, name);
         this.props.routerActions.push("/profile");

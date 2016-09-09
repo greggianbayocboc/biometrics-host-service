@@ -56,7 +56,7 @@ class SidebarContainer extends React.Component {
                         <div className='sidebar-header'>Daily Time Record</div>
                         <li tabIndex="-1" className="sidebar-nav-item">
                           <a tabIndex="-1" onClick={this.goEmployee}><span className="icon-fontello-users rubix-icon">
-                            </span><span className="name">Employee</span>
+                            </span><span className="name">Employees</span>
                           </a>
                         </li>
                         <li tabIndex="-1" className="sidebar-nav-item">

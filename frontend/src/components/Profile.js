@@ -30,12 +30,8 @@ class Profile extends React.Component{
                   <td>{item.dwEnrollNumber}</td>
                   <td>{item.dwVerifyMode}</td>
                   <td>{item.dwInoutMode}</td>
-                  <td>{item.dwYear}</td>
-                  <td>{item.dwMonth}</td>
-                  <td>{item.dwDay}</td>
-                  <td>{item.dwHour}</td>
-                  <td>{item.dwMinute}</td>
-                  <td>{item.dwSecindm}</td>
+                  <td>{item.date}</td>
+                  <td>{item.time}</td>
                   <td>{item.dwWorkCode}</td>
             </tr>
          );
@@ -50,16 +46,12 @@ class Profile extends React.Component{
                     <Table striped bordered condensed >
                        <thead>
                           <tr>
-                                <th>dwEnrollNumber</th>
-                                <th>dwVerifyMode</th>
-                                <th>dwInoutMode</th>
-                                <th>dwYear</th>
-                                <th>dwMonth</th>
-                                <th>dwDay</th>
-                                <th>dwHour</th>
-                                <th>dwMinute</th>
-                                <th>dwSecindm</th>
-                                <th>dwWorkCode</th>
+                                <th>Enroll Number</th>
+                                <th>Verify Mode</th>
+                                <th>Time In/Out</th>
+                                <th>Date</th>
+                                <th>Time</th>
+                                <th>Work Code</th>
                           </tr>
                        </thead>
                        <tbody>

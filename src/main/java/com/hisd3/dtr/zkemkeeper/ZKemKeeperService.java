@@ -9,9 +9,11 @@ import com.jacob.com.Variant;
 import org.apache.commons.codec.binary.StringUtils;
 import org.apache.commons.lang.BooleanUtils;
 import org.apache.log4j.Logger;
+import org.joda.time.DateTime;
+import org.joda.time.format.DateTimeFormat;
+import org.joda.time.format.DateTimeFormatter;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -60,6 +62,11 @@ public class ZKemKeeperService {
                     Variant dwSecindm = new Variant((int)0, true);
                     Variant dwWorkCode=  new Variant((int)0, true);
 
+                    DateTimeFormatter dateFormatter = DateTimeFormat.forPattern("MM/dd/yyyy");
+                    DateTimeFormatter timeFormatter = DateTimeFormat.forPattern("HH:mm:ss");
+
+
+
 
                     while((boolean)Dispatch.call(mf, "ssR_GetGeneralLogData",1,
                             dwEnrollNumber,
@@ -72,12 +79,25 @@ public class ZKemKeeperService {
                             dwMinute,
                             dwSecindm,
                             dwWorkCode).toJavaObject()){
-
+                        DateTime date = dateFormatter.parseDateTime(Integer.toString(dwMonth.getIntRef())+"/"+Integer.toString(dwDay.getIntRef())+"/"+dwYear.getIntRef());
+                        DateTime time = timeFormatter.parseDateTime(Integer.toString(dwHour.getIntRef())+":" + Integer.toString(dwMinute.getIntRef())+":" + Integer.toString(dwSecindm.getIntRef()));
                         if(StringUtils.equals(dwEnrollNumber.getStringRef(), enrollno)) {
                             BundyClockLogItem item = new BundyClockLogItem();
                             item.setDwEnrollNumber(dwEnrollNumber.getStringRef());
                             item.setDwVerifyMode(dwVerifyMode.getIntRef());
-                            item.setDwInoutMode(dwInoutMode.getIntRef());
+                            if(dwInoutMode.getIntRef() == 0){
+                                item.setDwInoutMode("Time In");
+                            }else if(dwInoutMode.getIntRef() == 1){
+                                item.setDwInoutMode("Time Out");
+                            }else if(dwInoutMode.getIntRef() == 2){
+                                item.setDwInoutMode("Break In");
+                            }else if(dwInoutMode.getIntRef() == 3){
+                                item.setDwInoutMode("Break Out");
+                            }else if(dwInoutMode.getIntRef() == 4){
+                                item.setDwInoutMode("Overtime In");
+                            }else{
+                                item.setDwInoutMode("Overtime Out");
+                            }
                             item.setDwYear(dwYear.getIntRef());
                             item.setDwMonth(dwMonth.getIntRef());
                             item.setDwDay(dwDay.getIntRef());
@@ -85,6 +105,8 @@ public class ZKemKeeperService {
                             item.setDwMinute(dwMinute.getIntRef());
                             item.setDwSecindm(dwSecindm.getIntRef());
                             item.setDwWorkCode(dwWorkCode.getIntRef());
+                            item.setDate(date.toString("MM/dd/yyyy"));
+                            item.setTime(time.toString("hh:mm:ss aa"));
 
 
                             items.add(item);

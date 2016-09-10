@@ -25,6 +25,10 @@ class RegisterUser extends React.Component{
     "confirm_password": ""
   };
 
+  componentWillMount(){
+    this.props.registerActions.beforeRegister();
+  }
+
   updateField = (name, value)=> {
     var data = {};
     data[name] = value;
@@ -33,9 +37,12 @@ class RegisterUser extends React.Component{
   };
 
   onFormSubmit = (event)=> {
-    console.log(this.state);
     event.preventDefault();
-    this.props.registerActions.login(this.state, this.props.location.query.targetPath || "/");
+    if (this.state.password.length >= 6){
+      if (this.state.password == this.state.confirm_password) {
+        this.props.registerActions.register(this.state, "/success");
+      }
+    }
   };
 
   goBack=()=>{
@@ -49,14 +56,28 @@ class RegisterUser extends React.Component{
           <div>
             <PanelBody style={{padding: 0}}>
               <div className='text-center bg-darkblue fg-white'>
-                <h3 style={{margin: 0, padding: 25}} >Login</h3>
+                <h3 style={{margin: 0, padding: 25}}>Register user</h3>
               </div>
+
               <div style={{margin: 'auto', marginButtom: 25, marginTop: 25, padding: 25, paddingButtom: 0, paddingTop: 0}}>
                 <Form horizontal  onSubmit={this.onFormSubmit}>
+
+                  {this.props.register.message != null ?
+                    <Alert bsStyle="danger">{this.props.register.message}</Alert>
+                  : null}
+
+                  {this.state.password.length > 0 && this.state.password.length < 6 ?
+                    <Alert bsStyle="danger">Password must be 6 characters or longer</Alert>
+                  : null}
+
+                  {this.state.password.length >= 6 && this.state.password != this.state.confirm_password ?
+                    <Alert bsStyle="danger">Passwords don't match</Alert>
+                  : null}
+
                   <FormGroup>
-                    <Col componentClass={ControlLabel} xs={2}>Username</Col>
+                    <Col componentClass={ControlLabel} xs={2}>Login name</Col>
                 	  <Col xs={10}>
-                		<FormControl type="text" placeholder="Username" required="required"
+                		<FormControl type="text" placeholder="Login name" required="required"
                       onChange={(e)=> {
                         this.updateField('login', e.target.value)
                       }}
@@ -108,10 +129,6 @@ class RegisterUser extends React.Component{
                 	  </Col>
                   </FormGroup>
 
-                  {/* {this.state.password != this.state.confirm_password ?
-                    <Alert bsStyle="danger">Passwords don't match</Alert>
-                  : null} */}
-
                   <FormGroup>
                     <Col componentClass={ControlLabel} xs={2}>Confirm Password</Col>
                 	  <Col xs={10}>
@@ -142,10 +159,9 @@ class RegisterUser extends React.Component{
 function mapStateToProps(state) {
     return {
         auth:state.auth,
-        profile:state.profile
+        register:state.register
     }
 }
-
 
 function mapDispatchToProps(dispatch) {
     return {

@@ -4,6 +4,7 @@ import healthchecks from './healthchecks';
 import authreducers from './authreducers'
 import bundyClockReducers from './bundyClockReducers'
 import profileReducers from './profileReducers'
+import registerReducers from './registerReducers'
 import employeeReducers from './employeeReducers'
 
 const rootReducer = combineReducers({
@@ -12,6 +13,7 @@ const rootReducer = combineReducers({
   auth:authreducers,
   bundyclock:bundyClockReducers,
   profile:profileReducers,
+  register:registerReducers,
   employee: employeeReducers
 });
 

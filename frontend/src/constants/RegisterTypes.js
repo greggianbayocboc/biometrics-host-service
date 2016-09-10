@@ -1,0 +1,6 @@
+/**
+ * Created by albertoclarit on 1/13/16.
+ */
+export const REGISTRATION_START = 'REGISTRATION_START';
+export const REGISTRATION_SUCCESS = 'REGISTRATION_SUCCESS';
+export const REGISTRATION_FAILED = 'REGISTRATION_FAILED';

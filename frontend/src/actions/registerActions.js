@@ -1,32 +1,48 @@
 /**
- * Created by albertoclarit on 1/13/16.
- */
-import * as types from '../constants/AuthActionTypes';
+* Created by albertoclarit on 1/13/16.
+*/
+import * as types from '../constants/RegisterTypes';
 import {post,get} from '~/src/utils/RestClient';
 import { routerActions } from 'react-router-redux'
-import {isInRole} from '~/src/utils/AuthUtils';
 import * as  healthchecks from './healthchecks';
-import * as dialogactions from './dialogactions'
 import Progress from "react-progress-2";
 
+export let beforeRegister = ()=>{
+  return {
+    type: types.REGISTRATION_START,
+  }
+};
 
+export let register= (loginstate,targetPath)=>{
+  Progress.show();
+  return dispatch => {
+    post('/api/register',{},{
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      data:loginstate
+    }).then((response)=>{
+      dispatch(registerSuccess());
+      dispatch(routerActions.push(targetPath));
+    }).catch((error)=>{
+      dispatch(registerFailed(error.response.request.response));
+      dispatch(healthchecks.ping());
+    });
 
-export let login= (loginstate,targetPath)=>{
+  }
+};
 
-    Progress.show();
+export let registerSuccess = ()=>{
+  Progress.hide();
+  return {
+    type: types.REGISTRATION_SUCCESS,
+  }
+};
 
-    return dispatch => {
-        post('/api/register',{},{
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            data:loginstate
-        }).then((response)=>{
-            dispatch(console.log(response));
-        }).catch((error)=>{
-            dispatch(console.log(error));
-            dispatch(healthchecks.ping());
-        });
-
-    }
+export let registerFailed = (message)=>{
+  Progress.hide();
+  return {
+    type: types.REGISTRATION_FAILED,
+    message: message.toUpperCase()
+  }
 };

@@ -35,6 +35,7 @@ import SecurePage from '../components/SecurePage'
 import Employee from '../components/Employee'
 import Profile from '../components/Profile'
 import Settings from '../components/Settings'
+import RegisterUser from '../components/RegisterUser'
 
 
 var initialState={
@@ -54,7 +55,8 @@ var Routes = (
                       <Route path ="secure" component={requireAuthentication(SecurePage,'ROLE_USER')}/>
                       <Route path ="employee" component={requireAuthentication(Employee,'ROLE_ADMIN')}/>
                       <Route path ="profile" component={requireAuthentication(Profile,'ROLE_USER')}/>
-                      <Route path ="settings" component={requireAuthentication(Employee,'ROLE_ADMIN')}/>
+                      <Route path ="settings" component={requireAuthentication(Settings,'ROLE_ADMIN')}/>
+                      <Route path ="adduser" component={requireAuthentication(RegisterUser,'ROLE_ADMIN')}/>
                 </Route>
             </Router>
     </Provider>

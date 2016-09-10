@@ -15,10 +15,12 @@ class Employee extends React.Component{
     componentDidMount(){
         this.props.employeeActions.getEmployeeActions();
     }
-    
+
     onSelectedRow=(enrollno, name)=>{
+      return ()=>{
         this.props.profileActions.loadBundyclockLogsById(enrollno, name);
         this.props.routerActions.push("/profile");
+      }
     }
 
 
@@ -30,7 +32,7 @@ class Employee extends React.Component{
                     <td>{item.dwEnrollNumber}</td>
                     <td>{item.name}</td>
                     <td>{item.privilege}</td>
-                    <td><Button className='btn btn-primary' onClick={()=>{this.onSelectedRow(item.dwEnrollNumber, item.name)}}>View Profile</Button></td>
+                    <td><Button className='btn btn-primary' onClick={this.onSelectedRow(item.dwEnrollNumber, item.name)}>View Profile</Button></td>
                 </tr>
 
             );

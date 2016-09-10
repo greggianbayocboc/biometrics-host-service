@@ -102,7 +102,7 @@ public class AccountResource {
     @Timed
     public ResponseEntity<?> registerAccount(@Valid @RequestBody UserDTO userDTO, HttpServletRequest request)  {
 
-        try {
+/*        try {
 
             String ipAddress = request.getHeader("X-FORWARDED-FOR");
             if (ipAddress == null) {
@@ -129,7 +129,7 @@ public class AccountResource {
         } catch (JSONException e) {
             e.printStackTrace();
             return new ResponseEntity<>("Captcha not validated", HttpStatus.BAD_REQUEST);
-        }
+        }*/
 
 
         //Check captcha first

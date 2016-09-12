@@ -4,7 +4,7 @@ import {bindActionCreators} from 'redux';
 import * as employeeActions from '../actions/employeeActions';
 import * as profileActions from '../actions/profileActions';
 import {routerActions} from 'react-router-redux';
-import * as modalAction from '../actions/modalActions';
+import * as modalActions from '../actions/modalActions';
 import {Table, Button,Well,PanelContainer,Panel,PanelHeader,Grid,Row,Col,PanelBody,ButtonGroup,InputGroup,Icon} from '@sketchpixy/rubix';
 class Employee extends React.Component{
 
@@ -29,7 +29,7 @@ class Employee extends React.Component{
 
     onSelectedRowModal=(data) =>{
         return ()=>{
-            this.props.modalAction.openClose(data);
+            this.props.modalActions.openClose(data);
         }
     }
 
@@ -132,7 +132,7 @@ function mapDispatchToProps(dispatch){
         routerActions: bindActionCreators(routerActions, dispatch),
         employeeActions : bindActionCreators(employeeActions, dispatch),
         profileActions:bindActionCreators(profileActions, dispatch),
-        modalAction: bindActionCreators(modalAction, dispatch)
+        modalActions: bindActionCreators(modalActions, dispatch)
 
     }
 }

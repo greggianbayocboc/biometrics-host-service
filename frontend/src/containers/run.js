@@ -37,6 +37,9 @@ import Employee from '../components/Employee'
 import Profile from '../components/Profile'
 import Settings from '../components/Settings'
 import RegisterUser from '../components/RegisterUser'
+import RegisterEmployee from '../components/RegisterEmployee'
+
+import ReduxModal from 'react-redux-modal'
 
 
 var initialState={
@@ -59,6 +62,8 @@ var Routes = (
                       <Route path ="profile" component={requireAuthentication(Profile,'ROLE_USER')}/>
                       <Route path ="settings" component={requireAuthentication(Settings,'ROLE_ADMIN')}/>
                       <Route path ="adduser" component={requireAuthentication(RegisterUser,'ROLE_ADMIN')}/>
+                      <Route path ="addemployee" component={requireAuthentication(RegisterEmployee,'ROLE_ADMIN')}/>
+                    <ReduxModal />
                 </Route>
             </Router>
     </Provider>

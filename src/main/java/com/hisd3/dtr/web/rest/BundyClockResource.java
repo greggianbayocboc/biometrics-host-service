@@ -1,18 +1,24 @@
 package com.hisd3.dtr.web.rest;
 
+import com.google.common.collect.Lists;
+import com.hisd3.dtr.web.rest.dto.EmployeeDto;
 import com.hisd3.dtr.zkemkeeper.dto.BundyClockLogItem;
 import com.hisd3.dtr.zkemkeeper.ZKemKeeperService;
 import com.hisd3.dtr.zkemkeeper.dto.BundyClockUserItems;
+import org.apache.catalina.servlet4preview.http.HttpServletRequest;
+import org.apache.commons.codec.binary.StringUtils;
 import org.apache.commons.lang.SystemUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * Created by albertoclarit on 9/2/16.
@@ -86,6 +92,39 @@ public class BundyClockResource {
         }
 
         return new ResponseEntity<List<BundyClockUserItems>>(zKemKeeperService.getUserAllUser(),HttpStatus.OK);
+    }
+
+    @RequestMapping("/deleteuser")
+    public ResponseEntity deleteuser(@RequestParam String enrollno){
+        HttpHeaders httpHeaders = new HttpHeaders();
+        zKemKeeperService.deleteUserInfo(enrollno);
+        httpHeaders.set("message", "Success");
+        return new ResponseEntity(httpHeaders,HttpStatus.OK);
+    }
+
+    @RequestMapping(value = "/addnewmeployee",
+            method = RequestMethod.POST,
+            produces = MediaType.TEXT_PLAIN_VALUE)
+    public ResponseEntity addnewmeployee(@Valid @RequestBody EmployeeDto employee, HttpServletRequest request){
+        HttpHeaders httpHeaders = new HttpHeaders();
+       List<BundyClockUserItems> users = zKemKeeperService.getUserAllUser();
+
+        for(BundyClockUserItems u:users){
+            if(StringUtils.equals(u.getDwEnrollNumber(), employee.getEnrollno())){
+                httpHeaders.set("message", "Error! Employee exist");
+                return new ResponseEntity(httpHeaders, HttpStatus.CONFLICT);
+            }
+        }
+        zKemKeeperService.newUserService(
+                employee.getEnrollno(),
+                employee.getName(),
+                employee.getPassword(),
+                employee.getPrivilege(),
+                employee.getEnabled());
+
+        httpHeaders.set("message", "Success! Employee added");
+        return new ResponseEntity(httpHeaders, HttpStatus.OK);
+
     }
 
 

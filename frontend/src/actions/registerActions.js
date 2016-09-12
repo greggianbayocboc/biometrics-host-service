@@ -9,7 +9,7 @@ import Progress from "react-progress-2";
 
 export let beforeRegister = ()=>{
   return {
-    type: types.REGISTRATION_START,
+    type: types.REGISTRATION_START
   }
 };
 

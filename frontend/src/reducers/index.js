@@ -6,6 +6,8 @@ import bundyClockReducers from './bundyClockReducers'
 import profileReducers from './profileReducers'
 import registerReducers from './registerReducers'
 import employeeReducers from './employeeReducers'
+import {reducer as modalReducer} from 'react-redux-modal'
+
 
 const rootReducer = combineReducers({
   routing,

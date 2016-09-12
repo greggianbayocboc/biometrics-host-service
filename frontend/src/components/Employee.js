@@ -4,13 +4,17 @@ import {bindActionCreators} from 'redux';
 import * as employeeActions from '../actions/employeeActions';
 import * as profileActions from '../actions/profileActions';
 import {routerActions} from 'react-router-redux';
-import {Table, Button,Well,PanelContainer,Panel,PanelHeader,Grid,Row,Col,PanelBody} from '@sketchpixy/rubix';
+import * as modalAction from '../actions/modalActions';
+import {Table, Button,Well,PanelContainer,Panel,PanelHeader,Grid,Row,Col,PanelBody,ButtonGroup,InputGroup,Icon} from '@sketchpixy/rubix';
 class Employee extends React.Component{
 
 
     constructor(props){
         super(props);
+
     }
+
+
 
     componentDidMount(){
         this.props.employeeActions.getEmployeeActions();
@@ -23,8 +27,21 @@ class Employee extends React.Component{
       }
     }
 
+    onSelectedRowModal=(data) =>{
+        return ()=>{
+            this.props.modalAction.openClose(data);
+        }
+    }
+
+    createNewEmployee=()=>{
+      return ()=>{
+          this.props.routerActions.push("/addemployee");
+        }
+    }
 
     render() {
+
+
 
         var users = this.props.employee.records.map((item, i)=>{
             return(
@@ -32,14 +49,23 @@ class Employee extends React.Component{
                     <td>{item.dwEnrollNumber}</td>
                     <td>{item.name}</td>
                     <td>{item.privilege}</td>
-                    <td><Button className='btn btn-primary' onClick={this.onSelectedRow(item.dwEnrollNumber, item.name)}>View Profile</Button></td>
+                    <td>
+                        <Button className='btn btn-primary' onClick={this.onSelectedRow(item.dwEnrollNumber, item.name)} style={{marginRight: 5}}>View Profile</Button>
+                        <Button bsStyle='danger'><Icon glyph='glyphicon glyphicon-remove' style={{marginRight: 5}}/>Delete</Button>
+                    </td>
                 </tr>
 
             );
         });
 
+
         return(
+                <div>
+
+
+
                 <PanelContainer>
+
                     <Panel>
                         <PanelHeader className='bg-green'>
                             <Grid>
@@ -74,10 +100,17 @@ class Employee extends React.Component{
                                         </Table>
                                     </Col>
                                 </Row>
+                                <Row >
+                                    <ButtonGroup style={{margin: 5}}>
+                                    <Button bsStyle='green' onClick={this.createNewEmployee()}>Create Employee</Button>
+                                    <Button bsStyle='blue'>Sync Employees</Button>
+                                    </ButtonGroup>
+                                </Row>
                             </Grid>
                         </PanelBody>
                     </Panel>
                 </PanelContainer>
+                    </div>
 
         );
 
@@ -98,7 +131,9 @@ function mapDispatchToProps(dispatch){
     return {
         routerActions: bindActionCreators(routerActions, dispatch),
         employeeActions : bindActionCreators(employeeActions, dispatch),
-        profileActions:bindActionCreators(profileActions, dispatch)
+        profileActions:bindActionCreators(profileActions, dispatch),
+        modalAction: bindActionCreators(modalAction, dispatch)
+
     }
 }
 

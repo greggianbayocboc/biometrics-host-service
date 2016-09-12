@@ -4,11 +4,11 @@
 import React,{PropTypes} from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import * as bundyclockActions from '../actions/bundyclockActions';
+import * as modalActions from '../actions/modalActions';
 import * as AuthActions from '../actions/authactions';
 import { routerActions } from 'react-router-redux';
 
-import {Well,Panel,Button,Table} from '@sketchpixy/rubix';
+import {Well,Panel,Button,Table,Modal} from '@sketchpixy/rubix';
 
 class Settings extends React.Component{
 
@@ -16,8 +16,32 @@ class Settings extends React.Component{
     super(props);
   }
 
+  componentDidMount(){
+    this.setState({ showModal: false });
+  }
+
+  close = ()=>{
+    this.props.modalActions.close({showModal:false});
+  }
+
+  open = ()=>{
+    this.props.modalActions.open({
+      showModal:true,
+      size:"small",
+      modalTitle:"Test",
+      modalBody:
+        <Well>
+          <h1>This is a sample modal content</h1>
+        </Well>
+      ,
+      cancelFunction:this.close,
+      cancel:<Button bsStyle='primary' onClick={this.close}>Cancel</Button>,
+      proceed:<Button bsStyle='green' onClick={this.goAddUser}>Add User</Button>,
+    });
+  }
+
   goAddUser = ()=>{
-      this.props.routerActions.push("/adduser");
+    this.props.routerActions.push("/adduser");
   }
 
   render(){
@@ -26,18 +50,17 @@ class Settings extends React.Component{
         <Well>
           <h1>This is the Admin settings page</h1>
           <Button bsStyle='green' onClick={this.goAddUser}>Add User</Button>
+          <Button bsStyle='primary' onClick={this.open}>Launch demo modal</Button>
         </Well>
       </div>
     );
   }
-
-
 }
 
 function mapStateToProps(state) {
   return {
     auth:state.auth,
-    bundyclock:state.bundyclock
+    modal:state.modal
   }
 }
 
@@ -46,7 +69,7 @@ function mapDispatchToProps(dispatch) {
   return {
     routerActions: bindActionCreators(routerActions, dispatch),
     authActions:bindActionCreators(AuthActions, dispatch),
-    bundyclockActions:bindActionCreators(bundyclockActions, dispatch)
+    modalActions: bindActionCreators(modalActions, dispatch)
   }
 }
 

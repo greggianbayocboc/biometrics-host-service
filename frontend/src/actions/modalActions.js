@@ -1,25 +1,3 @@
-<<<<<<< Updated upstream
-export * as types from '../constants/DialogsActionTypes';
-
-
-
-export let openClose=(data)=>{
-
-    return{
-        type: types.SHOW_MODAL,
-        data
-    }
-}
-
-
-export let close=()=>{
-
-    return{
-        type: types.HIDE_MODAL,
-        close: true
-    }
-}
-=======
 /**
 * Created by albertoclarit on 1/13/16.
 */
@@ -39,4 +17,3 @@ export let close = ({showModal})=>{
     modal:{showModal}
   }
 };
->>>>>>> Stashed changes

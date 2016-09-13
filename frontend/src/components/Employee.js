@@ -33,8 +33,8 @@ class Employee extends React.Component{
     }
 
     deleteUserEmployee = (enrollno) =>{
-        console.log(enrollno);
         this.props.employeeActions.deleteEmployeeActions(enrollno);
+        this.props.modalActions.close({showModal:false});
     }
 
 

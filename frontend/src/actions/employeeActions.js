@@ -19,7 +19,7 @@ export let deleteEmployeeActions =(enrollno)=>{
     _delete('api/bundyclock/deleteuser?enrollno=' + enrollno).then((response) => {
           var records =response.data;
 
-          dispatch(getEmployeeActionsSuccess(records));
+          dispatch(getEmployeeActions());
     });
 
   };

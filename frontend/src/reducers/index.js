@@ -7,7 +7,6 @@ import profileReducers from './profileReducers'
 import registerReducers from './registerReducers'
 import employeeReducers from './employeeReducers'
 import modalReducers from './modalReducers'
-import dialogReducer from './dialogReducer'
 
 const rootReducer = combineReducers({
   routing,
@@ -17,8 +16,7 @@ const rootReducer = combineReducers({
   profile:profileReducers,
   register:registerReducers,
   employee:employeeReducers,
-  modal:modalReducers,
-  dialog: dialogReducer
+  modal:modalReducers
 });
 
 export default rootReducer;

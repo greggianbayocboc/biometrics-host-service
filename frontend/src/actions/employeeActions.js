@@ -1,5 +1,5 @@
 import * as types from '../constants/BundyClockCommands';
-import {post, get} from '~/src/utils/RestClient';
+import {post, get, _delete} from '~/src/utils/RestClient';
 
 export let getEmployeeActions = () =>{
 
@@ -11,6 +11,17 @@ export let getEmployeeActions = () =>{
       dispatch(getEmployeeActionsSuccess(records));
 
     });
+  };
+}
+
+export let deleteEmployeeActions =(enrollno)=>{
+  return dispatch => {
+    _delete('api/bundyclock/deleteuser?enrollno=' + enrollno).then((response) => {
+          var records =response.data;
+
+          dispatch(getEmployeeActionsSuccess(records));
+    });
+
   };
 }
 

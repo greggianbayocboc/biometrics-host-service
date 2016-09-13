@@ -32,7 +32,13 @@ class Employee extends React.Component{
         this.props.modalActions.close({showModal:false});
     }
 
-    deleteemployee = ()=>{
+    deleteUserEmployee = (enrollno) =>{
+        console.log(enrollno);
+        this.props.employeeActions.deleteEmployeeActions(enrollno);
+    }
+
+
+    deleteemployee = (enrollno)=>{
         this.props.modalActions.open({
             showModal:true,
             modalTitle:"Warning",
@@ -42,7 +48,7 @@ class Employee extends React.Component{
             ,
             cancelFunction:this.close,
             cancel:<Button bsStyle='primary' onClick={this.close}>Cancel</Button>,
-            proceed:<Button bsStyle='red' onClick={this.goAddUser}>Delete</Button>
+            proceed:<Button bsStyle='red' onClick={()=>this.deleteUserEmployee(enrollno)}>Delete</Button>
         });
     }
     newemployee = ()=>{
@@ -69,7 +75,7 @@ class Employee extends React.Component{
                     <td>{item.privilege}</td>
                     <td>
                         <Button className='btn btn-primary' onClick={this.onSelectedRow(item.dwEnrollNumber, item.name)} style={{marginRight: 5}}>View Profile</Button>
-                        <Button bsStyle='danger' onClick={this.deleteemployee}><Icon glyph='glyphicon glyphicon-remove' style={{marginRight: 5}}/>Delete</Button>
+                        <Button bsStyle='danger' onClick={()=>this.deleteemployee(item.dwEnrollNumber)}><Icon glyph='glyphicon glyphicon-remove' style={{marginRight: 5}}/>Delete</Button>
                     </td>
                 </tr>
 

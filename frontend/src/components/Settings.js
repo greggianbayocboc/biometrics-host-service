@@ -27,8 +27,8 @@ class Settings extends React.Component{
   open = ()=>{
     this.props.modalActions.open({
       showModal:true,
-      size:"small",
       modalTitle:"Test",
+      colorType:'bg-green',
       modalBody:
         <Well>
           <h1>This is a sample modal content</h1>

@@ -17,14 +17,14 @@ class ModalComponent extends React.Component{
 
   render(){
     return (
-      <Modal bsSize={this.props.modal.size} show={this.props.modal.showModal} onHide={this.props.modal.cancelFunction}>
-        <Modal.Header>
-          <Modal.Title>{this.props.modal.modalTitle}</Modal.Title>
-        </Modal.Header>
+      <Modal  show={this.props.modal.showModal} onHide={this.props.modal.cancelFunction}>
+        <Modal.Header className={this.props.modal.colorType} closeButton>
+          <Modal.Title className='fg-white'>{this.props.modal.modalTitle}</Modal.Title>
+        </Modal.Header >
         <Modal.Body>
           {this.props.modal.modalBody}
         </Modal.Body>
-        <Modal.Footer>
+        <Modal.Footer className='bg-white'>
           {this.props.modal.cancel}
           {this.props.modal.proceed}
         </Modal.Footer>

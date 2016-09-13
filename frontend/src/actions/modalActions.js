@@ -4,10 +4,10 @@
 import * as types from '../constants/modalTypes';
 import { routerActions } from 'react-router-redux';
 
-export let open = ({showModal, size, modalTitle, modalBody, cancelFunction, cancel, proceed})=>{
+export let open = ({showModal,colorType, modalTitle, modalBody, cancelFunction, cancel, proceed})=>{
   return {
     type: types.MODAL_OPEN,
-    modal:{showModal, size, modalTitle, modalBody, cancelFunction, cancel, proceed}
+    modal:{showModal,colorType, modalTitle, modalBody, cancelFunction, cancel, proceed}
   }
 };
 

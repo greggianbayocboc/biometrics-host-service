@@ -4,8 +4,10 @@ import {bindActionCreators} from 'redux';
 import * as employeeActions from '../actions/employeeActions';
 import * as profileActions from '../actions/profileActions';
 import {routerActions} from 'react-router-redux';
-import * as modalAction from '../actions/modalActions';
-import {Table, Button,Well,PanelContainer,Panel,PanelHeader,Grid,Row,Col,PanelBody,ButtonGroup,InputGroup,Icon} from '@sketchpixy/rubix';
+import * as modalActions from '../actions/modalActions';
+
+import RegisterEmployee from '../components/RegisterEmployee';
+import {Table, Button,Well,PanelContainer,Panel,PanelHeader,Grid,Row,Col,PanelBody,ButtonGroup,InputGroup,Icon,Modal} from '@sketchpixy/rubix';
 class Employee extends React.Component{
 
 
@@ -18,6 +20,44 @@ class Employee extends React.Component{
 
     componentDidMount(){
         this.props.employeeActions.getEmployeeActions();
+
+        this.setState({ showModal: false });
+    }
+
+    close = ()=>{
+        this.props.modalActions.close({showModal:false});
+    }
+
+    open = ()=>{
+        this.props.modalActions.open({
+            showModal:true,
+            modalTitle:"New Employee",
+            colorType: 'bg-green',
+            modalBody:
+
+                    <RegisterEmployee />
+
+            ,
+            cancelFunction:this.close
+        });
+    }
+
+    deleteEmp = ()=>{
+        this.props.modalActions.open({
+            showModal:true,
+            modalTitle:"Warning",
+            colorType: 'bg-red',
+            modalBody:
+                <p>
+                    Are you sure you want to delete this employee?
+
+                </p>
+
+            ,
+            cancelFunction:this.close,
+            cancel:<Button bsStyle='primary' onClick={this.close}>Cancel</Button>,
+            proceed:<Button bsStyle='red' onClick={this.goAddUser}>Delete Employee</Button>
+        });
     }
 
     onSelectedRow=(enrollno, name)=>{
@@ -27,17 +67,10 @@ class Employee extends React.Component{
       }
     }
 
-    onSelectedRowModal=(data) =>{
-        return ()=>{
-            this.props.modalAction.openClose(data);
-        }
-    }
 
-    createNewEmployee=()=>{
-      return ()=>{
-          this.props.routerActions.push("/addemployee");
-        }
-    }
+
+
+
 
     render() {
 
@@ -51,7 +84,7 @@ class Employee extends React.Component{
                     <td>{item.privilege}</td>
                     <td>
                         <Button className='btn btn-primary' onClick={this.onSelectedRow(item.dwEnrollNumber, item.name)} style={{marginRight: 5}}>View Profile</Button>
-                        <Button bsStyle='danger'><Icon glyph='glyphicon glyphicon-remove' style={{marginRight: 5}}/>Delete</Button>
+                        <Button bsStyle='danger' onClick={this.deleteEmp}><Icon glyph='glyphicon glyphicon-remove' style={{marginRight: 5}} />Delete</Button>
                     </td>
                 </tr>
 
@@ -59,10 +92,11 @@ class Employee extends React.Component{
         });
 
 
+
+
+
         return(
                 <div>
-
-
 
                 <PanelContainer>
 
@@ -71,13 +105,13 @@ class Employee extends React.Component{
                             <Grid>
                                 <Row>
                                     <Col xs={12} className='fg-white'>
-                                        <h1>Employee List</h1>
+                                        <h3>Employee List</h3>
 
                                     </Col>
                                 </Row>
                             </Grid>
                         </PanelHeader>
-                        <PanelBody>
+                        <PanelBody className='bg-white'>
                             <Grid>
                                 <Row>
                                     <Col xs={12}>
@@ -102,7 +136,7 @@ class Employee extends React.Component{
                                 </Row>
                                 <Row >
                                     <ButtonGroup style={{margin: 5}}>
-                                    <Button bsStyle='green' onClick={this.createNewEmployee()}>Create Employee</Button>
+                                    <Button bsStyle='green' onClick={this.open}>Create Employee</Button>
                                     <Button bsStyle='blue'>Sync Employees</Button>
                                     </ButtonGroup>
                                 </Row>
@@ -120,7 +154,8 @@ class Employee extends React.Component{
 function mapStateToProps(state) {
     return {
         employee: state.employee,
-        bundyclock:state.bundyclock
+        bundyclock:state.bundyclock,
+        modal:state.modal
     }
 }
 
@@ -132,7 +167,8 @@ function mapDispatchToProps(dispatch){
         routerActions: bindActionCreators(routerActions, dispatch),
         employeeActions : bindActionCreators(employeeActions, dispatch),
         profileActions:bindActionCreators(profileActions, dispatch),
-        modalAction: bindActionCreators(modalAction, dispatch)
+        modalActions: bindActionCreators(modalActions, dispatch)
+
 
     }
 }

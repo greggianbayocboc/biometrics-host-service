@@ -49,8 +49,6 @@ class RegisterEmployee extends React.Component{
     render(){
         return (
 
-            <div>
-
                 <Form horizontal onSubmit={this.onFormSubmit}>
 
                     <FormGroup>
@@ -67,15 +65,54 @@ class RegisterEmployee extends React.Component{
                         <Col xs={10}>
                             <FormControl type="text" required="required"
                                 onChange={(e)=> {
+                                    this.updateField('name', e.target.value)
+                                }}
+                            />
+                        </Col>
+                        <Col componentClass={ControlLabel} xs={2}>Enroll No.</Col>
+                        <Col xs={10}>
+                            <FormControl type="text" required="required"
+                                onChange={(e)=> {
                                     this.updateField('enrollno', e.target.value)
                                 }}
                             />
                         </Col>
-                    </FormGroup>
+                        <Col componentClass={ControlLabel} xs={2}>Enroll No.</Col>
+                        <Col xs={10}>
+                            <FormControl type="text" required="required"
+                                onChange={(e)=> {
+                                    this.updateField('password', e.target.value)
+                                }}
+                            />
+                        </Col>
+                        <Col componentClass={ControlLabel} xs={2}>Enroll No.</Col>
+                        <Col xs={10}>
+                            <FormControl type="text" required="required"
+                                onChange={(e)=> {
+                                    this.updateField('confirm_password', e.target.value)
+                                }}
+                            />
+                        </Col>
+                        <Col componentClass={ControlLabel} xs={2}>Enroll No.</Col>
+                        <Col xs={10}>
+                            <FormControl type="text" required="required"
+                                onChange={(e)=> {
+                                    this.updateField('privilege', e.target.value)
+                                }}
+                            />
+                            <Col componentClass={ControlLabel} xs={2}>Enroll No.</Col>
+                            <FormControl componentClass="select" placeholder="select">
+                                <option value="select">select</option>
+                                <option value="other">...</option>
+                            </FormControl>
+                        </Col>
 
+                    </FormGroup>
+                    <Col xsOffset={2} xs={10}>
+                        <Button type="submit">Submit</Button>
+                    </Col>
                 </Form>
 
-            </div>
         )
     }
 

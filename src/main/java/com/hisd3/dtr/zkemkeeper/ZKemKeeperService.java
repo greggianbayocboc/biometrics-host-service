@@ -213,12 +213,7 @@ public class ZKemKeeperService {
             }
         });
 
-        Collections.sort(items,new Comparator<BundyClockLogItem>() {
-            @Override
-            public int compare(BundyClockLogItem o1, BundyClockLogItem o2) {
-                return  o2.getTime().compareTo(o1.getTime());
-            }
-        });
+
         return items;
     }
 

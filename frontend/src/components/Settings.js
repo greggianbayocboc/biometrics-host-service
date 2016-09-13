@@ -8,7 +8,7 @@ import * as modalActions from '../actions/modalActions';
 import * as AuthActions from '../actions/authactions';
 import { routerActions } from 'react-router-redux';
 
-import {Well,Panel,Button,Table,Modal} from '@sketchpixy/rubix';
+import {Well,Panel,Button,Table,Modal,Alert} from '@sketchpixy/rubix';
 
 class Settings extends React.Component{
 
@@ -30,9 +30,9 @@ class Settings extends React.Component{
       modalTitle:"Test",
       colorType:'bg-green',
       modalBody:
-        <Well>
-          <h1>This is a sample modal content</h1>
-        </Well>
+        <Alert danger>
+          <strong>Oh snap! </strong><span>Change a few things up and try submitting again.</span>
+        </Alert>
       ,
       cancelFunction:this.close,
       cancel:<Button bsStyle='primary' onClick={this.close}>Cancel</Button>,

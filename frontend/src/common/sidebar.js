@@ -11,6 +11,7 @@ import {
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import * as AuthActions from '../actions/authactions';
+import * as profileActions from '../actions/profileActions';
 import { routerActions } from 'react-router-redux';
 
 import {isInRole,isInAnyRole} from '../utils/AuthUtils'
@@ -21,6 +22,7 @@ class SidebarContainer extends React.Component {
   }
 
   goProfile = ()=>{
+      this.props.profileActions.loadBundyclockLogsById(this.props.auth.account.bundyclockEnrollNo, this.props.auth.account.firstName +" "+ this.props.auth.account.lastName);
       this.props.routerActions.push("/profile");
   }
 
@@ -167,6 +169,7 @@ function mapStateToProps(state) {
 function mapDispatchToProps(dispatch) {
     return {
         routerActions: bindActionCreators(routerActions, dispatch),
+        profileActions: bindActionCreators(profileActions, dispatch),
         authActions:bindActionCreators(AuthActions, dispatch)
     }
 }

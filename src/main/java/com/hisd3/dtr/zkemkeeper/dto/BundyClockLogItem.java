@@ -20,6 +20,24 @@ public class BundyClockLogItem {
     int dwWorkCode;
     String date;
     String time;
+    String timein;
+    String timeout;
+
+    public String getTimein() {
+        return timein;
+    }
+
+    public void setTimein(String timein) {
+        this.timein = timein;
+    }
+
+    public String getTimeout() {
+        return timeout;
+    }
+
+    public void setTimeout(String timeout) {
+        this.timeout = timeout;
+    }
 
     public String getDate() {
         return date;

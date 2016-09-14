@@ -34,7 +34,7 @@ class RegisterEmployee extends React.Component{
         event.preventDefault();
         if (this.state.password.length >= 6){
             if (this.state.password == this.state.confirm_password) {
-                this.props.registerActions.register(this.state, "/success");
+                this.props.registerEmployeeAction.registerEmployee(this.state, "/success");
             }
         }
     };
@@ -100,13 +100,14 @@ class RegisterEmployee extends React.Component{
                                     this.updateField('privilege', e.target.value)
                                 }}
                             />
-                            <Col componentClass={ControlLabel} xs={2}>Enroll No.</Col>
-                            <FormControl componentClass="select" placeholder="select">
-                                <option value="select">select</option>
-                                <option value="other">...</option>
-                            </FormControl>
-                        </Col>
 
+                        </Col>
+                        <Col componentClass={ControlLabel} xs={2}>Enroll No.</Col>
+                        <FormControl componentClass="select" placeholder="select">
+                            <option value="1">1 - USER</option>
+                            <option value="2">2 - STAFF</option>
+                            <option value="3">3 - ADMIN</option>
+                        </FormControl>
                     </FormGroup>
                     <Col xsOffset={2} xs={10}>
                         <Button type="submit">Submit</Button>

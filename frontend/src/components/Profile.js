@@ -26,20 +26,42 @@ class Profile extends React.Component{
 
   render(){
 
-    var records = this.props.profile.records.map((item,i)=>{
+    var records = [];
+    var dateRecords = [];
+    var x = 0;
+    var y = 0;
 
-      return (
-        <tr key={i}>
-        <td>{item.dwEnrollNumber}</td>
-        <td>{item.dwVerifyMode}</td>
-        <td>{item.dwInoutMode}</td>
-        <td>{item.date}</td>
-        <td>{item.time}</td>
-        <td>{item.dwWorkCode}</td>
-        </tr>
-      );
-
+     this.props.profile.records.map((item,i)=>{
+       if (typeof records[x] == 'undefined') {
+         dateRecords.push({
+           date:item.date,
+           time: item.time,
+           action: item.dwInoutMode
+         });
+         records[x] = {dateRecords};
+       } else {
+         if (dateRecords[y].date == item.date) {
+           dateRecords.push({
+             date:item.date,
+             time: item.time,
+             action: item.dwInoutMode
+           });
+           y++;
+         } else {
+           records[x] = {dateRecords};
+           dateRecords = [];
+           dateRecords.push({
+             date:item.date,
+             time: item.time,
+             action: item.dwInoutMode
+           });
+           x++;
+           y=0;
+         }
+       }
     });
+
+    console.log(records);
 
     return (
       <PanelContainer>
@@ -65,16 +87,17 @@ class Profile extends React.Component{
                   <Table responsive>
                   <thead>
                     <tr>
-                      <th>Enroll Number</th>
-                      <th>Verify Mode</th>
-                      <th>Time In/Out</th>
                       <th>Date</th>
-                      <th>Time</th>
-                      <th>Work Code</th>
+                      <th>Time In</th>
+                      <th>Time Out</th>
+                      <th>Overtime In</th>
+                      <th>Overtime Out</th>
+                      <th>Total Hours</th>
+                      <th>Total Overtime</th>
                     </tr>
                   </thead>
                   <tbody>
-                    {records}
+                    {/* {data} */}
                   </tbody>
                   </Table>
                 </Col>

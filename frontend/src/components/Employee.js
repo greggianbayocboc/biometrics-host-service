@@ -74,8 +74,8 @@ class Employee extends React.Component{
                     <td>{item.name}</td>
                     <td>{item.privilege}</td>
                     <td>
-                        <Button className='btn btn-primary' onClick={this.onSelectedRow(item.dwEnrollNumber, item.name)} style={{marginRight: 5}}>View Profile</Button>
-                        <Button bsStyle='danger' onClick={()=>this.deleteemployee(item.dwEnrollNumber)}><Icon glyph='glyphicon glyphicon-remove' style={{marginRight: 5}}/>Delete</Button>
+                        <Button className='btn btn-primary' onClick={this.onSelectedRow(item.dwEnrollNumber, item.name)} style={{marginRight: 5}}>View Logs</Button>
+                        {/* <Button bsStyle='danger' onClick={()=>this.deleteemployee(item.dwEnrollNumber)}><Icon glyph='glyphicon glyphicon-remove' style={{marginRight: 5}}/>Delete</Button> */}
                     </td>
                 </tr>
 

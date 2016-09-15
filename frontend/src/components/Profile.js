@@ -8,6 +8,8 @@ import * as profileActions from '../actions/profileActions';
 import * as AuthActions from '../actions/authactions';
 import { routerActions } from 'react-router-redux';
 
+import moment from 'moment';
+
 import {Well,Panel,Button,Table,PanelContainer,PanelHeader,Grid,Row,Col,PanelBody} from '@sketchpixy/rubix';
 
 class Profile extends React.Component{
@@ -27,41 +29,72 @@ class Profile extends React.Component{
   render(){
 
     var records = [];
-    var dateRecords = [];
+    var logs = [];
     var x = 0;
-    var y = 0;
 
-     this.props.profile.records.map((item,i)=>{
-       if (typeof records[x] == 'undefined') {
-         dateRecords.push({
-           date:item.date,
-           time: item.time,
-           action: item.dwInoutMode
-         });
-         records[x] = {dateRecords};
-       } else {
-         if (dateRecords[y].date == item.date) {
-           dateRecords.push({
-             date:item.date,
-             time: item.time,
-             action: item.dwInoutMode
-           });
-           y++;
-         } else {
-           records[x] = {dateRecords};
-           dateRecords = [];
-           dateRecords.push({
-             date:item.date,
-             time: item.time,
-             action: item.dwInoutMode
-           });
-           x++;
-           y=0;
-         }
-       }
+    this.props.profile.records.map((item,i)=>{
+      var date = moment.utc([item.dwYear, item.dwMonth-1, item.dwDay]).format("dddd, MMMM D YYYY");
+      var time = moment.utc([item.dwYear, item.dwMonth-1, item.dwDay, item.dwHour, item.dwMinute, item.dwSecindm]);
+      if (typeof records[x] == 'undefined') {
+        logs.push({
+          time: time,
+          action: item.dwInoutMode
+        });
+        records[x] = {date:date}
+        if (records.length == x+1) {
+          if (records[x].date == date) {
+            records[x] = {date:date, logs};
+          } else {
+            records.push({date:records[x].date, logs});
+          }
+        }
+      } else {
+        if (records[x].date == date) {
+          logs.push({
+            time: time,
+            action: item.dwInoutMode
+          });
+        } else {
+          records[x] = {date:records[x].date, logs};
+          logs = [];
+          logs.push({
+            time: time,
+            action: item.dwInoutMode
+          });
+          x++;
+        }
+      }
     });
 
-    console.log(records);
+    var data = records.map((item,i)=>{
+      var subArr = [];
+      item.logs.map((sub, a) => {
+        var current = sub.action;
+        if (typeof subArr[current.replace(' ', '')] == 'undefined') {
+          subArr[current.replace(' ', '')] = sub.time;
+        }
+        subArr['date'] = item.date;
+      });
+
+      var totalDuration = moment.duration(moment(subArr['TimeOut']).diff(moment(subArr['TimeIn'])));
+      var totalOvertimeDuration = moment.duration(moment(subArr['OvertimeOut']).diff(moment(subArr['OvertimeIn'])));
+      
+      var totalTime = totalDuration.hours() + "hrs " + totalDuration.minutes() + "mins ";
+      var totalOvertime = totalOvertimeDuration.hours() + "hrs " + totalOvertimeDuration.minutes() + "mins ";
+
+      return (
+        <tr key={i}>
+        <td>{subArr['date']}</td>
+        <td>{typeof subArr['TimeIn'] != 'undefined'? subArr['TimeIn'].format("h:mm:ss A") : "--"}</td>
+        <td>{typeof subArr['TimeOut'] != 'undefined'? subArr['TimeOut'].format("h:mm:ss A") : "--"}</td>
+        <td>{typeof subArr['OvertimeIn'] != 'undefined'? subArr['OvertimeIn'].format("h:mm:ss A") : "--"}</td>
+        <td>{typeof subArr['OvertimeOut'] != 'undefined'? subArr['OvertimeOut'].format("h:mm:ss A") : "--"}</td>
+        <td>{totalTime}</td>
+        <td>{totalOvertime}</td>
+        </tr>
+      );
+
+    });
 
     return (
       <PanelContainer>
@@ -97,7 +130,7 @@ class Profile extends React.Component{
                     </tr>
                   </thead>
                   <tbody>
-                    {/* {data} */}
+                    {data}
                   </tbody>
                   </Table>
                 </Col>

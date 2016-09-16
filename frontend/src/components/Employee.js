@@ -2,6 +2,7 @@ import React from 'react';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 import * as employeeActions from '../actions/employeeActions';
+import * as bundyClockActions from '../actions/bundyclockActions';
 import * as profileActions from '../actions/profileActions';
 import {routerActions} from 'react-router-redux';
 import RegisterEmployee from '../components/RegisterEmployee';
@@ -37,6 +38,11 @@ class Employee extends React.Component{
         this.props.modalActions.close({showModal:false});
     }
 
+    clearlogs = () =>{
+        console.log("clicked")
+        this.props.bundyClockActions.clearEmployeeLogs();
+    }
+
 
     deleteemployee = (enrollno)=>{
         this.props.modalActions.open({
@@ -57,9 +63,27 @@ class Employee extends React.Component{
             modalTitle:"New Employee",
             colorType:'bg-green',
             modalBody:
+                <div style={{marginButtom: 20}}>
               <RegisterEmployee />
+                    </div>
             ,
             cancelFunction:this.close
+        });
+    }
+
+    clearemployeelogsmodal = () =>{
+        this.props.modalActions.open({
+            showModal: true,
+            modalTitle: "!!!Warning",
+            colorType: 'bg-yellow',
+            modalBody:
+                <div>
+                <p>Are you sure you want to clear Employee Logs?</p><br/>
+                <p>Note: Attendance Logs will be automatically saved to local database. For Backup purpose.</p>
+                </div>,
+            cancelFunction: this.close,
+            cancel:<Button bsStyle='primary' onClick={this.close}>Cancel</Button>,
+            proceed:<Button bsStyle='yellow' onClick={this.clearlogs}>Clear</Button>
         });
     }
 
@@ -127,7 +151,7 @@ class Employee extends React.Component{
                                 <Row >
                                     <ButtonGroup style={{margin: 5}}>
                                     <Button bsStyle='green' onClick={this.newemployee}>Create Employee</Button>
-                                    <Button bsStyle='blue'>Sync Employees</Button>
+                                    <Button bsStyle='red' onClick={this.clearemployeelogsmodal} >Clear Logs</Button>
                                     </ButtonGroup>
                                 </Row>
                             </Grid>
@@ -156,7 +180,8 @@ function mapDispatchToProps(dispatch){
         routerActions: bindActionCreators(routerActions, dispatch),
         employeeActions : bindActionCreators(employeeActions, dispatch),
         profileActions:bindActionCreators(profileActions, dispatch),
-        modalActions: bindActionCreators(modalActions, dispatch)
+        modalActions: bindActionCreators(modalActions, dispatch),
+        bundyClockActions: bindActionCreators(bundyClockActions, dispatch)
 
     }
 }

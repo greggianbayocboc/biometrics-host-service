@@ -81,6 +81,17 @@ public class BundyClockResource {
 
     }
 
+    @RequestMapping("/clearlogs")
+    public  ResponseEntity migratetodb(){
+        HttpHeaders httpHeaders = new HttpHeaders();
+
+        zKemKeeperService.ClearGeneralLogs();
+
+        httpHeaders.set("message", "Cleared and Backup");
+
+        return new ResponseEntity(httpHeaders, HttpStatus.OK);
+    }
+
     @RequestMapping("/getusers")
     public ResponseEntity<List<BundyClockUserItems>>getusers(){
 
@@ -118,7 +129,7 @@ public class BundyClockResource {
         zKemKeeperService.newUserService(
                 employee.getEnrollno(),
                 employee.getName(),
-                employee.getPassword(),
+                employee.getWorkcode(),
                 employee.getPrivilege(),
                 employee.getEnabled());
 

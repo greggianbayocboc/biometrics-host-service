@@ -1,5 +1,5 @@
 import React from 'react'
-import {Button,Col,Panel,PanelContainer,PanelHeader,PanelBody,Form,FormGroup,ControlLabel,FormControl,Alert} from '@sketchpixy/rubix';
+import {Button,Col,Panel,PanelContainer,PanelHeader,PanelBody,Form,FormGroup,ControlLabel,FormControl,Alert,InputGroup} from '@sketchpixy/rubix';
 import * as registerEmployeeAction from '../actions/registerEmployeeBundyAction';
 import {bindActionCreators} from 'redux';
 
@@ -13,10 +13,9 @@ class RegisterEmployee extends React.Component{
     state = {
         "enrollno": null,
         "name": "",
-        "password": "",
-        "privilege": null,
-        "enabled": null,
-        "confirm_password": ""
+        "privilege": 1,
+        "enabled": false,
+        "workcode" : 0
     };
 
     componentWillMount(){
@@ -32,11 +31,10 @@ class RegisterEmployee extends React.Component{
 
     onFormSubmit = (event)=> {
         event.preventDefault();
-        if (this.state.password.length >= 6){
-            if (this.state.password == this.state.confirm_password) {
+                console.log(this.state);
                 this.props.registerEmployeeAction.registerEmployee(this.state, "/success");
-            }
-        }
+
+
     };
 
     goBack=()=>{
@@ -60,8 +58,11 @@ class RegisterEmployee extends React.Component{
                                     }}
                                 />
                             </Col>
+                    </FormGroup>
 
-                        <Col componentClass={ControlLabel} xs={2}>Enroll No.</Col>
+                    <FormGroup>
+
+                        <Col componentClass={ControlLabel} xs={2}>Name</Col>
                         <Col xs={10}>
                             <FormControl type="text" required="required"
                                 onChange={(e)=> {
@@ -69,49 +70,58 @@ class RegisterEmployee extends React.Component{
                                 }}
                             />
                         </Col>
-                        <Col componentClass={ControlLabel} xs={2}>Enroll No.</Col>
+
+                    </FormGroup>
+
+                    <FormGroup>
+                        <Col componentClass={ControlLabel} xs={2}>Work Code</Col>
                         <Col xs={10}>
-                            <FormControl type="text" required="required"
+                            <FormControl type="number" required="required"
                                 onChange={(e)=> {
-                                    this.updateField('enrollno', e.target.value)
+                                    this.updateField('workcode', e.target.value)
                                 }}
                             />
                         </Col>
-                        <Col componentClass={ControlLabel} xs={2}>Enroll No.</Col>
-                        <Col xs={10}>
-                            <FormControl type="text" required="required"
+
+                    </FormGroup>
+
+                    <FormGroup>
+                        <Col componentClass={ControlLabel} xs={2}>Enabled</Col>
+                        <Col xs={1}>
+                            <InputGroup.Addon>
+
+                            <input type="checkbox" required="required"
                                 onChange={(e)=> {
-                                    this.updateField('password', e.target.value)
-                                }}
-                            />
-                        </Col>
-                        <Col componentClass={ControlLabel} xs={2}>Enroll No.</Col>
-                        <Col xs={10}>
-                            <FormControl type="text" required="required"
-                                onChange={(e)=> {
-                                    this.updateField('confirm_password', e.target.value)
-                                }}
-                            />
-                        </Col>
-                        <Col componentClass={ControlLabel} xs={2}>Enroll No.</Col>
-                        <Col xs={10}>
-                            <FormControl type="text" required="required"
-                                onChange={(e)=> {
-                                    this.updateField('privilege', e.target.value)
+                                    this.updateField('enabled', e.target.value)
                                 }}
                             />
 
+                            </InputGroup.Addon>
                         </Col>
-                        <Col componentClass={ControlLabel} xs={2}>Enroll No.</Col>
-                        <FormControl componentClass="select" placeholder="select">
-                            <option value="1">1 - USER</option>
-                            <option value="2">2 - STAFF</option>
-                            <option value="3">3 - ADMIN</option>
-                        </FormControl>
+
                     </FormGroup>
-                    <Col xsOffset={2} xs={10}>
-                        <Button type="submit">Submit</Button>
-                    </Col>
+
+                    <FormGroup>
+                        <Col componentClass={ControlLabel} xs={2}>Privilege</Col>
+                        <Col xs={10}>
+                            <FormControl componentClass="select" placeholder="select"
+                                onChange={(e)=> {
+                                this.updateField('privilege', e.target.value)
+                            }}>
+                                <option value={1}>1 - USER</option>
+                                <option value={2}>2 - STAFF</option>
+                                <option value={3}>3 - ADMIN</option>
+                            </FormControl>
+                        </Col>
+
+                    </FormGroup>
+
+
+                    <InputGroup style={{marginLeft: 'auto'}}>
+                        <Col>
+                            <Button bsStyle="success" type="submit">Submit</Button>
+                        </Col>
+                    </InputGroup>
                 </Form>
 
         )

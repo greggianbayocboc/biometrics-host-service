@@ -1,5 +1,7 @@
 package com.hisd3.dtr.zkemkeeper;
 
+import com.hisd3.dtr.domain.BundyClockLogs;
+import com.hisd3.dtr.repository.BundyClockRepository;
 import com.hisd3.dtr.web.rest.BundyClockResource;
 import com.hisd3.dtr.zkemkeeper.dto.BundyClockLogItem;
 import com.hisd3.dtr.zkemkeeper.dto.BundyClockUserItems;
@@ -11,11 +13,15 @@ import org.apache.commons.lang.BooleanUtils;
 import org.apache.commons.lang.builder.CompareToBuilder;
 import org.apache.log4j.Logger;
 import org.joda.time.DateTime;
+import org.joda.time.LocalDate;
+import org.joda.time.LocalDateTime;
+import org.joda.time.LocalTime;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import javax.inject.Inject;
 import java.util.*;
 
 /**
@@ -25,6 +31,9 @@ import java.util.*;
 
 @Service
 public class ZKemKeeperService {
+
+    @Inject
+    private BundyClockRepository bundyClockRepository;
 
 
     @Value("${zkemkeeper.host}")
@@ -65,6 +74,7 @@ public class ZKemKeeperService {
 
                     DateTimeFormatter dateFormatter = DateTimeFormat.forPattern("MM/dd/yyyy");
                     DateTimeFormatter timeFormatter = DateTimeFormat.forPattern("HH:mm:ss");
+                    DateTimeFormatter dateTimeFormatter = DateTimeFormat.forPattern("MM/dd/yyyy HH:mm:ss");
 
 
 
@@ -80,8 +90,12 @@ public class ZKemKeeperService {
                             dwMinute,
                             dwSecindm,
                             dwWorkCode).toJavaObject()){
+
                         DateTime date = dateFormatter.parseDateTime(Integer.toString(dwMonth.getIntRef())+"/"+Integer.toString(dwDay.getIntRef())+"/"+dwYear.getIntRef());
                         DateTime time = timeFormatter.parseDateTime(Integer.toString(dwHour.getIntRef())+":" + Integer.toString(dwMinute.getIntRef())+":" + Integer.toString(dwSecindm.getIntRef()));
+                        LocalDate date1 = new LocalDate(date);
+                        LocalTime time1 = new LocalTime(time);
+
                         if(StringUtils.equals(dwEnrollNumber.getStringRef(), enrollno)) {
                             BundyClockLogItem item = new BundyClockLogItem();
                             item.setDwEnrollNumber(dwEnrollNumber.getStringRef());
@@ -108,7 +122,6 @@ public class ZKemKeeperService {
                             item.setDwWorkCode(dwWorkCode.getIntRef());
                             item.setDate(date.toString("MM/dd/yyyy"));
                             item.setTime(time.toString("hh:mm:ss aa"));
-
 
                             items.add(item);
                         }
@@ -207,13 +220,15 @@ public class ZKemKeeperService {
 
         }
 
+
+
         Collections.sort(items,new Comparator<BundyClockLogItem>() {
             @Override
             public int compare(BundyClockLogItem o1, BundyClockLogItem o2) {
-                return new CompareToBuilder().append(o2.getDate(),o1.getDate()).append(o2.getTime(), o1.getTime()).toComparison();
+                return new CompareToBuilder().append(o2.getDate(),
+                           o1.getDate()).append(o2.getTime(),
+                           o1.getTime()).toComparison();
             }
-
-
         });
 
 
@@ -381,7 +396,6 @@ public class ZKemKeeperService {
                                 item.setTime(time.toString("hh:mm:ss aa"));
 
 
-
                                 items.add(item);
                             }
 
@@ -397,6 +411,9 @@ public class ZKemKeeperService {
             }
 
         }
+
+
+
 
         Collections.sort(items,new Comparator<BundyClockLogItem>() {
             @Override
@@ -549,7 +566,7 @@ public class ZKemKeeperService {
     }
 
 
-    public void newUserService(String enrollno,String name, String password, Integer privilege, Boolean enable){
+    public void newUserService(String enrollno,String name, Integer workcode, Integer privilege, Boolean enable){
         ActiveXComponent mf = new ActiveXComponent("zkemkeeper.ZKEM.1");
         Boolean connect_net = (Boolean)Dispatch.call(mf, "connect_Net", host, 4370).toJavaObject();
             if(BooleanUtils.isTrue(connect_net)){
@@ -559,9 +576,9 @@ public class ZKemKeeperService {
                         Object object = Dispatch.call(mf, "SSR_SetUserInfo", 1,
                                 enrollno,
                                 name,
-                                password,
                                 privilege,
-                                enable
+                                enable,
+                                workcode
                         ).toJavaObject();
 
                     }
@@ -575,9 +592,9 @@ public class ZKemKeeperService {
 
                             Object object = Dispatch.call(mf, "SSR_SetUserInfo", 1,
                                     name,
-                                    password,
                                     privilege,
-                                    enable
+                                    enable,
+                                    workcode
                             ).toJavaObject();
                         }
 
@@ -586,6 +603,101 @@ public class ZKemKeeperService {
 
                     }
             }
+    }
+
+
+    public void ClearGeneralLogs(){
+
+        List<BundyClockLogItem> items = new ArrayList<>();
+
+        ActiveXComponent mf = new ActiveXComponent("zkemkeeper.ZKEM.1");
+        Boolean connect_net = (Boolean)Dispatch.call(mf, "connect_Net", host, 4370).toJavaObject();
+        Logger log = Logger.getLogger(BundyClockResource.class.getName());
+
+        // Variant resultRef = new Variant((int)0, true);
+        //Object getDeviceStatus = Dispatch.call(mf, "getDeviceStatus",1,6, resultRef).toJavaObject();
+        //  System.out.println(getDeviceStatus.toString());
+        //  System.out.println(resultRef.getIntRef());
+
+
+        if(BooleanUtils.isTrue(connect_net)){
+            Boolean enableDevice = (Boolean)Dispatch.call(mf, "enableDevice",1, false).toJavaObject();
+
+            if(BooleanUtils.isTrue(enableDevice)){
+
+                Boolean readGeneralLogData = (Boolean)Dispatch.call(mf, "readGeneralLogData",1).toJavaObject();
+                if(BooleanUtils.isTrue(readGeneralLogData)){
+
+
+                    Variant dwEnrollNumber =new Variant("", true);
+                    Variant dwVerifyMode = new Variant((int)0, true);
+                    Variant dwInoutMode =  new Variant((int)0, true);
+                    Variant dwYear =  new Variant((int)0, true);
+                    Variant dwMonth =  new Variant((int)0, true);
+                    Variant dwDay =  new Variant((int)0, true);
+                    Variant dwHour =  new Variant((int)0, true);
+                    Variant dwMinute =  new Variant((int)0, true);
+                    Variant dwSecindm = new Variant((int)0, true);
+                    Variant dwWorkCode=  new Variant((int)0, true);
+
+                    DateTimeFormatter dateFormatter = DateTimeFormat.forPattern("MM/dd/yyyy");
+                    DateTimeFormatter timeFormatter = DateTimeFormat.forPattern("HH:mm:ss");
+
+
+
+
+                    while((boolean)Dispatch.call(mf, "ssR_GetGeneralLogData",1,
+                            dwEnrollNumber,
+                            dwVerifyMode,
+                            dwInoutMode,
+                            dwYear,
+                            dwMonth,
+                            dwDay,
+                            dwHour,
+                            dwMinute,
+                            dwSecindm,
+                            dwWorkCode).toJavaObject()) {
+
+
+                        DateTime date = dateFormatter.parseDateTime(Integer.toString(dwMonth.getIntRef()) + "/" + Integer.toString(dwDay.getIntRef()) + "/" + dwYear.getIntRef());
+                        DateTime time = timeFormatter.parseDateTime(Integer.toString(dwHour.getIntRef()) + ":" + Integer.toString(dwMinute.getIntRef()) + ":" + Integer.toString(dwSecindm.getIntRef()));
+                        LocalDate date1 = new LocalDate(date);
+                        LocalTime time1 = new LocalTime(time);
+
+
+                        LocalDateTime dateTime = date1.toLocalDateTime(time1);
+
+
+
+                       // if (StringUtils.equals(dwEnrollNumber.getStringRef(), enrollno)) {
+
+                            BundyClockLogs todomainitem = new BundyClockLogs();
+
+
+
+
+                            todomainitem.setDwEnrollNumber(dwEnrollNumber.getStringRef());
+                            todomainitem.setDwVerifyMode(dwVerifyMode.getIntRef());
+                            todomainitem.setDwInoutMode(dwInoutMode.getIntRef());
+                            todomainitem.setDateTime(dateTime.toDateTime());
+                            todomainitem.setDwWorkCode(dwWorkCode.getIntRef());
+
+
+                            bundyClockRepository.save(todomainitem);
+
+
+
+
+                       // }
+                    }
+                }
+                Object object = Dispatch.call(mf, "ClearGLog", 1).toJavaObject();
+            }
+
+            Object disconnect = Dispatch.call(mf, "disconnect").toJavaObject();
+
+        }
+
     }
 
 

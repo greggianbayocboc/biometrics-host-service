@@ -45,7 +45,7 @@ public class BundyClockResource {
         return null;
     }
 
-/*    @RequestMapping("/getlogs")
+    @RequestMapping("/getlogs")
     public ResponseEntity<List<BundyClockLogItem>>getLogs(){
 
         if(!SystemUtils.IS_OS_WINDOWS){
@@ -57,10 +57,10 @@ public class BundyClockResource {
         }
 
 
-       return new ResponseEntity<List<BundyClockLogItem>>(zKemKeeperService.getBundyClockLogItems(),
+       return new ResponseEntity<List<BundyClockLogItem>>(zKemKeeperService.getAllEmployeeLogsByDate(),
                HttpStatus.OK);
 
-    }*/
+    }
 
 
 

@@ -699,7 +699,7 @@ public class ZKemKeeperService {
 
 
 
-    public List<BundyClockLogItem> getAllEmployeeLogsByDate(String enrollno) {
+    public List<BundyClockLogItem> getAllEmployeeLogsByDate() {
         List<BundyClockLogItem> items = new ArrayList<>();
 
         ActiveXComponent mf = new ActiveXComponent("zkemkeeper.ZKEM.1");
@@ -754,7 +754,6 @@ public class ZKemKeeperService {
                         LocalDate date1 = new LocalDate(date);
                         LocalTime time1 = new LocalTime(time);
 
-                        if (StringUtils.equals(dwEnrollNumber.getStringRef(), enrollno)) {
                             if (date == DateTime.now()) {
                                 BundyClockLogItem item = new BundyClockLogItem();
                                 item.setDwEnrollNumber(dwEnrollNumber.getStringRef());
@@ -784,7 +783,7 @@ public class ZKemKeeperService {
 
                                 items.add(item);
                             }
-                        }
+
 
 
                     }

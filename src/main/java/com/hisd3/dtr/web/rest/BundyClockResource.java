@@ -140,7 +140,7 @@ public class BundyClockResource {
 
 
     @RequestMapping("/getlogsbydate")
-    public ResponseEntity<List<BundyClockLogItem>> getlogsbydate(@RequestParam String enrollno){
+    public ResponseEntity<List<BundyClockLogItem>> getlogsbydate(){
 
         if(!SystemUtils.IS_OS_WINDOWS){
 
@@ -150,7 +150,7 @@ public class BundyClockResource {
             return new  ResponseEntity<List<BundyClockLogItem>>(responseHeaders,HttpStatus.CONFLICT);
         }
 
-        return new ResponseEntity<List<BundyClockLogItem>>(zKemKeeperService.getAllEmployeeLogsByDate(enrollno),HttpStatus.OK);
+        return new ResponseEntity<List<BundyClockLogItem>>(zKemKeeperService.getAllEmployeeLogsByDate(),HttpStatus.OK);
     }
 
 

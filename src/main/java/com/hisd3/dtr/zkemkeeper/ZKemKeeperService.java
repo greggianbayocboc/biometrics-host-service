@@ -754,6 +754,7 @@ public class ZKemKeeperService {
                         LocalDate date1 = new LocalDate(date);
                         LocalTime time1 = new LocalTime(time);
 
+                            if (date == DateTime.now()) {
                                 BundyClockLogItem item = new BundyClockLogItem();
                                 item.setDwEnrollNumber(dwEnrollNumber.getStringRef());
                                 item.setDwVerifyMode(dwVerifyMode.getIntRef());
@@ -781,7 +782,7 @@ public class ZKemKeeperService {
                                 item.setTime(time.toString("hh:mm:ss aa"));
 
                                 items.add(item);
-
+                            }
 
 
 

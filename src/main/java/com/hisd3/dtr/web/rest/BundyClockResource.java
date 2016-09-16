@@ -139,5 +139,20 @@ public class BundyClockResource {
     }
 
 
+    @RequestMapping("/getlogsbydate")
+    public ResponseEntity<List<BundyClockLogItem>> getlogsbydate(@RequestParam String enrollno){
+
+        if(!SystemUtils.IS_OS_WINDOWS){
+
+            HttpHeaders responseHeaders = new HttpHeaders();
+            responseHeaders.set("message", "This resource is only for Windows");
+
+            return new  ResponseEntity<List<BundyClockLogItem>>(responseHeaders,HttpStatus.CONFLICT);
+        }
+
+        return new ResponseEntity<List<BundyClockLogItem>>(zKemKeeperService.getAllEmployeeLogsByDate(enrollno),HttpStatus.OK);
+    }
+
+
 
 }

@@ -4,7 +4,6 @@ import {bindActionCreators} from 'redux';
 import * as employeeActions from '../actions/employeeActions';
 import * as profileActions from '../actions/profileActions';
 import {routerActions} from 'react-router-redux';
-import RegisterEmployee from '../components/RegisterEmployee';
 import * as modalActions from '../actions/modalActions';
 import {Table, Button,Well,PanelContainer,Panel,PanelHeader,Grid,Row,Col,PanelBody,ButtonGroup,InputGroup,Icon} from '@sketchpixy/rubix';
 class Employee extends React.Component{
@@ -49,17 +48,6 @@ class Employee extends React.Component{
             cancelFunction:this.close,
             cancel:<Button bsStyle='primary' onClick={this.close}>Cancel</Button>,
             proceed:<Button bsStyle='red' onClick={()=>this.deleteUserEmployee(enrollno)}>Delete</Button>
-        });
-    }
-    newemployee = ()=>{
-        this.props.modalActions.open({
-            showModal:true,
-            modalTitle:"New Employee",
-            colorType:'bg-green',
-            modalBody:
-              <RegisterEmployee />
-            ,
-            cancelFunction:this.close
         });
     }
 
@@ -123,12 +111,6 @@ class Employee extends React.Component{
 
                                         </Table>
                                     </Col>
-                                </Row>
-                                <Row >
-                                    <ButtonGroup style={{margin: 5}}>
-                                    <Button bsStyle='green' onClick={this.newemployee}>Create Employee</Button>
-                                    <Button bsStyle='blue'>Sync Employees</Button>
-                                    </ButtonGroup>
                                 </Row>
                             </Grid>
                         </PanelBody>

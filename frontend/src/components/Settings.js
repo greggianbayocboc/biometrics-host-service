@@ -8,7 +8,9 @@ import * as modalActions from '../actions/modalActions';
 import * as AuthActions from '../actions/authactions';
 import { routerActions } from 'react-router-redux';
 
-import {Well,Panel,Button,Table,Modal,Alert} from '@sketchpixy/rubix';
+import RegisterEmployee from '../components/RegisterEmployee';
+
+import {Well,Panel,Button,ButtonGroup,Table,Modal,Alert} from '@sketchpixy/rubix';
 
 class Settings extends React.Component{
 
@@ -24,20 +26,16 @@ class Settings extends React.Component{
     this.props.modalActions.close({showModal:false});
   }
 
-  open = ()=>{
-    this.props.modalActions.open({
-      showModal:true,
-      modalTitle:"Test",
-      colorType:'bg-green',
-      modalBody:
-        <Alert danger>
-          <strong>Oh snap! </strong><span>Change a few things up and try submitting again.</span>
-        </Alert>
-      ,
-      cancelFunction:this.close,
-      cancel:<Button bsStyle='primary' onClick={this.close}>Cancel</Button>,
-      proceed:<Button bsStyle='green' onClick={this.goAddUser}>Add User</Button>,
-    });
+  newemployee = ()=>{
+      this.props.modalActions.open({
+          showModal:true,
+          modalTitle:"New Employee",
+          colorType:'bg-green',
+          modalBody:
+            <RegisterEmployee />
+          ,
+          cancelFunction:this.close
+      });
   }
 
   goAddUser = ()=>{
@@ -49,8 +47,11 @@ class Settings extends React.Component{
       <div>
         <Well>
           <h1>This is the Admin settings page</h1>
+          <ButtonGroup style={{margin: 5}}>
           <Button bsStyle='green' onClick={this.goAddUser}>Add User</Button>
-          <Button bsStyle='primary' onClick={this.open}>Launch demo modal</Button>
+          <Button bsStyle='green' onClick={this.newemployee}>Create Employee</Button>
+          <Button bsStyle='blue'>Sync Employees</Button>
+          </ButtonGroup>
         </Well>
       </div>
     );

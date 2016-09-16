@@ -33,8 +33,8 @@ class Profile extends React.Component{
     var x = 0;
 
     this.props.profile.records.map((item,i)=>{
-      var date = moment.utc([item.dwYear, item.dwMonth-1, item.dwDay]).format("dddd, MMMM D YYYY");
-      var time = moment.utc([item.dwYear, item.dwMonth-1, item.dwDay, item.dwHour, item.dwMinute, item.dwSecindm]);
+      var date = moment([item.dwYear, item.dwMonth-1, item.dwDay]).format("dddd, MMMM D YYYY");
+      var time = moment([item.dwYear, item.dwMonth-1, item.dwDay, item.dwHour, item.dwMinute, item.dwSecindm]);
       if (typeof records[x] == 'undefined') {
         logs.push({
           time: time,
@@ -78,17 +78,17 @@ class Profile extends React.Component{
 
       var totalDuration = moment.duration(moment(subArr['TimeOut']).diff(moment(subArr['TimeIn'])));
       var totalOvertimeDuration = moment.duration(moment(subArr['OvertimeOut']).diff(moment(subArr['OvertimeIn'])));
-      
+
       var totalTime = totalDuration.hours() + "hrs " + totalDuration.minutes() + "mins ";
       var totalOvertime = totalOvertimeDuration.hours() + "hrs " + totalOvertimeDuration.minutes() + "mins ";
 
       return (
         <tr key={i}>
         <td>{subArr['date']}</td>
-        <td>{typeof subArr['TimeIn'] != 'undefined'? subArr['TimeIn'].format("h:mm:ss A") : "--"}</td>
-        <td>{typeof subArr['TimeOut'] != 'undefined'? subArr['TimeOut'].format("h:mm:ss A") : "--"}</td>
-        <td>{typeof subArr['OvertimeIn'] != 'undefined'? subArr['OvertimeIn'].format("h:mm:ss A") : "--"}</td>
-        <td>{typeof subArr['OvertimeOut'] != 'undefined'? subArr['OvertimeOut'].format("h:mm:ss A") : "--"}</td>
+        <td>{typeof subArr['TimeIn'] != 'undefined'? subArr['TimeIn'].format("h:mm A") : "--"}</td>
+        <td>{typeof subArr['TimeOut'] != 'undefined'? subArr['TimeOut'].format("h:mm A") : "--"}</td>
+        <td>{typeof subArr['OvertimeIn'] != 'undefined'? subArr['OvertimeIn'].format("h:mm A") : "--"}</td>
+        <td>{typeof subArr['OvertimeOut'] != 'undefined'? subArr['OvertimeOut'].format("h:mm A") : "--"}</td>
         <td>{totalTime}</td>
         <td>{totalOvertime}</td>
         </tr>

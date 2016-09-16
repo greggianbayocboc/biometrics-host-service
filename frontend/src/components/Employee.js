@@ -63,9 +63,7 @@ class Employee extends React.Component{
             modalTitle:"New Employee",
             colorType:'bg-green',
             modalBody:
-                <div style={{marginButtom: 20}}>
               <RegisterEmployee />
-                    </div>
             ,
             cancelFunction:this.close
         });
@@ -151,7 +149,7 @@ class Employee extends React.Component{
                                 <Row >
                                     <ButtonGroup style={{margin: 5}}>
                                     <Button bsStyle='green' onClick={this.newemployee}>Create Employee</Button>
-                                    <Button bsStyle='red' onClick={this.clearemployeelogsmodal} >Clear Logs</Button>
+                                    <Button bsStyle='blue'>Sync Employees</Button>
                                     </ButtonGroup>
                                 </Row>
                             </Grid>

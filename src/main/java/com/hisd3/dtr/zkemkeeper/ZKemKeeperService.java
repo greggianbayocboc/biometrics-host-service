@@ -570,12 +570,13 @@ public class ZKemKeeperService {
                 Boolean enableDevice = (Boolean)Dispatch.call(mf, "enableDevice",1, false).toJavaObject();
                     if(BooleanUtils.isTrue(enableDevice)){
 
+                        String password = "";
                         Object object = Dispatch.call(mf, "SSR_SetUserInfo", 1,
                                 enrollno,
                                 name,
+                                password,
                                 privilege,
-                                enable,
-                                workcode
+                                enable
                         ).toJavaObject();
 
                     }
@@ -688,7 +689,7 @@ public class ZKemKeeperService {
                        // }
                     }
                 }
-                Object object = Dispatch.call(mf, "ClearGLog", 1).toJavaObject();
+               // Object object = Dispatch.call(mf, "ClearGLog", 1).toJavaObject();
             }
 
             Object disconnect = Dispatch.call(mf, "disconnect").toJavaObject();

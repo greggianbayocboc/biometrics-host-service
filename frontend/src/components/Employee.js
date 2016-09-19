@@ -146,12 +146,6 @@ class Employee extends React.Component{
                                         </Table>
                                     </Col>
                                 </Row>
-                                <Row >
-                                    <ButtonGroup style={{margin: 5}}>
-                                    <Button bsStyle='green' onClick={this.newemployee}>Create Employee</Button>
-                                    <Button bsStyle='blue'>Sync Employees</Button>
-                                    </ButtonGroup>
-                                </Row>
                             </Grid>
                         </PanelBody>
                     </Panel>

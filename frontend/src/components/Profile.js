@@ -1,4 +1,4 @@
-/**
+ /**
  * Created by albertoclarit on 9/2/16.
  */
 import React,{PropTypes} from 'react';
@@ -68,29 +68,130 @@ class Profile extends React.Component{
 
     var data = records.map((item,i)=>{
       var subArr = [];
-      item.logs.map((sub, a) => {
-        var current = sub.action;
-        if (typeof subArr[current.replace(' ', '')] == 'undefined') {
-          subArr[current.replace(' ', '')] = sub.time;
+      var a=0, b=0, c=0, d=0;
+      item.logs.reverse();
+      item.logs.map((sub, e)=>{
+        var action = sub.action.replace(' ', '');
+        if (typeof subArr[action] == 'undefined') {
+          subArr[action] = [];
         }
+        subArr[action].push(sub.time);
         subArr['date'] = item.date;
       });
 
-      var totalDuration = moment.duration(moment(subArr['TimeOut']).diff(moment(subArr['TimeIn'])));
-      var totalOvertimeDuration = moment.duration(moment(subArr['OvertimeOut']).diff(moment(subArr['OvertimeIn'])));
+      if (typeof subArr.TimeIn != 'undefined') {
+        var timein = subArr.TimeIn.map((time, f)=>{
+          console.log(time);
+          return (
+            <tr key={f}>
+              <td>{typeof time != 'undefined'? time.format("h:mm A") : "--"}</td>
+            </tr>
+          );
+        });
+      }
 
-      var totalTime = totalDuration.hours() + "hrs " + totalDuration.minutes() + "mins ";
-      var totalOvertime = totalOvertimeDuration.hours() + "hrs " + totalOvertimeDuration.minutes() + "mins ";
+      if (typeof subArr.TimeOut != 'undefined') {
+        var timeout = subArr.TimeOut.map((time, f)=>{
+          console.log(time);
+          return (
+            <tr key={f}>
+              <td>{typeof time != 'undefined'? time.format("h:mm A") : "--"}</td>
+            </tr>
+          );
+        });
+      }
+
+      if (typeof subArr.OvertimeIn != 'undefined') {
+        var overtimein = subArr.OvertimeIn.map((time, f)=>{
+          console.log(time);
+          return (
+            <tr key={f}>
+              <td>{typeof time != 'undefined'? time.format("h:mm A") : "--"}</td>
+            </tr>
+          );
+        });
+      }
+
+      if (typeof subArr.OvertimeOut != 'undefined') {
+        var overtimeout = subArr.OvertimeOut.map((time, f)=>{
+          console.log(time);
+          return (
+            <tr key={f}>
+              <td>{typeof time != 'undefined'? time.format("h:mm A") : "--"}</td>
+            </tr>
+          );
+        });
+      }
+
+      if (typeof subArr.TimeIn != 'undefined' && typeof subArr.TimeOut != 'undefined') {
+        var totalhours = subArr.TimeIn.map((time, f)=>{
+          var totalDuration = moment.duration(moment(subArr.TimeOut[f]).diff(moment(subArr.TimeIn[f])));
+          var totalTime = totalDuration.hours() + "hrs " + totalDuration.minutes() + "mins ";
+          return (
+            <tr key={f}>
+              <td>{typeof subArr.TimeOut[f] != 'undefined'? totalTime : "Incomplete"}</td>
+            </tr>
+          );
+        });
+      }
+
+      if (typeof subArr.OvertimeIn != 'undefined' && typeof subArr.OvertimeOut != 'undefined') {
+        var totalovertime = subArr.OvertimeIn.map((time, f)=>{
+          var totalOvertimeDuration = moment.duration(moment(subArr.OvertimeOut[f]).diff(moment(subArr.OvertimeIn[f])));
+          var totalOvertime = totalOvertimeDuration.hours() + "hrs " + totalOvertimeDuration.minutes() + "mins ";
+          return (
+            <tr key={f}>
+              <td>{typeof subArr.OvertimeOut[f] != 'undefined'? totalOvertime : "Incomplete"}</td>
+            </tr>
+          );
+        });
+      }
 
       return (
         <tr key={i}>
         <td>{subArr['date']}</td>
-        <td>{typeof subArr['TimeIn'] != 'undefined'? subArr['TimeIn'].format("h:mm A") : "--"}</td>
-        <td>{typeof subArr['TimeOut'] != 'undefined'? subArr['TimeOut'].format("h:mm A") : "--"}</td>
-        <td>{typeof subArr['OvertimeIn'] != 'undefined'? subArr['OvertimeIn'].format("h:mm A") : "--"}</td>
-        <td>{typeof subArr['OvertimeOut'] != 'undefined'? subArr['OvertimeOut'].format("h:mm A") : "--"}</td>
-        <td>{totalTime}</td>
-        <td>{totalOvertime}</td>
+        <td>
+          <Table responsive>
+            <tbody>
+              {timein}
+            </tbody>
+          </Table>
+        </td>
+        <td>
+          <Table responsive>
+            <tbody>
+              {timeout}
+            </tbody>
+          </Table>
+        </td>
+        <td>
+          <Table responsive>
+            <tbody>
+              {overtimein}
+            </tbody>
+          </Table>
+        </td>
+        <td>
+          <Table responsive>
+            <tbody>
+              {overtimeout}
+            </tbody>
+          </Table>
+        </td>
+        <td>
+          <Table responsive>
+            <tbody>
+              {totalhours}
+            </tbody>
+          </Table>
+        </td>
+        <td>
+          <Table responsive>
+            <tbody>
+              {totalovertime}
+            </tbody>
+          </Table>
+        </td>
         </tr>
       );
 

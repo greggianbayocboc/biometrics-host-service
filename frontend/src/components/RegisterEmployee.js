@@ -13,7 +13,7 @@ class RegisterEmployee extends React.Component{
     state = {
         "enrollno": null,
         "name": "",
-        "privilege": 1,
+        "privilege": 0,
         "enabled": false,
         "workcode" : 0
     };
@@ -90,7 +90,7 @@ class RegisterEmployee extends React.Component{
                         <Col xs={1}>
                             <InputGroup.Addon>
 
-                            <input type="checkbox" required="required"
+                            <input type="checkbox" required="required" value="true"
                                 onChange={(e)=> {
                                     this.updateField('enabled', e.target.value)
                                 }}
@@ -108,9 +108,10 @@ class RegisterEmployee extends React.Component{
                                 onChange={(e)=> {
                                 this.updateField('privilege', e.target.value)
                             }}>
-                                <option value={1}>1 - USER</option>
-                                <option value={2}>2 - STAFF</option>
-                                <option value={3}>3 - ADMIN</option>
+                                <option value={1}>0 - USER</option>
+                                <option value={1}>1 - ENROLLER</option>
+                                <option value={2}>2 - ADMIN</option>
+                                <option value={3}>3 - SUPER ADMIN</option>
                             </FormControl>
                         </Col>
 

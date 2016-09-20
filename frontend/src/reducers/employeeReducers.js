@@ -2,7 +2,8 @@ import  * as types from '../constants/BundyClockCommands';
 import  update from 'react-addons-update';
 
 export default function employeeReducers(state={
-  records:[]
+  records:[],
+  logs:[]
 }, action={}) {
 
 
@@ -12,6 +13,9 @@ export default function employeeReducers(state={
       return update(state,{
         records:{
           $set:action.records
+        },
+        logs:{
+          $set:action.logs
         }
       });
 

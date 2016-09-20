@@ -25,6 +25,9 @@ public class EmployeeDto {
 
     private Boolean enabled;
 
+    public EmployeeDto(){
+
+    }
 
     public EmployeeDto(String enrollno, String name, Integer privilege, Integer workcode, Boolean enabled) {
         this.enrollno = enrollno;

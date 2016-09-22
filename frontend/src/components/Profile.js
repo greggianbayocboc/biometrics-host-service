@@ -69,7 +69,7 @@ class Profile extends React.Component{
     var data = records.map((item,i)=>{
       var subArr = [];
       var a=0, b=0, c=0, d=0;
-      item.logs.reverse();
+      //item.logs.reverse();
       item.logs.map((sub, e)=>{
         var action = sub.action.replace(' ', '');
         if (typeof subArr[action] == 'undefined') {
@@ -80,8 +80,9 @@ class Profile extends React.Component{
       });
 
       if (typeof subArr.TimeIn != 'undefined') {
+
         var timein = subArr.TimeIn.map((time, f)=>{
-          console.log(time);
+          console.log(time.format("h:mm A"));
           return (
             <tr key={f}>
               <td>{typeof time != 'undefined'? time.format("h:mm A") : "--"}</td>
@@ -92,7 +93,6 @@ class Profile extends React.Component{
 
       if (typeof subArr.TimeOut != 'undefined') {
         var timeout = subArr.TimeOut.map((time, f)=>{
-          console.log(time);
           return (
             <tr key={f}>
               <td>{typeof time != 'undefined'? time.format("h:mm A") : "--"}</td>
@@ -103,7 +103,6 @@ class Profile extends React.Component{
 
       if (typeof subArr.OvertimeIn != 'undefined') {
         var overtimein = subArr.OvertimeIn.map((time, f)=>{
-          console.log(time);
           return (
             <tr key={f}>
               <td>{typeof time != 'undefined'? time.format("h:mm A") : "--"}</td>
@@ -114,7 +113,6 @@ class Profile extends React.Component{
 
       if (typeof subArr.OvertimeOut != 'undefined') {
         var overtimeout = subArr.OvertimeOut.map((time, f)=>{
-          console.log(time);
           return (
             <tr key={f}>
               <td>{typeof time != 'undefined'? time.format("h:mm A") : "--"}</td>

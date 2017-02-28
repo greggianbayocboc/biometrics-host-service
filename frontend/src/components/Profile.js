@@ -1,13 +1,13 @@
- /**
- * Created by albertoclarit on 9/2/16.
- */
+/**
+* Created by albertoclarit on 9/2/16.
+*/
 import React,{PropTypes} from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import * as profileActions from '../actions/profileActions';
 import * as AuthActions from '../actions/authactions';
 import { routerActions } from 'react-router-redux';
-
+import _ from 'lodash'
 import moment from 'moment';
 
 import {Well,Panel,Button,Table,PanelContainer,PanelHeader,Grid,Row,Col,PanelBody} from '@sketchpixy/rubix';
@@ -16,6 +16,9 @@ class Profile extends React.Component{
 
   constructor(props){
     super(props);
+    this.state = {
+      filter: ''
+    }
   }
 
   logout=()=>{
@@ -32,57 +35,46 @@ class Profile extends React.Component{
     var logs = [];
     var x = 0;
 
-    this.props.profile.records.map((item,i)=>{
+    let bundyRecords = this.props.profile.records.filter((item,i)=>{
+      var date = moment([item.dwYear, item.dwMonth-1, item.dwDay]).format("dddd, MMMM D YYYY");
+      if(date.includes(this.state.filter))
+      return true;
+    });
+
+    bundyRecords.map((item,i)=>{
       var date = moment([item.dwYear, item.dwMonth-1, item.dwDay]).format("dddd, MMMM D YYYY");
       var time = moment([item.dwYear, item.dwMonth-1, item.dwDay, item.dwHour, item.dwMinute, item.dwSecindm]);
-      if (typeof records[x] == 'undefined') {
+
+      if (_.get(records, item.date)) {
+        logs = records[item.date].logs;
         logs.push({
           time: time,
           action: item.dwInoutMode
         });
-        records[x] = {date:date}
-        if (records.length == x+1) {
-          if (records[x].date == date) {
-            records[x] = {date:date, logs};
-          } else {
-            records.push({date:records[x].date, logs});
-          }
-        }
+        logs = [];
       } else {
-        if (records[x].date == date) {
-          logs.push({
-            time: time,
-            action: item.dwInoutMode
-          });
-        } else {
-          records[x] = {date:records[x].date, logs};
-          logs = [];
-          logs.push({
-            time: time,
-            action: item.dwInoutMode
-          });
-          x++;
-        }
+        logs.push({
+          time: time,
+          action: item.dwInoutMode
+        });
+        records[item.date] = {date:date, logs}
+        logs = [];
       }
     });
 
-    var data = records.map((item,i)=>{
+    var data = Object.keys(records).map((item,i)=>{
       var subArr = [];
       var a=0, b=0, c=0, d=0;
-      //item.logs.reverse();
-      item.logs.map((sub, e)=>{
+      records[item].logs.map((sub, e)=>{
         var action = sub.action.replace(' ', '');
         if (typeof subArr[action] == 'undefined') {
           subArr[action] = [];
         }
         subArr[action].push(sub.time);
-        subArr['date'] = item.date;
       });
 
       if (typeof subArr.TimeIn != 'undefined') {
-
         var timein = subArr.TimeIn.map((time, f)=>{
-          console.log(time.format("h:mm A"));
           return (
             <tr key={f}>
               <td>{typeof time != 'undefined'? time.format("h:mm A") : "--"}</td>
@@ -131,6 +123,26 @@ class Profile extends React.Component{
             </tr>
           );
         });
+      } else {
+        if (typeof subArr.TimeIn == 'undefined' && typeof subArr.TimeOut != 'undefined') {
+          var totalhours = (
+            <tr>
+              <td>Sorry, I forgot to Time In</td>
+            </tr>
+          );
+        } else if (typeof subArr.TimeIn != 'undefined' && typeof subArr.TimeOut == 'undefined') {
+          var totalhours = (
+            <tr>
+              <td>Sorry, I forgot to Time Out</td>
+            </tr>
+          );
+        } else {
+          var totalhours = (
+            <tr>
+              <td>No Data</td>
+            </tr>
+          );
+        }
       }
 
       if (typeof subArr.OvertimeIn != 'undefined' && typeof subArr.OvertimeOut != 'undefined') {
@@ -143,53 +155,73 @@ class Profile extends React.Component{
             </tr>
           );
         });
+      } else {
+        if (typeof subArr.OvertimeIn == 'undefined' && typeof subArr.OvertimeOut != 'undefined') {
+          var totalovertime = (
+            <tr>
+              <td>Sorry, I forgot to OverTime In</td>
+            </tr>
+          );
+        } else if (typeof subArr.OvertimeIn != 'undefined' && typeof subArr.OvertimeOut == 'undefined') {
+          var totalovertime = (
+            <tr>
+              <td>Sorry, I forgot to OverTime Out</td>
+            </tr>
+          );
+        } else {
+          var totalovertime = (
+            <tr>
+              <td>No Data</td>
+            </tr>
+          );
+        }
       }
 
       return (
         <tr key={i}>
-        <td>{subArr['date']}</td>
-        <td>
-          <Table responsive>
-            <tbody>
-              {timein}
-            </tbody>
-          </Table>
-        </td>
-        <td>
-          <Table responsive>
-            <tbody>
-              {timeout}
-            </tbody>
-          </Table>
-        </td>
-        <td>
-          <Table responsive>
-            <tbody>
-              {overtimein}
-            </tbody>
-          </Table>
-        </td>
-        <td>
-          <Table responsive>
-            <tbody>
-              {overtimeout}
-            </tbody>
-          </Table>
-        </td>
-        <td>
-          <Table responsive>
-            <tbody>
-              {totalhours}
-            </tbody>
-          </Table>
-        </td>
-        <td>
-          <Table responsive>
-            <tbody>
-              {totalovertime}
-            </tbody>
-          </Table>
-        </td>
+          <td>{records[item].date}</td>
+          <td>
+            <Table responsive>
+              <tbody>
+                {timein}
+              </tbody>
+            </Table>
+          </td>
+          <td>
+            <Table responsive>
+              <tbody>
+                {timeout}
+              </tbody>
+            </Table>
+          </td>
+          <td>
+            <Table responsive>
+              <tbody>
+                {overtimein}
+              </tbody>
+            </Table>
+          </td>
+          <td>
+            <Table responsive>
+              <tbody>
+                {overtimeout}
+              </tbody>
+            </Table>
+          </td>
+          <td>
+            <Table responsive>
+              <tbody>
+                {totalhours}
+              </tbody>
+            </Table>
+          </td>
+          <td>
+            <Table responsive>
+              <tbody>
+                {totalovertime}
+              </tbody>
+            </Table>
+          </td>
         </tr>
       );
 
@@ -217,20 +249,20 @@ class Profile extends React.Component{
               <Row>
                 <Col xs={12}>
                   <Table responsive>
-                  <thead>
-                    <tr>
-                      <th>Date</th>
-                      <th>Time In</th>
-                      <th>Time Out</th>
-                      <th>Overtime In</th>
-                      <th>Overtime Out</th>
-                      <th>Total Hours</th>
-                      <th>Total Overtime</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {data}
-                  </tbody>
+                    <thead>
+                      <tr>
+                        <th>Date</th>
+                        <th>Time In</th>
+                        <th>Time Out</th>
+                        <th>Overtime In</th>
+                        <th>Overtime Out</th>
+                        <th>Total Hours</th>
+                        <th>Total Overtime</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {data}
+                    </tbody>
                   </Table>
                 </Col>
               </Row>
@@ -243,19 +275,19 @@ class Profile extends React.Component{
 }
 
 function mapStateToProps(state) {
-    return {
-        auth:state.auth,
-        profile:state.profile
-    }
+  return {
+    auth:state.auth,
+    profile:state.profile
+  }
 }
 
 
 function mapDispatchToProps(dispatch) {
-    return {
-        routerActions: bindActionCreators(routerActions, dispatch),
-        authActions:bindActionCreators(AuthActions, dispatch),
-        profileActions:bindActionCreators(profileActions, dispatch)
-    }
+  return {
+    routerActions: bindActionCreators(routerActions, dispatch),
+    authActions:bindActionCreators(AuthActions, dispatch),
+    profileActions:bindActionCreators(profileActions, dispatch)
+  }
 }
 
 export default connect(mapStateToProps,mapDispatchToProps)(Profile);

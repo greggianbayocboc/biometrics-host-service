@@ -6,7 +6,7 @@ import rootReducer from '../reducers';
 
 
 export default function configureStore(initialState,history) {
-  const router = routerMiddleware(hashHistory);
+  const router = routerMiddleware(history);
 
   const enhancer = applyMiddleware(thunk, router);
 

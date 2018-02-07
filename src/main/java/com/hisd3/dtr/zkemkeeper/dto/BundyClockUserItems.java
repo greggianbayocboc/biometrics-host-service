@@ -1,5 +1,7 @@
 package com.hisd3.dtr.zkemkeeper.dto;
 
+import io.swagger.models.auth.In;
+
 /**
  * Created by AyingzkiE on 9/3/2016.
  */

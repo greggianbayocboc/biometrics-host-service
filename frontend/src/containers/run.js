@@ -1,7 +1,6 @@
 /**
 * Created by albertoclarit on 1/9/16.
 */
-
 import React from 'react';
 import ReactDOM from 'react-dom';
 import App from './App';
@@ -20,6 +19,7 @@ import {requireAuthentication} from '../utils/AuthUtils'
 require('../fonts/sourcesanspro/css/fonts.css');
 require('font-awesome/css/font-awesome.css');
 require('../styles/css/main.css');
+import 'antd/dist/antd.css';
 
 import Index from '../components/Index'
 import Login from '../components/Login'

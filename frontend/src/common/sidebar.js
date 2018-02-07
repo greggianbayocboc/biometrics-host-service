@@ -1,13 +1,6 @@
 import React from 'react';
 
-import {
-  Sidebar, SidebarNav, SidebarNavItem,
-  SidebarControls, SidebarControlBtn,
-  LoremIpsum, Grid, Row, Col, FormControl,
-  Label, Progress, Icon,
-  SidebarDivider
-} from '@sketchpixy/rubix';
-
+import { Layout, Menu, Icon } from 'antd';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import * as AuthActions from '../actions/authactions';
@@ -22,6 +15,7 @@ class SidebarContainer extends React.Component {
   }
 
   goProfile = ()=>{
+      console.log("pass here")
       this.props.profileActions.loadBundyclockLogsById(this.props.auth.account.bundyclockEnrollNo, this.props.auth.account.firstName +" "+ this.props.auth.account.lastName);
       this.props.routerActions.push("/profile");
   }
@@ -77,85 +71,20 @@ class SidebarContainer extends React.Component {
 
   render() {
     return (
-      <div id='sidebar'>
-        <div id='avatar'>
-          <Grid>
-            <Row className='fg-white'>
-              <Col xs={4} collapseRight>
-                <img src='../../public/imgs/app/avatars/avatar0.png' width='40' height='40' />
-              </Col>
-              <Col xs={8} collapseLeft id='avatar-col'>
-                <div style={{top: 23, fontSize: 16, lineHeight: 1, position: 'relative'}}>{this.props.auth.account.firstName} {this.props.auth.account.lastName}</div>
-              </Col>
-            </Row>
-          </Grid>
-        </div>
-        <SidebarControls>
-          <SidebarControlBtn bundle='fontello' glyph='calendar' sidebar={0} />
-          <SidebarControlBtn bundle='fontello' glyph='user' sidebar={1} />
-        </SidebarControls>
-        <div id='sidebar-container'>
-          <Sidebar sidebar={0}>
-            <div>
-              <Grid>
-                <Row>
-                  <Col xs={12}>
-                    <div className='sidebar-nav-container'>
-                      <SidebarNav>
-                        <div className='sidebar-header'>Daily Time Record</div>
-                            {this.checkRoles((
-                              <li tabIndex="-1" className="sidebar-nav-item">
-                                <a tabIndex="-1" onClick={this.goProfile}><span className="icon-fontello-user rubix-icon">
-                                  </span><span className="name">My Records</span>
-                                </a>
-                              </li>
-                            ), "ROLE_USER")}
-
-                            {this.checkRoles((
-                              <li tabIndex="-1" className="sidebar-nav-item">
-                                <a tabIndex="-1" onClick={this.goEmployee}><span className="icon-fontello-users rubix-icon">
-                                  </span><span className="name">Employees</span>
-                                </a>
-                              </li>
-                            ), "ROLE_ADMIN")}
-
-                            {this.checkRoles((
-                              <li tabIndex="-1" className="sidebar-nav-item">
-                                <a tabIndex="-1" onClick={this.goSettings}><span className="icon-fontello-cog rubix-icon">
-                                </span><span className="name">Settings</span>
-                                </a>
-                              </li>
-                            ), "ROLE_ADMIN")}
-
-                      </SidebarNav>
-                    </div>
-                  </Col>
-                </Row>
-              </Grid>
-            </div>
-          </Sidebar>
-          <Sidebar sidebar={1}>
-          <div>
-            <Grid>
-              <Row>
-                <Col xs={12}>
-                  <div className='sidebar-nav-container'>
-                    <SidebarNav>
-                      <div className='sidebar-header'>Account</div>
-                      <li tabIndex="-1" className="sidebar-nav-item">
-                        <a tabIndex="-1" onClick={this.goSecure}><span className="icon-fontello-cogs rubix-icon">
-                        </span><span className="name">Account Settings</span>
-                        </a>
-                      </li>
-                    </SidebarNav>
-                  </div>
-                </Col>
-              </Row>
-            </Grid>
-          </div>
-          </Sidebar>
-        </div>
-      </div>
+        <Menu theme="dark" mode="inline" defaultSelectedKeys={['1']}>
+          <Menu.Item key="1" onClick={this.goProfile}>
+            <Icon type="user" />
+            <a onClick={this.goProfile}>Profile</a>
+          </Menu.Item>
+          <Menu.Item key="2" onClick={this.goEmployee}>
+            <Icon type="video-camera" />
+            <a onClick={this.goEmployee}>Employee</a>
+          </Menu.Item>
+          <Menu.Item key="3" onClick={this.goSettings}>
+            <Icon type="upload" />
+            <a onClick={this.goSettings}>Settings</a>
+          </Menu.Item>
+        </Menu>
     );
   }
 }

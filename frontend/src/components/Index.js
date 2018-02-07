@@ -20,7 +20,9 @@ import { connect } from 'react-redux';
     render(){
 
         return (<div>
-                 <h1>Welcome to React JS
+
+
+                 <h1>Welcome to React JSss
                     <br/>
                   <Button bsStyle="primary" onClick={this.goSecure}>Go to a secure page!</Button></h1>
             </div>);

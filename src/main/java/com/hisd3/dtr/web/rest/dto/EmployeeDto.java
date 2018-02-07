@@ -1,5 +1,7 @@
 package com.hisd3.dtr.web.rest.dto;
 
+import io.swagger.models.auth.In;
+
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
@@ -9,12 +11,8 @@ import javax.validation.constraints.Size;
 public class EmployeeDto {
 
 
-    @NotNull
-    @Size(max=100)
     private String enrollno;
 
-    @NotNull
-    @Size(min = 10, max=255)
     private String name;
 
 

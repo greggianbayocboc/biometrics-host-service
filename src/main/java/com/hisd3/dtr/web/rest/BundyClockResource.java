@@ -5,20 +5,20 @@ import com.hisd3.dtr.web.rest.dto.EmployeeDto;
 import com.hisd3.dtr.zkemkeeper.dto.BundyClockLogItem;
 import com.hisd3.dtr.zkemkeeper.ZKemKeeperService;
 import com.hisd3.dtr.zkemkeeper.dto.BundyClockUserItems;
+import io.swagger.models.auth.In;
 import org.apache.catalina.servlet4preview.http.HttpServletRequest;
-import org.apache.commons.codec.binary.StringUtils;
+import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.SystemUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 /**
  * Created by albertoclarit on 9/2/16.
@@ -45,7 +45,7 @@ public class BundyClockResource {
         return null;
     }
 
-    /*@RequestMapping("/getlogs")
+    @RequestMapping("/getlogs")
     public ResponseEntity<List<BundyClockLogItem>>getLogs(){
 
         if(!SystemUtils.IS_OS_WINDOWS){
@@ -60,7 +60,7 @@ public class BundyClockResource {
        return new ResponseEntity<List<BundyClockLogItem>>(zKemKeeperService.getAllEmployeeLogsByDate(),
                HttpStatus.OK);
 
-    }*/
+    }
 
 
 
@@ -113,28 +113,119 @@ public class BundyClockResource {
         return new ResponseEntity(httpHeaders,HttpStatus.OK);
     }
 
-    @RequestMapping(value = "/addnewmeployee",
-            method = RequestMethod.POST,
-            produces = MediaType.TEXT_PLAIN_VALUE)
-    public ResponseEntity addnewmeployee(@Valid @RequestBody EmployeeDto employee, HttpServletRequest request){
+    @RequestMapping("/findbyname")
+    public BundyClockUserItems findbyname(@RequestParam String fullname){
         HttpHeaders httpHeaders = new HttpHeaders();
-       List<BundyClockUserItems> users = zKemKeeperService.getUserAllUser();
+        List<BundyClockUserItems> users = zKemKeeperService.getUserAllUser();
 
-        for(BundyClockUserItems u:users){
-            if(StringUtils.equals(u.getDwEnrollNumber(), employee.getEnrollno())){
-                httpHeaders.set("message", "Error! Employee exist");
-                return new ResponseEntity(httpHeaders, HttpStatus.CONFLICT);
+        BundyClockUserItems dto = new BundyClockUserItems();
+
+        for(BundyClockUserItems u: users){
+            if(StringUtils.equalsIgnoreCase(u.getName(), fullname)){
+                dto = u;
+            }
+
+        }
+        return dto;
+    }
+
+    @RequestMapping("addfingerprint")
+    public ResponseEntity addfingerprint(@RequestParam Integer enrollno, @RequestParam Integer fingerIndex){
+        HttpHeaders httpHeaders = new HttpHeaders();
+        List<BundyClockUserItems> users = zKemKeeperService.getUserAllUser();
+
+        for(BundyClockUserItems u: users){
+            if(StringUtils.equals(u.getDwEnrollNumber(), enrollno.toString())){
+
+
+               if( zKemKeeperService.addUserFingerPrint(enrollno, fingerIndex, 2)){
+                   httpHeaders.set("message", "Success");
+                   return new ResponseEntity(httpHeaders,HttpStatus.OK);
+               }else{
+                   httpHeaders.set("message", "Error");
+                   return new ResponseEntity(httpHeaders,HttpStatus.OK);
+               }
+
+
             }
         }
-        zKemKeeperService.newUserService(
-                employee.getEnrollno(),
-                employee.getName(),
-                employee.getWorkcode(),
-                employee.getPrivilege(),
-                employee.getEnabled());
 
-        httpHeaders.set("message", "Success! Employee added");
+        httpHeaders.set("message","Success");
         return new ResponseEntity(httpHeaders, HttpStatus.OK);
+    }
+
+
+    @RequestMapping(value = "/addnewmeployeev2",
+            produces = MediaType.TEXT_PLAIN_VALUE)
+    public ResponseEntity<BundyClockUserItems> addnewmeployeev2(
+            @RequestParam(required = false) String enrollno,
+            @RequestParam String name,
+            @RequestParam Integer privilege,
+            @RequestParam Integer workcode, HttpServletRequest request){
+        HttpHeaders httpHeaders = new HttpHeaders();
+        List<BundyClockUserItems> users = zKemKeeperService.getUserAllUser();
+        ArrayList<Integer> max = new ArrayList<Integer>();
+        for(BundyClockUserItems u:users){
+            max.add(Integer.parseInt(u.getDwEnrollNumber()));
+        }
+        Integer largest = Collections.max(max);
+        if(enrollno==null || enrollno.trim().equals("")){
+            //
+           for(BundyClockUserItems u: users){
+               if(StringUtils.equals(u.getName(), name)){
+
+                   return new ResponseEntity<BundyClockUserItems>(u,HttpStatus.OK);
+
+               }
+           }
+
+
+
+            if(largest!=null){
+                Integer enrollnos = largest+1;
+                zKemKeeperService.newUserService(
+                        enrollnos.toString(),
+                        name,
+                        workcode,
+                        privilege,
+                        true);
+                BundyClockUserItems u = new BundyClockUserItems();
+                u.setName(name);
+                u.setDwEnrollNumber(enrollnos.toString());
+                u.setDwEnable(true);
+
+                Integer returnEnrollno = largest+1;
+                httpHeaders.set("enrollno", returnEnrollno.toString());
+                return new ResponseEntity<BundyClockUserItems>(u,HttpStatus.OK);
+
+            }
+        }else {
+
+            for(BundyClockUserItems u: users){
+                if(StringUtils.equals(u.getName(), name)){
+
+                    httpHeaders.set("enrollno", "Employee Already Exist");
+                    return new ResponseEntity(httpHeaders,HttpStatus.OK);
+                }
+            }
+
+            zKemKeeperService.newUserService(
+                    enrollno,
+                    name,
+                    workcode,
+                    privilege,
+                    true);
+            BundyClockUserItems u = new BundyClockUserItems();
+            u.setName(name);
+            u.setDwEnrollNumber(enrollno);
+            u.setDwEnable(true);
+
+            return new ResponseEntity<BundyClockUserItems>(u,HttpStatus.OK);
+        }
+
+
+
+        return null;
 
     }
 

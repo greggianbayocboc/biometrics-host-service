@@ -8,6 +8,7 @@ import com.hisd3.dtr.zkemkeeper.dto.BundyClockUserItems;
 import com.jacob.activeX.ActiveXComponent;
 import com.jacob.com.Dispatch;
 import com.jacob.com.Variant;
+import io.swagger.models.auth.In;
 import org.apache.commons.codec.binary.StringUtils;
 import org.apache.commons.lang.BooleanUtils;
 import org.apache.commons.lang.builder.CompareToBuilder;
@@ -428,11 +429,11 @@ public class ZKemKeeperService {
 
         ActiveXComponent mf = new ActiveXComponent("zkemkeeper.ZKEM.1");
 
-        Boolean connect_net = (Boolean)Dispatch.call(mf, "connect_Net", host, 4370).toJavaObject();
+        Boolean connect_net = (Boolean)Dispatch.call(mf, "Connect_Net", host, 4370).toJavaObject();
 
         if(BooleanUtils.isTrue(connect_net)){
 
-            Boolean enableDevice = (Boolean)Dispatch.call(mf, "enableDevice",1, false).toJavaObject();
+            Boolean enableDevice = (Boolean)Dispatch.call(mf, "EnableDevice",1, false).toJavaObject();
             if(BooleanUtils.isTrue(enableDevice)){
                 Boolean readAllUserId =(Boolean) Dispatch.call(mf, "ReadAllUserID", 1).toJavaObject();
 
@@ -604,6 +605,65 @@ public class ZKemKeeperService {
     }
 
 
+    public Boolean addUserFingerPrint(Integer enrollno, Integer fingerIndex, Integer flag){
+        ActiveXComponent mf = new ActiveXComponent("zkemkeeper.ZKEM.1");
+        Boolean connect_net = (Boolean)Dispatch.call(mf, "connect_Net", host, 4370).toJavaObject();
+        if(BooleanUtils.isTrue(connect_net)){
+            Boolean enableDevice = (Boolean)Dispatch.call(mf, "enableDevice",1, false).toJavaObject();
+
+            if(BooleanUtils.isTrue(enableDevice)){
+                Dispatch.call(mf, "CancelOperation"
+                ).toJavaObject();
+                Dispatch.call(mf, "SSR_DelUserTmpExt", 1, enrollno, fingerIndex
+                ).toJavaObject();
+                Boolean startEnroll = (Boolean) Dispatch.call(mf, "startEnrollEx",
+                        enrollno,fingerIndex,flag
+                ).toJavaObject();
+                if(startEnroll){
+                    Boolean response = (Boolean)Dispatch.call(mf, "startIdentify"
+                    ).toJavaObject();
+
+                    return response;
+                }
+
+            }
+            Object disconnect = Dispatch.call(mf, "disconnect").toJavaObject();
+
+        }else{
+            Boolean connect_com  = (Boolean) Dispatch.call(mf, "Connect_Com", 3, 1, 115200).toJavaObject();
+            if(BooleanUtils.isTrue(connect_com)){
+                Boolean enableDevice = (Boolean)Dispatch.call(mf, "enableDevice",1, false).toJavaObject();
+
+                if(BooleanUtils.isTrue(enableDevice)){
+                    Dispatch.call(mf, "CancelOperation"
+                    ).toJavaObject();
+                    Dispatch.call(mf, "SSR_DelUserTmpExt", 1, enrollno, fingerIndex
+                    ).toJavaObject();
+                    Boolean startEnroll = (Boolean) Dispatch.call(mf, "startEnrollEx",
+                            enrollno,fingerIndex,flag
+                    ).toJavaObject();
+
+                    if(startEnroll){
+                        Boolean response = (Boolean)Dispatch.call(mf, "startIdentify"
+                        ).toJavaObject();
+
+                        return response;
+                    }
+
+
+                }
+
+                Object disconnect = Dispatch.call(mf, "disconnect").toJavaObject();
+
+
+            }
+
+        }
+        return false;
+    }
+
+
+
     public void ClearGeneralLogs(){
 
         List<BundyClockLogItem> items = new ArrayList<>();
@@ -704,7 +764,7 @@ public class ZKemKeeperService {
         List<BundyClockLogItem> items = new ArrayList<>();
 
         ActiveXComponent mf = new ActiveXComponent("zkemkeeper.ZKEM.1");
-        Boolean connect_net = (Boolean) Dispatch.call(mf, "connect_Net", host, 4370).toJavaObject();
+        Boolean connect_net = (Boolean) Dispatch.call(mf, "Connect_Net", host, 4370).toJavaObject();
         Logger log = Logger.getLogger(BundyClockResource.class.getName());
 
         // Variant resultRef = new Variant((int)0, true);
@@ -714,7 +774,7 @@ public class ZKemKeeperService {
 
 
         if (BooleanUtils.isTrue(connect_net)) {
-            Boolean enableDevice = (Boolean) Dispatch.call(mf, "enableDevice", 1, false).toJavaObject();
+            Boolean enableDevice = (Boolean) Dispatch.call(mf, "EnableDevice", 1, false).toJavaObject();
 
             if (BooleanUtils.isTrue(enableDevice)) {
 

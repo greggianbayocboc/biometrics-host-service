@@ -77,7 +77,10 @@ class SidebarContainer extends React.Component {
 
       if(item.key==="1"){
           this.props.routerActions.push("/employee");
-      }else if(item.key === "2")
+      }else if(item.key === "2"){
+          this.props.routerActions.push("/settings");
+
+      }
       this.setState({
           keyPath: item.keyPath
       })

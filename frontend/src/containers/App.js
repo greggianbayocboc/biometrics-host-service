@@ -11,13 +11,11 @@ import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 
 
-import { Grid, Row, Col, MainContainer } from '@sketchpixy/rubix';
-
 import Sidebar from '../common/sidebar';
 import Headers from '../common/header';
 import Footer from '../common/footer';
 
-import { Layout, Menu, Icon } from 'antd';
+import { Layout, Menu, Icon,Col,Row } from 'antd';
 const { Header, Sider, Content } = Layout;
 
 import ModalComponent from '../components/ModalComponent'
@@ -48,12 +46,22 @@ class   App extends React.Component{
     }
 
     logout=()=>{
-        this.props.authActions.logout();
+          this.props.authActions.logout();
     }
 
     goHome = ()=>{
         this.props.routerActions.push("/");
     }
+
+    onHeaderMenuItemClick = (item)=>{
+      if(item.key === "1"){
+          this.setState({
+              collapsed: !this.state.collapsed,
+          });
+      }
+    }
+
+
 
   render(){
     return (
@@ -71,20 +79,29 @@ class   App extends React.Component{
           <Layout>
               {this.props.auth.isAuthenticated && !_.includes(this.props.location.pathname, "/") || !_.includes(this.props.location.pathname, "/login") ? (
                   <Header style={{ background: '#fff', padding: 0 }}>
-                      <Menu
-                          mode="horizontal"
-                          style={{ lineHeight: '64px', backgroundColor: "#fff"}}
-                      >
-                          <Menu.Item key="1">
-                              <Icon
-                                  className="trigger"
-                                  type={this.state.collapsed ? 'menu-unfold' : 'menu-fold'}
-                                  onClick={this.toggle}
-                              />
-                          </Menu.Item>
-                          <Menu.Item key="2">nav 2</Menu.Item>
-                          <Menu.Item key="3">nav 3</Menu.Item>
-                      </Menu>
+                      <Row>
+                          <Col span={12}>
+                              <Menu
+                                  mode="horizontal"
+                                  style={{ lineHeight: '64px', backgroundColor: "#fff"}}
+                                  onClick={this.onHeaderMenuItemClick}
+                              >
+                                  <Menu.Item key="1">
+                                      <Icon
+                                          className="trigger"
+                                          type={this.state.collapsed ? 'menu-unfold' : 'menu-fold'}
+                                          onClick={this.toggle}
+                                      />
+                                  </Menu.Item>
+                              </Menu>
+                          </Col>
+                          <Col span={12} style={{textAlign: "right",paddingRight: "10px",borderBottom:"1px solid #e8e8e8"}}>
+                              <div onClick={this.logout}>
+                                  <Icon type="logout" />
+                              </div>
+                          </Col>
+
+                      </Row>
 
             </Header>):null}
 

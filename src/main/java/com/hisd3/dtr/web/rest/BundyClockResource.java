@@ -1,11 +1,9 @@
 package com.hisd3.dtr.web.rest;
 
-import com.google.common.collect.Lists;
-import com.hisd3.dtr.web.rest.dto.EmployeeDto;
+import com.hisd3.dtr.domain.BundyClockLogs;
 import com.hisd3.dtr.zkemkeeper.dto.BundyClockLogItem;
 import com.hisd3.dtr.zkemkeeper.ZKemKeeperService;
 import com.hisd3.dtr.zkemkeeper.dto.BundyClockUserItems;
-import io.swagger.models.auth.In;
 import org.apache.catalina.servlet4preview.http.HttpServletRequest;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.SystemUtils;
@@ -14,11 +12,10 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.*;
 
-import javax.validation.Valid;
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * Created by albertoclarit on 9/2/16.
@@ -57,23 +54,77 @@ public class BundyClockResource {
         }
 
 
-       return new ResponseEntity<List<BundyClockLogItem>>(zKemKeeperService.getAllEmployeeLogsByDate(),
+       return new ResponseEntity<List<BundyClockLogItem>>(zKemKeeperService.getBundyClockLogItemsAll(),
                HttpStatus.OK);
 
     }
 
-
-
-    @RequestMapping("/getlogsbyenrollno")
-    public ResponseEntity<List<BundyClockLogItem>>getLogs(@RequestParam String enrollno){
+    @RequestMapping("/getlogsbyenrollnov2")
+    public Map<String, BundyClockLogItem> getLogsv2(@RequestParam String enrollno){
 
         if(!SystemUtils.IS_OS_WINDOWS){
 
             HttpHeaders responseHeaders = new HttpHeaders();
             responseHeaders.set("message", "This resource is only for Windows");
 
-            return new  ResponseEntity<List<BundyClockLogItem>>(responseHeaders,HttpStatus.CONFLICT);
+            //  return new  ResponseEntity<List<BundyClockLogItem>>(responseHeaders,HttpStatus.CONFLICT);
         }
+
+        List<BundyClockLogItem> logs = zKemKeeperService.getBundyClockLogItems(enrollno);
+        Map<String, List<BundyClockLogItem>> studlistGrouped =
+                logs.stream().collect(Collectors.groupingBy(w -> w.getDate()));
+
+        Map<String ,BundyClockLogItem> mapdto =  new HashMap<>();
+
+        for(String key1: studlistGrouped.keySet()){
+               for(BundyClockLogItem log: studlistGrouped.get(key1)){
+                    if(!mapdto.isEmpty()){
+                        if(mapdto.containsKey(key1)){
+                            if(StringUtils.equalsIgnoreCase(log.getDate(),mapdto.get(log.getDate()).getDate())){
+                                if(StringUtils.equalsIgnoreCase(log.getDwInoutMode(),"time in")){
+                                    mapdto.get(log.getDate()).setTimein(log.getTime());
+                                }else if(StringUtils.equalsIgnoreCase(log.getDwInoutMode(),"time out")){
+                                    mapdto.get(log.getDate()).setTimeout(log.getTime());
+                                }
+                            }
+                        }else{
+                            if(StringUtils.equalsIgnoreCase(log.getDwInoutMode(),"time in")){
+                              log.setTimein(log.getTime());
+                            }else if(StringUtils.equalsIgnoreCase(log.getDwInoutMode(),"time out")){
+                              log.setTimeout(log.getTime());
+                            }
+                            mapdto.put(log.getDate(),log);
+
+                        }
+
+                    }else{
+                        mapdto.put(log.getDate(), log);
+                    }
+
+
+
+               }
+        }
+
+
+        return mapdto;
+
+    }
+
+
+
+
+    @RequestMapping("/getlogsbyenrollno")
+    public ResponseEntity<List<BundyClockLogItem>> getLogs(@RequestParam String enrollno){
+
+        if(!SystemUtils.IS_OS_WINDOWS){
+
+            HttpHeaders responseHeaders = new HttpHeaders();
+            responseHeaders.set("message", "This resource is only for Windows");
+
+          return new  ResponseEntity<List<BundyClockLogItem>>(responseHeaders,HttpStatus.CONFLICT);
+        }
+
 
 
         return new ResponseEntity<List<BundyClockLogItem>>(zKemKeeperService.getBundyClockLogItems(enrollno),
@@ -157,7 +208,7 @@ public class BundyClockResource {
 
     @RequestMapping(value = "/addnewmeployeev2",
             produces = MediaType.TEXT_PLAIN_VALUE)
-    public ResponseEntity<BundyClockUserItems> addnewmeployeev2(
+    public ResponseEntity addnewmeployeev2(
             @RequestParam(required = false) String enrollno,
             @RequestParam String name,
             @RequestParam Integer privilege,
@@ -174,7 +225,7 @@ public class BundyClockResource {
            for(BundyClockUserItems u: users){
                if(StringUtils.equals(u.getName(), name)){
 
-                   return new ResponseEntity<BundyClockUserItems>(u,HttpStatus.OK);
+                   return new ResponseEntity<>(u, HttpStatus.OK);
 
                }
            }
@@ -196,7 +247,7 @@ public class BundyClockResource {
 
                 Integer returnEnrollno = largest+1;
                 httpHeaders.set("enrollno", returnEnrollno.toString());
-                return new ResponseEntity<BundyClockUserItems>(u,HttpStatus.OK);
+                return new ResponseEntity<>(u, HttpStatus.OK);
 
             }
         }else {
@@ -220,7 +271,7 @@ public class BundyClockResource {
             u.setDwEnrollNumber(enrollno);
             u.setDwEnable(true);
 
-            return new ResponseEntity<BundyClockUserItems>(u,HttpStatus.OK);
+            return new ResponseEntity<>(u, HttpStatus.OK);
         }
 
 
@@ -231,7 +282,7 @@ public class BundyClockResource {
 
 
     @RequestMapping("/getlogsbydate")
-    public ResponseEntity<List<BundyClockLogItem>> getlogsbydate(){
+    public ResponseEntity<List<BundyClockLogItem>> getlogsbydate(@RequestParam String enrollno){
 
         if(!SystemUtils.IS_OS_WINDOWS){
 
@@ -241,7 +292,7 @@ public class BundyClockResource {
             return new  ResponseEntity<List<BundyClockLogItem>>(responseHeaders,HttpStatus.CONFLICT);
         }
 
-        return new ResponseEntity<List<BundyClockLogItem>>(zKemKeeperService.getAllEmployeeLogsByDate(),HttpStatus.OK);
+        return new ResponseEntity<List<BundyClockLogItem>>(zKemKeeperService.getBundyClockLogItems(enrollno),HttpStatus.OK);
     }
 
 

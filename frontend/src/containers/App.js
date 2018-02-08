@@ -21,7 +21,7 @@ import { Layout, Menu, Icon } from 'antd';
 const { Header, Sider, Content } = Layout;
 
 import ModalComponent from '../components/ModalComponent'
-
+import _ from 'lodash';
 require('react-progress-2/main.css');
 require('react-progress-2/main.css');
 
@@ -58,38 +58,39 @@ class   App extends React.Component{
   render(){
     return (
         <Layout>
-            {this.props.auth.isAuthenticated ? (<Sider
+            {this.props.auth.isAuthenticated || !_.includes(this.props.location.pathname, "/")  || !_.includes(this.props.location.pathname, "/login")? (
+                <Sider
               trigger={null}
               collapsible
               collapsed={this.state.collapsed}
-              style={{ height: '100vh', position: 'fixed' }}
+              style={{ height: '100vh',background: '#fff' }}
           >
               <Sidebar />
 
           </Sider>):null}
           <Layout>
-              {this.props.auth.isAuthenticated ? (
+              {this.props.auth.isAuthenticated && !_.includes(this.props.location.pathname, "/") || !_.includes(this.props.location.pathname, "/login") ? (
                   <Header style={{ background: '#fff', padding: 0 }}>
-              <Icon
-                  className="trigger"
-                  type={this.state.collapsed ? 'menu-unfold' : 'menu-fold'}
-                  onClick={this.toggle}
-              />
-                <Icon type="upload"
-                      onClick={this.logout}
-
-                />
-
-                <Icon type="upload"
-                      onClick={this.goHome}
-
-                />
+                      <Menu
+                          mode="horizontal"
+                          style={{ lineHeight: '64px', backgroundColor: "#fff"}}
+                      >
+                          <Menu.Item key="1">
+                              <Icon
+                                  className="trigger"
+                                  type={this.state.collapsed ? 'menu-unfold' : 'menu-fold'}
+                                  onClick={this.toggle}
+                              />
+                          </Menu.Item>
+                          <Menu.Item key="2">nav 2</Menu.Item>
+                          <Menu.Item key="3">nav 3</Menu.Item>
+                      </Menu>
 
             </Header>):null}
 
 
 
-            <Content style={{ margin: '24px 16px', padding: 24, background: '#fff'}}>
+            <Content style={{ background: '#fff', padding: 24, margin: 0, minHeight: 280 }}>
                 {this.props.children}
             </Content>
           </Layout>

@@ -7,7 +7,7 @@ export let loadBundyclockLogsById= (enrollno, name)=>{
 
   return dispatch => {
 
-     get('/api/bundyclock/getlogsbyenrollno?enrollno=' + enrollno).then((response)=>{
+     get('/api/bundyclock/getlogsbyenrollnov2?enrollno=' + enrollno).then((response)=>{
 
        var records = response.data;
 

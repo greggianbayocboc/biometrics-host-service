@@ -619,13 +619,8 @@ public class ZKemKeeperService {
                 Boolean startEnroll = (Boolean) Dispatch.call(mf, "startEnrollEx",
                         enrollno,fingerIndex,flag
                 ).toJavaObject();
-                if(startEnroll){
-                    Boolean response = (Boolean)Dispatch.call(mf, "startIdentify"
-                    ).toJavaObject();
 
-                    return response;
-                }
-
+                return startEnroll;
             }
             Object disconnect = Dispatch.call(mf, "disconnect").toJavaObject();
 
@@ -643,12 +638,7 @@ public class ZKemKeeperService {
                             enrollno,fingerIndex,flag
                     ).toJavaObject();
 
-                    if(startEnroll){
-                        Boolean response = (Boolean)Dispatch.call(mf, "startIdentify"
-                        ).toJavaObject();
-
-                        return response;
-                    }
+                  return startEnroll;
 
 
                 }

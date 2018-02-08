@@ -7,7 +7,9 @@ import * as profileActions from '../actions/profileActions';
 import {routerActions} from 'react-router-redux';
 import RegisterEmployee from '../components/RegisterEmployee';
 import * as modalActions from '../actions/modalActions';
-import {Table, Button,Well,PanelContainer,Panel,PanelHeader,Grid,Row,Col,PanelBody,ButtonGroup,InputGroup,Icon} from '@sketchpixy/rubix';
+//import {Table, Button,Well,PanelContainer,Panel,PanelHeader,Grid,Row,Col,PanelBody,ButtonGroup,InputGroup,Icon} from '@sketchpixy/rubix';
+
+import { Table, Icon, Divider } from 'antd';
 class Employee extends React.Component{
 
   constructor(props){
@@ -71,56 +73,37 @@ class Employee extends React.Component{
   //     });
   // }
 
+
+
   render() {
-    var users = this.props.employee.records.map((item, i)=>{
-      return(
-        <tr key = {i}>
-          <td>{item.dwEnrollNumber}</td>
-          <td>{item.name}</td>
-          <td>{item.privilege}</td>
-          <td>
-            <Button className='btn btn-primary' onClick={this.onSelectedRow(item.dwEnrollNumber, item.name)} style={{marginRight: 5}}>View Logs</Button>
-            {/* <Button bsStyle='danger' onClick={()=>this.deleteemployee(item.dwEnrollNumber)}><Icon glyph='glyphicon glyphicon-remove' style={{marginRight: 5}}/>Delete</Button> */}
-          </td>
-        </tr>
-      );
-    });
+
+      const columns = [{
+          title: 'Enroll no.',
+          dataIndex: 'dwEnrollNumber',
+          key: 'dwEnrollNumber',
+          render: text => <a href="#">{text}</a>,
+      }, {
+          title: 'Name',
+          dataIndex: 'name',
+          key: 'name',
+      }, {
+          title: 'Privilege',
+          dataIndex: 'privilege',
+          key: 'privilege',
+      }, {
+          title: 'Action',
+          key: 'action',
+          render: (text, record) => (
+              <span>
+                  <a onClick={this.onSelectedRow(record.dwEnrollNumber, record.name)} className="ant-dropdown-link">
+                      View Logs
+                  </a>
+              </span>
+          ),
+      }];
 
     return(
-      <PanelContainer>
-        <Panel>
-          <PanelHeader className='bg-green'>
-            <Grid>
-              <Row>
-                <Col xs={12} className='fg-white'>
-                  <h1>Employee List</h1>
-                </Col>
-              </Row>
-            </Grid>
-          </PanelHeader>
-          <PanelBody>
-            <Grid>
-              <Row>
-                <Col xs={12}>
-                  <Table responsive>
-                    <thead>
-                      <tr>
-                        <th>Enroll Number</th>
-                        <th>Emp Name</th>
-                        <th>Privilege</th>
-                        <th>Info</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {users}
-                    </tbody>
-                  </Table>
-                </Col>
-              </Row>
-            </Grid>
-          </PanelBody>
-        </Panel>
-      </PanelContainer>
+        <Table columns={columns} rowKey={(item)=> item.dwEnrollNumber} dataSource={this.props.employee.records}/>
     );
   }
 }

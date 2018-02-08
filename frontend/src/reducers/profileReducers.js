@@ -4,7 +4,7 @@ import  update from 'react-addons-update';
 
 
 export default function profileReducers(state={
-    records:[],
+    records:{},
     name:null
 }, action={}) {
 

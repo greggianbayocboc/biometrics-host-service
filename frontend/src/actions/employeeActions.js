@@ -18,14 +18,22 @@ export let getEmployeeActions = () =>{
   return dispatch =>{
     get('api/bundyclock/getusers').then((response) =>{
       var records = response.data;
-      get('api/bundyclock/getlogsbydate').then((response) =>{
-        var logs = response.data;
-
-        dispatch(getEmployeeActionsSuccess(records, logs));
-
-      });
-
+        dispatch(getEmployeeActionsSuccess(records));
     });
+  }
+}
+
+export let getEmployeeLogs = (enrollno)=>{
+  return dispatch =>{
+      get('api/bundyclock/getlogsbydate',{
+        params:{
+            enrollno: enrollno
+        }
+      }).then((response) =>{
+
+          var logs = response.data;
+          dispatch(getEmployeeLogsSuccess(logs))
+      });
   }
 }
 
@@ -40,12 +48,15 @@ export let deleteEmployeeActions =(enrollno)=>{
   };
 }
 
-export let getEmployeeActionsSuccess=(records, logs)=>{
+export let getEmployeeLogsSuccess = (logs)=>{
+
+}
+
+export let getEmployeeActionsSuccess=(records)=>{
 
   return {
     type:types.LOAD_EMPLOYEE,
-    records:records,
-    logs:logs
+    records:records
   }
 
 }

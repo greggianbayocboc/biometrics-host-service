@@ -43,7 +43,7 @@ var Routes = (
   <Provider store={store}>
     <Router history={enhanceHistory}>
       <Route path ="/" component={App}>
-        <IndexRoute component={Index}/>
+        <IndexRoute component={requireAuthentication(Employee,'ROLE_USER')}/>
         <Route path ="login" component={Login}/>
         <Route path ="accessdenied" component={AccessDenied}/>
         <Route path ="success" component={SuccessPage}/>

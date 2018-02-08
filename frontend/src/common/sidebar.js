@@ -12,6 +12,9 @@ import {isInRole,isInAnyRole} from '../utils/AuthUtils'
 class SidebarContainer extends React.Component {
   constructor(props){
       super(props);
+      this.state={
+          keyPath:['1']
+      }
   }
 
   goProfile = ()=>{
@@ -69,20 +72,31 @@ class SidebarContainer extends React.Component {
     }
   }
 
+  onMenuItemClick=(item)=>{
+      console.log(item.key)
+
+      if(item.key==="1"){
+          this.props.routerActions.push("/employee");
+      }else if(item.key === "2")
+      this.setState({
+          keyPath: item.keyPath
+      })
+  }
+
   render() {
     return (
-        <Menu theme="dark" mode="inline" defaultSelectedKeys={['1']}>
-          <Menu.Item key="1" onClick={this.goProfile}>
-            <Icon type="user" />
-            <a onClick={this.goProfile}>Profile</a>
-          </Menu.Item>
-          <Menu.Item key="2" onClick={this.goEmployee}>
+        <Menu theme="dark" mode="inline" onClick={this.onMenuItemClick} defaultSelectedKeys={this.state.keyPath} style={{ height: '100%', borderRight: 0 }}>
+          <Menu.Item key="1">
             <Icon type="video-camera" />
-            <a onClick={this.goEmployee}>Employee</a>
+            <span>
+               Employee
+            </span>
           </Menu.Item>
-          <Menu.Item key="3" onClick={this.goSettings}>
+          <Menu.Item key="2">
             <Icon type="upload" />
-            <a onClick={this.goSettings}>Settings</a>
+            <span>
+                   Settings
+            </span>
           </Menu.Item>
         </Menu>
     );

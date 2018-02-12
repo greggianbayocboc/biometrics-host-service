@@ -14,9 +14,9 @@ module.exports = {
         publicPath: publicPath,
         noInfo: false,
         proxy: {
-            "/api":"http://localhost:8080",
-            "/images":"http://localhost:8080",
-            "/restapi":"http://localhost:8080"
+            "/api":"http://192.168.7.100:8080",
+            "/images":"http://192.168.7.100:8080",
+            "/restapi":"http://192.168.7.100:8080"
         }
     },
     module: {

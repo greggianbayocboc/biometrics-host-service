@@ -49,7 +49,7 @@ var Routes = (
         <Route path ="success" component={SuccessPage}/>
         <Route path ="secure" component={requireAuthentication(SecurePage,'ROLE_USER')}/>
         <Route path ="employee" component={requireAuthentication(Employee,'ROLE_ADMIN')}/>
-        <Route path ="profile" component={requireAuthentication(Profile,'ROLE_USER')}/>
+        <Route path ="profile/:name/:id" component={requireAuthentication(Profile,'ROLE_USER')}/>
         <Route path ="settings" component={requireAuthentication(Settings,'ROLE_ADMIN')}/>
         <Route path ="adduser" component={requireAuthentication(RegisterUser,'ROLE_ADMIN')}/>
         <Route path ="addemployee" component={requireAuthentication(RegisterEmployee,'ROLE_ADMIN')}/>

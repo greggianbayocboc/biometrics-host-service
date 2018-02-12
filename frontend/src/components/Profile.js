@@ -10,7 +10,7 @@ import { routerActions } from 'react-router-redux';
 import _ from 'lodash'
 import moment from 'moment';
 
-import { Table, Icon, Divider } from 'antd';
+import { Table, Icon, Divider ,Spin,Button,Row,Col} from 'antd';
 import {post, get, _delete} from '~/src/utils/RestClient';
 
 class Profile extends React.Component{
@@ -19,8 +19,26 @@ class Profile extends React.Component{
     super(props);
     this.state = {
       filter: '',
-        logs: []
+        logs: [],
+        isLoading: false
     }
+  }
+
+  componentDidMount(){
+      this.setState({
+          isLoading: true
+      })
+      get('/api/bundyclock/getlogsbyenrollnov2?enrollno=' + this.props.params.id).then((response)=>{
+
+          var records = response.data;
+
+          this.setState({
+              logs: records,
+              isLoading:false
+          })
+
+
+      });
   }
 
 
@@ -34,11 +52,11 @@ class Profile extends React.Component{
 
   render(){
 
-    var keys = Object.keys(this.props.profile.records)
+    var keys = Object.keys(this.state.logs)
     const datas = []
       if(keys)
       for (let i = 0; i <= keys.length; i++) {
-          var item = this.props.profile.records[keys[i]];
+          var item = this.state.logs[keys[i]];
           if(item){
               console.log(item, "item")
               datas.push({
@@ -51,16 +69,18 @@ class Profile extends React.Component{
 
       }
 
-      console.log(keys, "item")
+      console.log(datas, "item")
 
       const columns = [{
           title: 'Name',
           key: 'name',
-          render:()=> <a href="#">{this.props.profile.name}</a>,
+          render:()=> <a href="#">{this.props.params.name}</a>,
       },{
           title: 'Date',
           dataIndex: 'date',
           key: 'date',
+          sortOrder:"descend",
+          sorter: (a, b) => moment.utc(moment(a.date, "MM/DD/YYYY")).diff(moment.utc(moment(b.date,"MM/DD/YYYY"))),
       }, {
           title: 'Time in',
           dataIndex: 'timein',
@@ -71,7 +91,26 @@ class Profile extends React.Component{
           key: 'timeout',
       }];
     return(
-        <Table columns={columns} rowKey={(item)=> item.key} dataSource={datas} />
+        <div >
+            <h1 style={{marginLeft: "10px"}}> {this.props.params.name}</h1>
+            <Row>
+                <Col span={24}>
+                    <Spin spinning={this.state.isLoading}>
+                        <Table columns={columns} rowKey={(item)=> item.key} dataSource={datas} />
+                    </Spin>
+                </Col>
+            </Row>
+            <Row>
+                <Col span={24} style={{textAlign: "right"}}>
+                    <Button type={"danger"} onClick={this.goBack} style={{marginTop: "10px",marginLeft: "10px"}}>
+                        Back
+                    </Button>
+                </Col>
+            </Row>
+
+        </div>
+
+
     )
   }
 }

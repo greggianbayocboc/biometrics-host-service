@@ -50,8 +50,8 @@ class Login extends React.Component {
 
         return (
 
-            <div style={{width: "40%", margin:"auto"}}>
-                <h1>asdfasdf</h1>
+            <div style={{width: "20%", margin:"auto"}}>
+                <h1>Login</h1>
                 <Form onSubmit={this.onFormSubmit} className="login-form">
                     <FormItem>
                         {getFieldDecorator('j_username', {
@@ -76,12 +76,10 @@ class Login extends React.Component {
                         })(
                             <Checkbox>Remember me</Checkbox>
                         )}
-                        <a className="login-form-forgot" href="">Forgot password</a>
-                        <Button type="primary" htmlType="submit" className="login-form-button">
-                            Log in
-                        </Button>
-                        Or <a href="">register now!</a>
                     </FormItem>
+                    <Button type="primary" htmlType="submit" className="login-form-button">
+                        Log in
+                    </Button>
                 </Form>
             </div>
 

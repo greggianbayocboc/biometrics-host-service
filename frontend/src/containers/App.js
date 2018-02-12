@@ -23,7 +23,6 @@ import _ from 'lodash';
 require('react-progress-2/main.css');
 require('react-progress-2/main.css');
 
-require('../styles/css/custom-styles.css');
 class   App extends React.Component{
 
   constructor(props){
@@ -107,7 +106,8 @@ class   App extends React.Component{
 
 
 
-            <Content style={{ background: '#fff', padding: 24, margin: 0, minHeight: 280 }}>
+            <Content style={{ background: '#fff', paddingTop: 24, margin: 0, minHeight: 280 }}>
+
                 {this.props.children}
             </Content>
           </Layout>

@@ -23,8 +23,7 @@ class Employee extends React.Component{
 
   onSelectedRow=(enrollno, name)=>{
     return ()=>{
-      this.props.profileActions.loadBundyclockLogsById(enrollno, name);
-      this.props.routerActions.push("/profile");
+      this.props.routerActions.push("/profile/"+name+"/"+enrollno);
     }
   }
 
@@ -77,10 +76,14 @@ class Employee extends React.Component{
 
   render() {
 
+
+
       const columns = [{
           title: 'Enroll no.',
           dataIndex: 'dwEnrollNumber',
           key: 'dwEnrollNumber',
+          sortOrder: 'ascend',
+          sorter: (a, b) => a.dwEnrollNumber-b.dwEnrollNumber,
           render: text => <a href="#">{text}</a>,
       }, {
           title: 'Name',
@@ -103,7 +106,10 @@ class Employee extends React.Component{
       }];
 
     return(
-        <Table columns={columns} rowKey={(item)=> item.dwEnrollNumber} dataSource={this.props.employee.records}/>
+        <div >
+            <h1 style={{marginLeft: "10px"}}>Employees</h1>
+            <Table columns={columns} rowKey={(item)=> item.dwEnrollNumber} dataSource={this.props.employee.records}/>
+        </div>
     );
   }
 }

@@ -70,12 +70,12 @@ class   App extends React.Component{
               trigger={null}
               collapsible
               collapsed={this.state.collapsed}
-              style={{ height: '100vh',background: '#fff' }}
+              style={{ overflow: 'auto', height: '100vh', position: 'fixed', left: 0 }}
           >
               <Sidebar />
 
           </Sider>):null}
-          <Layout>
+          <Layout  style={{ marginLeft: 200 }}>
               {this.props.auth.isAuthenticated && !_.includes(this.props.location.pathname, "/") || !_.includes(this.props.location.pathname, "/login") ? (
                   <Header style={{ background: '#fff', padding: 0 }}>
                       <Row>
@@ -106,7 +106,7 @@ class   App extends React.Component{
 
 
 
-            <Content style={{ background: '#fff', paddingTop: 24, margin: 0, minHeight: 280 }}>
+            <Content style={{ background: '#fff', paddingTop: 24, margin: 0, minHeight: 280,overflow: 'initial'}}>
 
                 {this.props.children}
             </Content>

@@ -78,8 +78,6 @@ class   App extends React.Component{
             {this.props.auth.isAuthenticated || !_.includes(this.props.location.pathname, "/")  || !_.includes(this.props.location.pathname, "/login")? (
                 <Sider
               trigger={null}
-              collapsible
-              collapsed={this.state.collapsed}
               style={{ overflow: 'auto', height: '100vh', position: 'fixed', left: 0 }}
           >
               <Sidebar {...this.props} />
@@ -90,19 +88,7 @@ class   App extends React.Component{
                   <Header style={{ background: '#fff', padding: 0 }}>
                       <Row>
                           <Col span={12}>
-                              <Menu
-                                  mode="horizontal"
-                                  style={{ lineHeight: '64px', backgroundColor: "#fff"}}
-                                  onClick={this.onHeaderMenuItemClick}
-                              >
-                                  <Menu.Item key="1">
-                                      <Icon
-                                          className="trigger"
-                                          type={this.state.collapsed ? 'menu-unfold' : 'menu-fold'}
-                                          onClick={this.toggle}
-                                      />
-                                  </Menu.Item>
-                              </Menu>
+
                           </Col>
                           <Col span={12} style={{textAlign: "right",paddingRight: "10px",borderBottom:"1px solid #e8e8e8"}}>
                               <div onClick={this.logout}>

@@ -6,14 +6,14 @@ import { connect } from 'react-redux';
 import * as AuthActions from '../actions/authactions';
 import * as profileActions from '../actions/profileActions';
 import { routerActions } from 'react-router-redux';
-
+import _ from "lodash";
 import {isInRole,isInAnyRole} from '../utils/AuthUtils'
 
 class SidebarContainer extends React.Component {
   constructor(props){
       super(props);
       this.state={
-          keyPath:_.includes(this.props.location.pathname, "/")?["/employee"]:["/employee"]
+          keyPath:this.props.location.pathname==="/"?["/employee"]:[this.props.location.pathname]
       }
   }
 
@@ -87,8 +87,10 @@ class SidebarContainer extends React.Component {
   }
 
   render() {
+      console.log(this.state.keyPath, "props")
+      console.log(this.props.location.pathname, "location")
     return (
-        <Menu theme="dark" mode="inline" onClick={this.onMenuItemClick} defaultSelectedKeys={this.state.keyPath} style={{ height: '100%', borderRight: 0 }}>
+        <Menu theme="dark" mode="inline" selectedKeys={this.state.keyPath} onClick={this.onMenuItemClick} defaultSelectedKeys={this.state.keyPath} style={{ height: '100%', borderRight: 0 }}>
           <Menu.Item key="/employee">
             <Icon type="video-camera" />
             <span>

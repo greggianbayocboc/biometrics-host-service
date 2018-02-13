@@ -47,4 +47,4 @@ spring.data.rest.basePath: /restapi
 spring.data.rest.baseUri: /restapi
 
 
-zkemkeeper.host: 192.168.7.99
+zkemkeeper.host: 10.10.10.2

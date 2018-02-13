@@ -118,9 +118,9 @@ class NewDeviceSingleton extends React.Component{
         };
 
         return(
-            <Modal maskClosable={false} visible={this.state.show} title={"New Device"} footer={null} width={"45%"} onCancel={this.close()}>
+            <Modal maskClosable={false} visible={this.state.show} title={"New Device"} footer={null} width={"50%"} onCancel={this.close()}>
                 <Spin spinning={this.state.loading}>
-                    <NewDeviceForm onSubmit={(data)=>this.beforeClose(data)} handleCancel={this.close()} activeRecord={this.state.activeRecord}/>
+                    <NewDeviceForm onSubmit={(data)=>this.beforeClose(data)} handleCancel={this.close()} activeRecord={this.props.data}/>
                 </Spin>
             </Modal>
         )

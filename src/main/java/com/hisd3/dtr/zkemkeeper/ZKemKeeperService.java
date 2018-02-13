@@ -1,8 +1,11 @@
 package com.hisd3.dtr.zkemkeeper;
 
 import com.hisd3.dtr.domain.BundyClockLogs;
+import com.hisd3.dtr.domain.Device;
 import com.hisd3.dtr.repository.BundyClockRepository;
+import com.hisd3.dtr.repository.DeviceRepository;
 import com.hisd3.dtr.web.rest.BundyClockResource;
+import com.hisd3.dtr.web.rest.dto.DeviceDto;
 import com.hisd3.dtr.zkemkeeper.dto.BundyClockLogItem;
 import com.hisd3.dtr.zkemkeeper.dto.BundyClockUserItems;
 import com.jacob.activeX.ActiveXComponent;
@@ -33,15 +36,27 @@ public class ZKemKeeperService {
     @Inject
     private BundyClockRepository bundyClockRepository;
 
+    @Inject
+    private DeviceRepository deviceRepository;
 
-    @Value("${zkemkeeper.host}")
-    String host;
-
-    public List<BundyClockLogItem> getBundyClockLogItems(String enrollno){
-        List<BundyClockLogItem> items = new ArrayList<>();
+    public Boolean checkDeviceConnection(DeviceDto device){
+        String host = device.getIp_address();
+        String port = device.getPort();
 
         ActiveXComponent mf = new ActiveXComponent("zkemkeeper.ZKEM.1");
-        Boolean connect_net = (Boolean)Dispatch.call(mf, "connect_Net", host, 4370).toJavaObject();
+        Boolean connect_net = (Boolean)Dispatch.call(mf, "connect_Net", host, port).toJavaObject();
+
+        return connect_net;
+    }
+
+    public List<BundyClockLogItem> getBundyClockLogItems(Device setting,String enrollno){
+        List<BundyClockLogItem> items = new ArrayList<>();
+
+        String host = setting.getIp_address();
+        String port = setting.getPort();
+
+        ActiveXComponent mf = new ActiveXComponent("zkemkeeper.ZKEM.1");
+        Boolean connect_net = (Boolean)Dispatch.call(mf, "connect_Net", host, port).toJavaObject();
         Logger log = Logger.getLogger(BundyClockResource.class.getName());
 
        // Variant resultRef = new Variant((int)0, true);
@@ -235,11 +250,14 @@ public class ZKemKeeperService {
     }
 
 
-    public List<BundyClockLogItem> getBundyClockLogItemsAll(){
+    public List<BundyClockLogItem> getBundyClockLogItemsAll(Device setting){
         List<BundyClockLogItem> items = new ArrayList<>();
 
+        String host = setting.getIp_address();
+        String port = setting.getPort();
+
         ActiveXComponent mf = new ActiveXComponent("zkemkeeper.ZKEM.1");
-        Boolean connect_net = (Boolean)Dispatch.call(mf, "connect_Net", host, 4370).toJavaObject();
+        Boolean connect_net = (Boolean)Dispatch.call(mf, "connect_Net", host, port).toJavaObject();
         Logger log = Logger.getLogger(BundyClockResource.class.getName());
 
         // Variant resultRef = new Variant((int)0, true);
@@ -424,12 +442,15 @@ public class ZKemKeeperService {
         return items;
     }
 
-    public List<BundyClockUserItems> getUserAllUser(){
+    public List<BundyClockUserItems> getUserAllUser(Device setting){
         List<BundyClockUserItems> items = new ArrayList<>();
+
+        String host = setting.getIp_address();
+        String port = setting.getPort();
 
         ActiveXComponent mf = new ActiveXComponent("zkemkeeper.ZKEM.1");
 
-        Boolean connect_net = (Boolean)Dispatch.call(mf, "Connect_Net", host, 4370).toJavaObject();
+        Boolean connect_net = (Boolean)Dispatch.call(mf, "Connect_Net", host, port).toJavaObject();
 
         if(BooleanUtils.isTrue(connect_net)){
 
@@ -525,10 +546,11 @@ public class ZKemKeeperService {
     }
 
 
-    public void deleteUserInfo(String enrollno){
+    public void deleteUserInfo(Device setting,String enrollno){
         ActiveXComponent mf = new ActiveXComponent("zkemkeeper.ZKEM.1");
-
-        Boolean connect_net = (Boolean)Dispatch.call(mf, "connect_Net", host, 4370).toJavaObject();
+        String host = setting.getIp_address();
+        String port = setting.getPort();
+        Boolean connect_net = (Boolean)Dispatch.call(mf, "connect_Net", host, port).toJavaObject();
 
         if(BooleanUtils.isTrue(connect_net)){
             Boolean enableDevice = (Boolean)Dispatch.call(mf, "enableDevice",1, false).toJavaObject();
@@ -564,9 +586,11 @@ public class ZKemKeeperService {
     }
 
 
-    public void newUserService(String enrollno,String name, Integer workcode, Integer privilege, Boolean enable){
+    public void newUserService(Device setting,String enrollno,String name, Integer workcode, Integer privilege, Boolean enable){
         ActiveXComponent mf = new ActiveXComponent("zkemkeeper.ZKEM.1");
-        Boolean connect_net = (Boolean)Dispatch.call(mf, "connect_Net", host, 4370).toJavaObject();
+        String host = setting.getIp_address();
+        String port = setting.getPort();
+        Boolean connect_net = (Boolean)Dispatch.call(mf, "connect_Net", host, port).toJavaObject();
             if(BooleanUtils.isTrue(connect_net)){
                 Boolean enableDevice = (Boolean)Dispatch.call(mf, "enableDevice",1, false).toJavaObject();
                     if(BooleanUtils.isTrue(enableDevice)){
@@ -605,9 +629,11 @@ public class ZKemKeeperService {
     }
 
 
-    public Boolean addUserFingerPrint(Integer enrollno, Integer fingerIndex, Integer flag){
+    public Boolean addUserFingerPrint(Device setting,Integer enrollno, Integer fingerIndex, Integer flag){
         ActiveXComponent mf = new ActiveXComponent("zkemkeeper.ZKEM.1");
-        Boolean connect_net = (Boolean)Dispatch.call(mf, "connect_Net", host, 4370).toJavaObject();
+        String host = setting.getIp_address();
+        String port = setting.getPort();
+        Boolean connect_net = (Boolean)Dispatch.call(mf, "connect_Net", host, port).toJavaObject();
         if(BooleanUtils.isTrue(connect_net)){
             Boolean enableDevice = (Boolean)Dispatch.call(mf, "enableDevice",1, false).toJavaObject();
 
@@ -654,12 +680,15 @@ public class ZKemKeeperService {
 
 
 
-    public void ClearGeneralLogs(){
+    public void ClearGeneralLogs(Device setting){
 
         List<BundyClockLogItem> items = new ArrayList<>();
 
+        String host = setting.getIp_address();
+        String port = setting.getPort();
+
         ActiveXComponent mf = new ActiveXComponent("zkemkeeper.ZKEM.1");
-        Boolean connect_net = (Boolean)Dispatch.call(mf, "connect_Net", host, 4370).toJavaObject();
+        Boolean connect_net = (Boolean)Dispatch.call(mf, "connect_Net", host, port).toJavaObject();
         Logger log = Logger.getLogger(BundyClockResource.class.getName());
 
         // Variant resultRef = new Variant((int)0, true);
@@ -750,11 +779,13 @@ public class ZKemKeeperService {
 
 
 
-    public List<BundyClockLogItem> getAllEmployeeLogsByDate() {
+    public List<BundyClockLogItem> getAllEmployeeLogsByDate(Device setting) {
         List<BundyClockLogItem> items = new ArrayList<>();
 
+        String host = setting.getIp_address();
+        String port = setting.getPort();
         ActiveXComponent mf = new ActiveXComponent("zkemkeeper.ZKEM.1");
-        Boolean connect_net = (Boolean) Dispatch.call(mf, "Connect_Net", host, 4370).toJavaObject();
+        Boolean connect_net = (Boolean) Dispatch.call(mf, "Connect_Net", host, port).toJavaObject();
         Logger log = Logger.getLogger(BundyClockResource.class.getName());
 
         // Variant resultRef = new Variant((int)0, true);

@@ -63,6 +63,16 @@ class   App extends React.Component{
 
 
   render(){
+
+
+      let layOutStyle = this.props.auth.isAuthenticated || !_.includes(this.props.location.pathname, "/")  || !_.includes(this.props.location.pathname, "/login")?
+          {
+              marginLeft: 200
+          }:
+          {
+              marginLeft: 0
+          }
+
     return (
         <Layout>
             {this.props.auth.isAuthenticated || !_.includes(this.props.location.pathname, "/")  || !_.includes(this.props.location.pathname, "/login")? (
@@ -72,10 +82,10 @@ class   App extends React.Component{
               collapsed={this.state.collapsed}
               style={{ overflow: 'auto', height: '100vh', position: 'fixed', left: 0 }}
           >
-              <Sidebar />
+              <Sidebar {...this.props} />
 
           </Sider>):null}
-          <Layout  style={{ marginLeft: 200 }}>
+          <Layout  style={layOutStyle}>
               {this.props.auth.isAuthenticated && !_.includes(this.props.location.pathname, "/") || !_.includes(this.props.location.pathname, "/login") ? (
                   <Header style={{ background: '#fff', padding: 0 }}>
                       <Row>

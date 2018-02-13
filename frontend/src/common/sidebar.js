@@ -13,7 +13,7 @@ class SidebarContainer extends React.Component {
   constructor(props){
       super(props);
       this.state={
-          keyPath:['1']
+          keyPath:[this.props.location.pathname]
       }
   }
 
@@ -75,9 +75,9 @@ class SidebarContainer extends React.Component {
   onMenuItemClick=(item)=>{
       console.log(item.key)
 
-      if(item.key==="1"){
+      if(item.key==="/employee"){
           this.props.routerActions.push("/employee");
-      }else if(item.key === "2"){
+      }else if(item.key === "/settings"){
           this.props.routerActions.push("/settings");
 
       }
@@ -89,13 +89,13 @@ class SidebarContainer extends React.Component {
   render() {
     return (
         <Menu theme="dark" mode="inline" onClick={this.onMenuItemClick} defaultSelectedKeys={this.state.keyPath} style={{ height: '100%', borderRight: 0 }}>
-          <Menu.Item key="1">
+          <Menu.Item key="/employee">
             <Icon type="video-camera" />
             <span>
                Employee
             </span>
           </Menu.Item>
-          <Menu.Item key="2">
+          <Menu.Item key="/settings">
             <Icon type="upload" />
             <span>
                    Settings

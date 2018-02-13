@@ -12,6 +12,9 @@ const FormItem = Form.Item;
 class SettingsForm extends React.Component{
     constructor(props){
         super(props);
+        this.state ={
+            loading: false
+        }
     }
 
     handleSubmit = (e) => {
@@ -22,6 +25,40 @@ class SettingsForm extends React.Component{
                 this.props.onSubmit(values)
             }
         });
+    }
+
+    checkDeviceConnection  = (data) =>{
+        return()=>{
+            delete data._links
+            this.props.form.validateFields((err, values) => {
+                if (!err) {
+                    values.id = this.props.activeRecord.id?this.props.activeRecord.id:null;
+                    this.setState({
+                        loading:true
+                    })
+                        post("/api/bundyclock/checkdeviceconnection",values).then((response)=>{
+                            console.log(response,"response")
+                            if(response.headers.message === "success"){
+                                message.success("Connection Success")
+                                this.setState({
+                                    loading:false
+                                })
+                            }else{
+                                message.error("Connection Failure")
+                                this.setState({
+                                    loading:false
+                                })
+
+                            }
+                        }).catch((error)=>{
+                            console.log(error)
+                        })
+
+                }
+            });
+
+
+        }
     }
 
 
@@ -74,9 +111,9 @@ class SettingsForm extends React.Component{
                     <Col span={12} style={{paddingLeft: "10px"}}>
                         <FormItem>
                             <Button type={"primary"} htmlType="submit" icon={"plus"} className="login-form-button" style={{marginRight: "10px"}}>
-                                Add
+                                {this.props.activeRecord.id?"Update": "Add"}
                             </Button>
-                            <Button htmlType="submit" icon={"link"} className="login-form-button" style={{backgroundColor:"#00d044", color:"#fff"}}>
+                            <Button onClick={this.checkDeviceConnection(this.props.activeRecord)} icon={"link"} className="login-form-button" style={{backgroundColor:"#00d044", color:"#fff"}}>
                                 Check Connection
                             </Button>
                         </FormItem>

@@ -18,6 +18,7 @@ class SettingsForm extends React.Component{
         e.preventDefault();
         this.props.form.validateFields((err, values) => {
             if (!err) {
+                values.id = this.props.activeRecord.id?this.props.activeRecord.id:null;
                 this.props.onSubmit(values)
             }
         });

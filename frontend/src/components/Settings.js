@@ -65,6 +65,7 @@ class Settings extends React.Component{
 
     openFormModal = () =>{
         NewDeviceSingleton.show({
+            data:{},
             onSuccess:(data)=>{
                 NewDeviceSingleton.hide()
                 this.addDevice(data)

@@ -9,7 +9,8 @@ export let upSert = (data) =>{
         if(data.id){
             patch("/restapi/devices/"+data.id, data).then((response)=>{
                 if(response){
-                    message.success('Device succesfully added');
+                    message.success('Device succesfully updated');
+                    dispatch(getAllDevices(0))
                 }
 
             }).catch((error)=>{
@@ -20,6 +21,8 @@ export let upSert = (data) =>{
             post("/restapi/devices/", data).then((response)=>{
                 if(response){
                     message.success('Device succesfully added');
+                    dispatch(getAllDevices(0))
+
                 }
 
             }).catch((error)=>{

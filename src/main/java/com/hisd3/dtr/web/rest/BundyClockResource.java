@@ -402,7 +402,7 @@ public class BundyClockResource {
 
         List<Device> devices = deviceRepository.findAll();
         for(Device d:devices){
-            if(d.getId() == body.getId()){
+            if(d.getId().equals(body.getId())){
                     d.setDefault_device(true);
                     deviceRepository.save(d);
 

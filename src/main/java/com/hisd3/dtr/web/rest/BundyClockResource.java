@@ -7,6 +7,7 @@ import com.hisd3.dtr.web.rest.dto.DeviceDto;
 import com.hisd3.dtr.zkemkeeper.dto.BundyClockLogItem;
 import com.hisd3.dtr.zkemkeeper.ZKemKeeperService;
 import com.hisd3.dtr.zkemkeeper.dto.BundyClockUserItems;
+import io.swagger.models.auth.In;
 import org.apache.catalina.servlet4preview.http.HttpServletRequest;
 import org.apache.commons.lang.BooleanUtils;
 import org.apache.commons.lang.StringUtils;
@@ -398,14 +399,28 @@ public class BundyClockResource {
     public ResponseEntity setasdefault(@RequestBody DeviceDto body){
         HttpHeaders httpHeaders = new HttpHeaders();
 
+        Boolean connectStatus = zKemKeeperService.checkDeviceConnection(body);
+
         List<Device> devices = deviceRepository.findAll();
         for(Device d:devices){
             if(d.getId() == body.getId()){
-                d.setDefault_device(true);
-                deviceRepository.save(d);
+                if(BooleanUtils.isTrue(connectStatus)){
+                    d.setDefault_device(true);
+                    deviceRepository.save(d);
+
+                    httpHeaders.set("message","Successfully set as default device");
+                    httpHeaders.set("connection","true");
+                    return new ResponseEntity(httpHeaders,HttpStatus.OK);
+                }else{
+
+                    httpHeaders.set("message","Can't connect to device");
+                    httpHeaders.set("connection","false");
+                    return new ResponseEntity(httpHeaders,HttpStatus.OK);
+                }
             }else{
                 d.setDefault_device(false);
                 deviceRepository.save(d);
+
             }
         }
 
@@ -416,7 +431,7 @@ public class BundyClockResource {
     }
 
     @RequestMapping("/checkdeviceconnection")
-    public ResponseEntity checkdeviceconnection(@RequestBody DeviceDto body){
+    public ResponseEntity<Integer> checkdeviceconnection(@RequestBody DeviceDto body,@RequestParam Integer index){
         HttpHeaders httpHeaders = new HttpHeaders();
 
         Boolean connectionStatus = zKemKeeperService.checkDeviceConnection(body);
@@ -424,10 +439,10 @@ public class BundyClockResource {
         if(BooleanUtils.isTrue(connectionStatus)){
 
             httpHeaders.set("message","success");
-            return new ResponseEntity(httpHeaders,HttpStatus.OK);
+            return new ResponseEntity(index,httpHeaders, HttpStatus.OK);
         }else{
             httpHeaders.set("message","failed");
-            return new ResponseEntity(httpHeaders,HttpStatus.OK);
+            return new ResponseEntity(index,httpHeaders,HttpStatus.OK);
         }
 
 

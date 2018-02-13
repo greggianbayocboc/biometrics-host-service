@@ -12,7 +12,8 @@ import {post,get,patch} from '~/src/utils/RestClient';
 import {message } from 'antd';
 import RegisterEmployee from '../components/RegisterEmployee';
 import NewDeviceSingleton from './modal/NewDeviceSingleton';
-
+import update from 'react-addons-update';
+import _ from "lodash"
 import { Form, Icon, Input, Button, Checkbox,Row,Col,Tabs ,Table} from 'antd';
 const FormItem = Form.Item;
 const TabPane = Tabs.TabPane;
@@ -21,7 +22,9 @@ class Settings extends React.Component{
     constructor(props){
         super(props);
         this.state = {
-            loading :false
+           loading :[{
+               id: -1
+           }]
         }
     }
 
@@ -91,23 +94,38 @@ class Settings extends React.Component{
         }
     }
 
-    checkDeviceConnection  = (data) =>{
+    checkDeviceConnection  = (index,data) =>{
         return()=>{
             delete data._links
-            this.setState({
-                loading:true
+            console.log(index,"index")
+            let indexes = update(this.state.loading,{
+                $push: [index]
             })
-            post("/api/bundyclock/checkdeviceconnection",data).then((response)=>{
+            this.setState({
+                loading: indexes
+            })
+            post("/api/bundyclock/checkdeviceconnection",data,{
+                params:{
+                    index: index
+                }
+            }).then((response)=>{
                 console.log(response,"response")
                 if(response.headers.message === "success"){
                     message.success("Connection Success")
+                   let removedKey =_.remove(this.state.loading, (n)=>{
+                      return n !== response.data
+                   });
                     this.setState({
-                        loading:false
+                        loading:removedKey
                     })
                 }else{
                     message.error("Connection Failure")
+                    console.log(response, "response error")
+                    let removedKey =_.remove(this.state.loading, (n)=>{
+                        return n !== response.data
+                    })
                     this.setState({
-                        loading:false
+                        loading:removedKey
                     })
 
                 }
@@ -146,7 +164,7 @@ class Settings extends React.Component{
                     <span>
                         <Button onClick={this.openViewFormModal(record)} style={{marginRight: "10px"}}>View</Button>
                         <Button onClick={this.setAsDefaultDevice(record)} style={{marginRight: "10px"}}>Set As Default</Button>
-                        <Button loading={this.state.loading} onClick={this.checkDeviceConnection(record)}>Check Connection</Button>
+                        <Button loading={_.includes(this.state.loading, record.id)} onClick={this.checkDeviceConnection(record.id,record)}>Check Connection</Button>
                     </span>
             }
         ]

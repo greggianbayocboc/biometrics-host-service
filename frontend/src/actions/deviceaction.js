@@ -63,7 +63,15 @@ export let getAllDevices = (page)=>{
 export let setDefaultDevice = (data)=>{
         return dipatch =>{
             post("/api/bundyclock/setasdefault",data).then((response)=>{
-                dipatch(getAllDevices(0))
+                if(response.headers.connection === "true"){
+                    message.success(response.headers.message)
+                    dipatch(getAllDevices(0))
+
+                }else{
+                    message.success(response.headers.message)
+                    dipatch(getAllDevices(0))
+
+                }
             }).catch((error)=>{
                 console.log(error)
             })

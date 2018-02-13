@@ -90,7 +90,7 @@ class   App extends React.Component{
                           <Col span={12}>
 
                           </Col>
-                          <Col span={12} style={{textAlign: "right",paddingRight: "10px",borderBottom:"1px solid #e8e8e8"}}>
+                          <Col span={12} style={{textAlign: "right",paddingRight: "10px"}}>
                               <div onClick={this.logout}>
                                   <Icon type="logout" />
                               </div>

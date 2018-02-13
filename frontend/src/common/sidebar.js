@@ -13,7 +13,7 @@ class SidebarContainer extends React.Component {
   constructor(props){
       super(props);
       this.state={
-          keyPath:[this.props.location.pathname]
+          keyPath:_.includes(this.props.location.pathname, "/")?["/employee"]:["/employee"]
       }
   }
 

@@ -110,10 +110,10 @@ class SettingsForm extends React.Component{
                 <Row>
                     <Col span={12} style={{paddingLeft: "10px"}}>
                         <FormItem>
-                            <Button type={"primary"} htmlType="submit" icon={"plus"} className="login-form-button" style={{marginRight: "10px"}}>
+                            <Button loading={this.state.loading} type={"primary"} htmlType="submit" icon={"plus"} className="login-form-button" style={{marginRight: "10px"}}>
                                 {this.props.activeRecord.id?"Update": "Add"}
                             </Button>
-                            <Button onClick={this.checkDeviceConnection(this.props.activeRecord)} icon={"link"} className="login-form-button" style={{backgroundColor:"#00d044", color:"#fff"}}>
+                            <Button loading={this.state.loading} onClick={this.checkDeviceConnection(this.props.activeRecord)} icon={"link"} className="login-form-button" style={{backgroundColor:"#00d044", color:"#fff"}}>
                                 Check Connection
                             </Button>
                         </FormItem>

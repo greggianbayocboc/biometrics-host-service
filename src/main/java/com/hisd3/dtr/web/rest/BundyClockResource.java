@@ -399,24 +399,13 @@ public class BundyClockResource {
     public ResponseEntity setasdefault(@RequestBody DeviceDto body){
         HttpHeaders httpHeaders = new HttpHeaders();
 
-        Boolean connectStatus = zKemKeeperService.checkDeviceConnection(body);
 
         List<Device> devices = deviceRepository.findAll();
         for(Device d:devices){
             if(d.getId() == body.getId()){
-                if(BooleanUtils.isTrue(connectStatus)){
                     d.setDefault_device(true);
                     deviceRepository.save(d);
 
-                    httpHeaders.set("message","Successfully set as default device");
-                    httpHeaders.set("connection","true");
-                    return new ResponseEntity(httpHeaders,HttpStatus.OK);
-                }else{
-
-                    httpHeaders.set("message","Can't connect to device");
-                    httpHeaders.set("connection","false");
-                    return new ResponseEntity(httpHeaders,HttpStatus.OK);
-                }
             }else{
                 d.setDefault_device(false);
                 deviceRepository.save(d);
@@ -431,7 +420,7 @@ public class BundyClockResource {
     }
 
     @RequestMapping("/checkdeviceconnection")
-    public ResponseEntity<Integer> checkdeviceconnection(@RequestBody DeviceDto body,@RequestParam Integer index){
+    public ResponseEntity<Integer> checkdeviceconnection(@RequestBody DeviceDto body,@RequestParam(required = false) Integer index){
         HttpHeaders httpHeaders = new HttpHeaders();
 
         Boolean connectionStatus = zKemKeeperService.checkDeviceConnection(body);

@@ -24,7 +24,10 @@ class Settings extends React.Component{
         this.state = {
            loading :[{
                id: -1
-           }]
+           }],
+            loadingSetdefault :[{
+               id: -1
+            }]
         }
     }
 
@@ -58,9 +61,44 @@ class Settings extends React.Component{
         this.props.deviceaction.upSert(data)
 
     }
-    setAsDefaultDevice = (data)=>{
+    setAsDefaultDevice = (index,data)=>{
         return()=>{
-            this.props.deviceaction.setDefaultDevice(data)
+            delete data._links
+            console.log(index,"index")
+            let indexes = update(this.state.loadingSetdefault,{
+                $push: [index]
+            })
+            this.setState({
+                loadingSetdefault: indexes
+            })
+            post("/api/bundyclock/checkdeviceconnection",data,{
+                params:{
+                    index: index
+                }
+            }).then((response)=>{
+                console.log(response,"response")
+                if(response.headers.message === "success"){
+                    message.success("Connection Success")
+                    let removedKey =_.remove(this.state.loadingSetdefault, (n)=>{
+                        return n !== response.data
+                    });
+                    this.setState({
+                        loadingSetdefault:removedKey
+                    },this.props.deviceaction.setDefaultDevice(data))
+                }else{
+                    message.error("Connection Failure")
+                    console.log(response, "response error")
+                    let removedKey =_.remove(this.state.loadingSetdefault, (n)=>{
+                        return n !== response.data
+                    })
+                    this.setState({
+                        loadingSetdefault:removedKey
+                    })
+
+                }
+            }).catch((error)=>{
+                console.log(error)
+            })
 
         }
 
@@ -94,7 +132,7 @@ class Settings extends React.Component{
         }
     }
 
-    checkDeviceConnection  = (index,data) =>{
+    checkDeviceConnection  = (index,data,callback=null) =>{
         return()=>{
             delete data._links
             console.log(index,"index")
@@ -163,7 +201,7 @@ class Settings extends React.Component{
                 render: (text,record)=>
                     <span>
                         <Button onClick={this.openViewFormModal(record)} style={{marginRight: "10px"}}>View</Button>
-                        <Button onClick={this.setAsDefaultDevice(record)} style={{marginRight: "10px"}}>Set As Default</Button>
+                        <Button loading={_.includes(this.state.loadingSetdefault, record.id)} onClick={this.setAsDefaultDevice(record.id,record)} style={{marginRight: "10px"}}>Set As Default</Button>
                         <Button loading={_.includes(this.state.loading, record.id)} onClick={this.checkDeviceConnection(record.id,record)}>Check Connection</Button>
                     </span>
             }

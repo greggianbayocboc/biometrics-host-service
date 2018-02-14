@@ -2,12 +2,14 @@
  * Created by albertoclarit on 9/2/16.
  */
 import React,{PropTypes} from 'react';
-import {Well,Panel,Button,Table} from 'react-bootstrap'
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import * as bundyclockActions from '../actions/bundyclockActions';
 import * as AuthActions from '../actions/authactions';
-import { routerActions } from 'react-router-redux'
+import { routerActions } from 'react-router-redux';
+
+import {Well,Panel,Button,Table} from '@sketchpixy/rubix';
+
 class   SecurePage extends React.Component{
 
     constructor(props){
@@ -50,6 +52,9 @@ class   SecurePage extends React.Component{
                 <Well>
                     <h1>This is a secured Page than can only be viewed by logged-in users</h1>
                     <Button bsStyle="warning" onClick={this.logout}> Logout</Button>
+                    <Button bsStyle='green'>Green Button!</Button>
+              		  <Button bsStyle='red'>Red Button!</Button>
+              		  <Button bsStyle='blue' outlined>Blue Button!</Button>
 
                     <Table striped bordered condensed >
                        <thead>

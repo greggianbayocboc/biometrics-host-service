@@ -1,0 +1,1 @@
+export const LOAD_ALLDEVICES = "LOAD_ALLDEVICES";

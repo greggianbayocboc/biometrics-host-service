@@ -1,4 +1,6 @@
-package com.hisd3.dtr.zkemkeeper;
+package com.hisd3.dtr.zkemkeeper.dto;
+
+import org.joda.time.DateTime;
 
 /**
  * Created by albertoclarit on 9/2/16.
@@ -8,7 +10,7 @@ public class BundyClockLogItem {
 
     String dwEnrollNumber ;
     int dwVerifyMode;
-    int dwInoutMode ;
+    String dwInoutMode ;
     int dwYear;
     int dwMonth ;
     int dwDay ;
@@ -16,7 +18,42 @@ public class BundyClockLogItem {
     int dwMinute ;
     int dwSecindm ;
     int dwWorkCode;
+    String date;
+    String time;
+    String timein;
+    String timeout;
 
+    public String getTimein() {
+        return timein;
+    }
+
+    public void setTimein(String timein) {
+        this.timein = timein;
+    }
+
+    public String getTimeout() {
+        return timeout;
+    }
+
+    public void setTimeout(String timeout) {
+        this.timeout = timeout;
+    }
+
+    public String getDate() {
+        return date;
+    }
+
+    public void setDate(String date) {
+        this.date = date;
+    }
+
+    public String getTime() {
+        return time;
+    }
+
+    public void setTime(String time) {
+        this.time = time;
+    }
 
     public String getDwEnrollNumber() {
         return dwEnrollNumber;
@@ -34,11 +71,11 @@ public class BundyClockLogItem {
         this.dwVerifyMode = dwVerifyMode;
     }
 
-    public int getDwInoutMode() {
+    public String getDwInoutMode() {
         return dwInoutMode;
     }
 
-    public void setDwInoutMode(int dwInoutMode) {
+    public void setDwInoutMode(String dwInoutMode) {
         this.dwInoutMode = dwInoutMode;
     }
 

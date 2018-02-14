@@ -8,3 +8,4 @@
 *.log
 /src/main/generated/
 *.iml
+/build/

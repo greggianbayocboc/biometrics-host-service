@@ -2,108 +2,96 @@
  * Created by albertoclarit on 9/1/16.
  */
 import React,{PropTypes} from 'react';
-import {Well,Panel,FormGroup,ControlLabel,FormControl,Alert} from 'react-bootstrap'
+import {Form,Input,Icon,Checkbox,Button } from 'antd'
 import { routerActions } from 'react-router-redux'
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import * as AuthActions from '../actions/authactions';
+import * as
+AuthActions
+from
+'../actions/authactions';
 
+const FormItem = Form.Item
 
+class Login extends React.Component {
 
- class   Login extends React.Component{
-
-    constructor(props){
+    constructor(props) {
         super(props);
     }
 
-    state={
-        "j_username":null,
-        "j_password":"",
-        "remember-me":false,
-        validated:false
+    state = {
+        "j_username": null,
+        "j_password": "",
+        "remember-me": false,
+        validated: false
     };
-    updateField= (name,value)=>{
+    updateField = (name, value)=> {
         var data = {};
-        data[name]=value;
+        data[name] = value;
 
         this.setState(data);
     };
 
-    onFormSubmit=(event)=>{
+    onFormSubmit = (event)=> {
         event.preventDefault();
+        this.props.form.validateFields((err, values) => {
+            if (!err) {
+                this.props.authActions.login(values, this.props.location.query.targetPath || "/");
 
+            }
+        });
 
-
-
-        this.props.authActions.login(this.state, this.props.location.query.targetPath || "/");
     };
 
 
-    render(){
+    render() {
+
+        const { getFieldDecorator } = this.props.form;
 
         return (
-            <div>
-            <Well>
-                <br/>
-                <br/>
-                <br/>
-                <br/>  <br/>
-                <form className="form-signin" onSubmit={this.onFormSubmit}>
-                <div style={{width:'500px',marginLeft:'auto',marginRight:'auto'}}>
 
-                    {this.props.auth.isWrongCredentials ?
-                        <Alert bsStyle="danger">Wrong Credentials</Alert>
-                        :null}
-                    {this.props.auth.logoutSuccess ?
-                        <Alert bsStyle="success">You are now logged-out</Alert>
-                        :null}
+            <div style={{width: "20%", margin:"auto"}}>
+                <h1>Login</h1>
+                <Form onSubmit={this.onFormSubmit} className="login-form">
+                    <FormItem>
+                        {getFieldDecorator('j_username', {
+                            rules: [{ required: true, message: 'Please input your username!' }],
+                        })(
+                            <Input prefix={<Icon type="user" style={{ color: 'rgba(0,0,0,.25)' }} />} placeholder="Username" />
+                        )}
 
 
+                    </FormItem>
+                    <FormItem>
+                        {getFieldDecorator('j_password', {
+                            rules: [{ required: true, message: 'Please input your Password!' }],
+                        })(
+                            <Input prefix={<Icon type="lock" style={{ color: 'rgba(0,0,0,.25)' }} />} type="password" placeholder="Password" />
+                        )}
+                    </FormItem>
+                    <FormItem>
+                        {getFieldDecorator('remember-me', {
+                            valuePropName: 'checked',
+                            initialValue: true,
+                        })(
+                            <Checkbox>Remember me</Checkbox>
+                        )}
+                    </FormItem>
+                    <Button type="primary" htmlType="submit" className="login-form-button">
+                        Log in
+                    </Button>
+                </Form>
+            </div>
 
-                <Panel header="Login Credentials" bsStyle="primary">
-                    <FormGroup>
-                        <ControlLabel>Email address</ControlLabel>
-                        <FormControl type="text"
-                                     tabIndex="3"
-                                     placeholder="Email Address"
-                                     onChange={(e)=>{this.updateField('j_username',e.target.value)}}
-                            />
-                    </FormGroup>
 
-                    <FormGroup>
-                        <ControlLabel>Password</ControlLabel>
-                        <FormControl type="password"
-                                     tabIndex="4"
-                                     placeholder="Password"
-                                     onChange={(e)=>{this.updateField('j_password',e.target.value)}}
-                            />
-                    </FormGroup>
-
-
-                    <div className="checkbox">
-                        <label>
-                            <input type="checkbox" value="remember-me" checked={this.state['remember-me']} onChange={(e)=>{
-                                            this.setState({
-                                            "remember-me":e.target.checked
-                                            });
-                                            }}/> Remember me
-                        </label>
-                    </div>
-                    <button className="btn btn-md btn-primary btn-block" type="submit">Sign in</button>
-
-                </Panel>
-                </div>
-               </form>
-
-            </Well>
-            </div>);
+                );
     }
 }
 
 
 function mapStateToProps(state) {
     return {
-        auth:state.auth
+        auth: state.auth
     }
 }
 
@@ -111,8 +99,13 @@ function mapStateToProps(state) {
 function mapDispatchToProps(dispatch) {
     return {
         routerActions: bindActionCreators(routerActions, dispatch),
-        authActions:bindActionCreators(AuthActions, dispatch)
+        authActions: bindActionCreators(AuthActions, dispatch)
     }
 }
 
-export default connect(mapStateToProps,mapDispatchToProps)(Login);
+
+
+
+const WrappedNormalLoginForm = Form.create()(Login);
+
+export default connect(mapStateToProps, mapDispatchToProps)(WrappedNormalLoginForm);

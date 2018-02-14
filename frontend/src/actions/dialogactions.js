@@ -10,11 +10,13 @@ export let openAlert= (message,title,typeDialog='info',onClosed=null)=>{
 
     return {
         type:types.DIALOG_OPEN_ALERT,
-        message,
-        title,
-        isOpen:true,
-        typeDialog,
-        onClosed
+        dialog: {
+            message,
+            title,
+            isOpen: true,
+            typeDialog,
+            onClosed
+        }
     }
 
 };

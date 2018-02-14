@@ -13,13 +13,9 @@ import { connect } from 'react-redux';
         super(props);
     }
 
-
-
     goSecure = ()=>{
         this.props.routerActions.push("/secure");
     };
-
-
 
     render(){
 
@@ -30,7 +26,6 @@ import { connect } from 'react-redux';
             </div>);
     }
 }
-
 
 function mapStateToProps(state) {
 
@@ -47,4 +42,3 @@ function mapDispatchToProps(dispatch) {
 
 
 export default connect(mapStateToProps,mapDispatchToProps)(Index);
-

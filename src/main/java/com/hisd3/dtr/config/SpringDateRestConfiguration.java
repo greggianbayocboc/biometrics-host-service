@@ -1,6 +1,7 @@
 package com.hisd3.dtr.config;
 
 
+import com.hisd3.dtr.domain.Device;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.rest.core.config.RepositoryRestConfiguration;
 import org.springframework.data.rest.webmvc.config.RepositoryRestConfigurerAdapter;
@@ -14,7 +15,9 @@ public class SpringDateRestConfiguration extends RepositoryRestConfigurerAdapter
     @Override
     public void configureRepositoryRestConfiguration(RepositoryRestConfiguration config) {
         super.configureRepositoryRestConfiguration(config);
-        config.exposeIdsFor();
+        config.exposeIdsFor(
+                Device.class
+        );
 
 
 

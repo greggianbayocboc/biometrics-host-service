@@ -20,6 +20,16 @@ export let loadBundyclockLogs= ()=>{
   };
 };
 
+export let clearEmployeeLogs = () =>{
+    return dispatch => {
+        get('/api/bundyclock/clearlogs').then((response) =>{
+            var records = response.data;
+
+            dispatch(loadBundyclockLogs);
+        })
+    };
+}
+
 export let loadBundyclockLogsSuccess = (records)=>{
 
  return {

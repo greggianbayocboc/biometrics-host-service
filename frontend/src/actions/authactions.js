@@ -7,18 +7,10 @@ import { routerActions } from 'react-router-redux'
 import {isInRole} from '~/src/utils/AuthUtils';
 import * as  healthchecks from './healthchecks';
 import * as dialogactions from './dialogactions'
-import Progress from "react-progress-2";
-
 
 
 export let login= (loginstate,targetPath)=>{
-
-    Progress.show();
-
     return dispatch => {
-
-
-
         post('/api/authentication',{},{
             headers: {
                 'Content-Type': 'application/x-www-form-urlencoded',
@@ -74,7 +66,6 @@ export let loginSuccess= (targetPath,fromRefresh)=>{
 
 export let accountReceived = (account,fromRefresh)=>{
 
-    Progress.hide();
     return {
         type: types.AUTH_ACCOUNTRECIEVE,
         account:account,
@@ -83,7 +74,6 @@ export let accountReceived = (account,fromRefresh)=>{
 };
 
 export let loginFailed = ()=>{
-    Progress.hide();
     return {
         type: types.AUTH_LOGIN_FAILED
     }

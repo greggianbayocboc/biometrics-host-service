@@ -29,8 +29,8 @@ import java.util.Map;
 /**
  * Configuration of web application with Servlet 3.0 APIs.
  */
-@Configuration
-@AutoConfigureAfter(CacheConfiguration.class)
+//@Configuration
+//@AutoConfigureAfter(CacheConfiguration.class)
 public class WebConfigurer implements ServletContextInitializer, EmbeddedServletContainerCustomizer {
 
     private final Logger log = LoggerFactory.getLogger(WebConfigurer.class);

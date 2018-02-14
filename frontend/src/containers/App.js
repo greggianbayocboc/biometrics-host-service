@@ -102,7 +102,7 @@ class   App extends React.Component{
 
 
 
-            <Content style={{ background: '#fff', paddingTop: 24, margin: 0, minHeight: 280,overflow: 'initial'}}>
+            <Content style={{ background: '#fff', margin: 0, minHeight: 280,overflow: 'initial'}}>
 
                 {this.props.children}
             </Content>

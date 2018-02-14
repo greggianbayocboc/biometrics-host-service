@@ -1,14 +1,11 @@
 package com.hisd3.dtr.web.rest;
 
-import com.hisd3.dtr.domain.BundyClockLogs;
 import com.hisd3.dtr.domain.Device;
 import com.hisd3.dtr.repository.DeviceRepository;
 import com.hisd3.dtr.web.rest.dto.DeviceDto;
 import com.hisd3.dtr.zkemkeeper.dto.BundyClockLogItem;
 import com.hisd3.dtr.zkemkeeper.ZKemKeeperService;
 import com.hisd3.dtr.zkemkeeper.dto.BundyClockUserItems;
-import io.swagger.models.auth.In;
-import org.apache.catalina.servlet4preview.http.HttpServletRequest;
 import org.apache.commons.lang.BooleanUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.SystemUtils;
@@ -293,7 +290,7 @@ public class BundyClockResource {
             @RequestParam(required = false) String enrollno,
             @RequestParam String name,
             @RequestParam Integer privilege,
-            @RequestParam Integer workcode, HttpServletRequest request){
+            @RequestParam Integer workcode){
         HttpHeaders httpHeaders = new HttpHeaders();
         Device settings = deviceRepository.getAllByDefault_device().get(0);
 

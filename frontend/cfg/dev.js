@@ -5,7 +5,7 @@
 var path = require('path');
 var webpack = require('webpack');
 var _ = require('lodash');
-var publicPath = 'http://localhost:8000/assets/';
+var publicPath = 'http://localhost:9000/assets/';
 
 var baseConfig = require('./base');
 
@@ -16,7 +16,7 @@ var config = _.merge({
         publicPath: publicPath
     },
     entry: [
-        'webpack-dev-server/client?http://127.0.0.1:8000',
+        'webpack-dev-server/client?http://127.0.0.1:9000',
         'webpack/hot/only-dev-server',
         './src/containers/run'
     ],

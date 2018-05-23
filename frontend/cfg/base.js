@@ -2,7 +2,7 @@
  * Created by albertoclarit on 12/27/15.
  */
 var path = require('path');
-var port = 8000;
+var port = 9000;
 var publicPath = '/assets/';
 
 module.exports = {
@@ -14,9 +14,9 @@ module.exports = {
         publicPath: publicPath,
         noInfo: false,
         proxy: {
-            "/api":"http://localhost:8080",
-            "/images":"http://localhost:8080",
-            "/restapi":"http://localhost:8080"
+            "/api":"http://localhost:9090",
+            "/images":"http://localhost:9090",
+            "/restapi":"http://localhost:9090"
         }
     },
     module: {

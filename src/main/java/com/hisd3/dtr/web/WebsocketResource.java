@@ -172,23 +172,19 @@ public class WebsocketResource implements StompSessionHandler{
     @Override
     public void handleFrame(StompHeaders headers, Object payload) {
         HISD3MessageV2 message = (HISD3MessageV2) payload;
-        List<BundyClockLogItem> logs = new ArrayList<>();
         Gson gson = new Gson();
-
-        BundyClockLogItem item = new BundyClockLogItem();
-
-        item.setDwInoutMode("1");
-        item.setDate("01/01/2017");
-
-        ArrayList<BundyClockLogItem> items = new ArrayList<>();
-        items.add(item);
-
+        JSONObject jsonformatmessage = new JSONObject();
         for(HISD3MessageV2 m: transports){
             if(message.command == HISD3MessageCommandType.BIOMETRICS_GET_ALL_LOGS) {
                 m.command = message.command;
                 if(bundyClockResource.getLogs()!=null){
-                    logs = items;
-                    m.payload = new JSONArray(logs).toString();
+                    try {
+                        m.payload = gson.toJson(jsonformatmessage.put("logs", gson.toJson(bundyClockResource.getLogs())));
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }else{
+                    m.payload = null;
                 }
                 this.sendMessage("/app/client.messagesV2", gson.toJson(m));
             }

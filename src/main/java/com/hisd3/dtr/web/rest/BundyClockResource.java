@@ -74,6 +74,43 @@ public class BundyClockResource {
 
     }
 
+    @RequestMapping("/getAllDeviceLogs")
+    public ResponseEntity<List<BundyClockLogItem>>getAllDeviceLogs(){
+
+        List<Device> devices = deviceRepository.getAllByDefault_device();
+        List<BundyClockLogItem> list = new ArrayList<>();
+
+        if(devices.size()==0){
+            HttpHeaders httpHeaders = new HttpHeaders();
+            httpHeaders.set("message", "No Default Device Selected");
+            return  new ResponseEntity<List<BundyClockLogItem>>(httpHeaders, HttpStatus.CONFLICT);
+
+        }
+
+        if(!SystemUtils.IS_OS_WINDOWS){
+
+            HttpHeaders responseHeaders = new HttpHeaders();
+            responseHeaders.set("message", "This resource is only for Windows");
+
+            return new  ResponseEntity<List<BundyClockLogItem>>(responseHeaders,HttpStatus.CONFLICT);
+        }
+
+        for (Device device:devices) {
+            try{
+                list.addAll(zKemKeeperService.getBundyClockLogItemsAll(device));
+            }
+            catch (Exception e)
+            {
+                e.printStackTrace();
+            }
+
+        }
+
+       return new ResponseEntity<List<BundyClockLogItem>>(list,
+               HttpStatus.OK);
+
+    }
+
     @RequestMapping("/getlogsbyenrollnov2")
     public Map<String, BundyClockLogItem> getLogsv2(@RequestParam String enrollno){
 
@@ -285,7 +322,8 @@ public class BundyClockResource {
 
 
     @RequestMapping(value = "/addnewmeployeev2",
-            produces = MediaType.TEXT_PLAIN_VALUE)
+            method = RequestMethod.POST,
+            produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity addnewmeployeev2(
             @RequestParam(required = false) String enrollno,
             @RequestParam String name,
@@ -311,7 +349,7 @@ public class BundyClockResource {
            for(BundyClockUserItems u: users){
                if(StringUtils.equals(u.getName(), name)){
 
-                   return new ResponseEntity<>(u, HttpStatus.OK);
+                   return new ResponseEntity<>(u.getDwEnrollNumber(), HttpStatus.OK);
 
                }
            }
@@ -327,14 +365,12 @@ public class BundyClockResource {
                         workcode,
                         privilege,
                         true);
-                BundyClockUserItems u = new BundyClockUserItems();
-                u.setName(name);
-                u.setDwEnrollNumber(enrollnos.toString());
-                u.setDwEnable(true);
+                System.out.println("##########################IF - ADDED ENROLL NO"+enrollnos.toString());
+
 
                 Integer returnEnrollno = largest+1;
                 httpHeaders.set("enrollno", returnEnrollno.toString());
-                return new ResponseEntity<>(u, HttpStatus.OK);
+                return new ResponseEntity<>(returnEnrollno, HttpStatus.OK);
 
             }
         }else {
@@ -354,16 +390,13 @@ public class BundyClockResource {
                     workcode,
                     privilege,
                     true);
-            BundyClockUserItems u = new BundyClockUserItems();
-            u.setName(name);
-            u.setDwEnrollNumber(enrollno);
-            u.setDwEnable(true);
 
-            return new ResponseEntity<>(u, HttpStatus.OK);
+            System.out.println("########################## ELSE - ADDED");
+            return new ResponseEntity<>(enrollno, HttpStatus.OK);
         }
 
 
-
+        System.out.println("##################### RETURNING NULL");
         return null;
 
     }

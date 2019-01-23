@@ -28,7 +28,7 @@ task cleanPublicFolder(type: Delete){
 
 
 task copyDist(type: Copy){
-    dependsOn npm_run_dist
+   // dependsOn npm_run_dist
     description 'Copy Files from frontend to public'
     def publicDir = file("${project.projectDir}/src/main/resources/public/")
     publicDir.mkdirs()

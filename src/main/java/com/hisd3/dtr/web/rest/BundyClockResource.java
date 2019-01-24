@@ -6,9 +6,12 @@ import com.hisd3.dtr.web.rest.dto.DeviceDto;
 import com.hisd3.dtr.zkemkeeper.dto.BundyClockLogItem;
 import com.hisd3.dtr.zkemkeeper.ZKemKeeperService;
 import com.hisd3.dtr.zkemkeeper.dto.BundyClockUserItems;
+import com.hisd3.dtr.zkemkeeper.dto.GroupedBundyClockLog;
 import org.apache.commons.lang.BooleanUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.SystemUtils;
+import org.joda.time.format.DateTimeFormat;
+import org.joda.time.format.DateTimeFormatter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -50,10 +53,10 @@ public class BundyClockResource {
     @RequestMapping("/getlogs")
     public ResponseEntity<List<BundyClockLogItem>>getLogs(){
 
-        Device settings = deviceRepository.getAllByDefault_device().get(0);
+        List<Device> devices = deviceRepository.findAll();
+        List<BundyClockLogItem> list = new ArrayList<>();
 
-
-        if(settings==null){
+        if(devices.size()==0){
             HttpHeaders httpHeaders = new HttpHeaders();
             httpHeaders.set("message", "No Default Device Selected");
             return  new ResponseEntity<List<BundyClockLogItem>>(httpHeaders, HttpStatus.CONFLICT);
@@ -68,8 +71,18 @@ public class BundyClockResource {
             return new  ResponseEntity<List<BundyClockLogItem>>(responseHeaders,HttpStatus.CONFLICT);
         }
 
+        for (Device device:devices) {
+            try{
+                list.addAll(zKemKeeperService.getBundyClockLogItemsAll(device));
+            }
+            catch (Exception e)
+            {
+                e.printStackTrace();
+            }
 
-        return new ResponseEntity<List<BundyClockLogItem>>(zKemKeeperService.getBundyClockLogItemsAll(settings),
+        }
+
+        return new ResponseEntity<List<BundyClockLogItem>>(list,
                 HttpStatus.OK);
 
     }
@@ -114,10 +127,22 @@ public class BundyClockResource {
     @RequestMapping("/getlogsbyenrollnov2")
     public Map<String, BundyClockLogItem> getLogsv2(@RequestParam String enrollno){
 
-        Device settings = deviceRepository.getAllByDefault_device().get(0);
+        List<Device> devices = deviceRepository.findAll();
+        List<BundyClockLogItem> logs = new ArrayList<>();
 
 
-        if(settings==null){
+
+        for (Device device:devices) {
+            try{
+                logs.addAll(zKemKeeperService.getBundyClockLogItems(device,enrollno));
+            }
+            catch (Exception e)
+            {
+                e.printStackTrace();
+            }
+        }
+
+        if(devices.size()==0){
             HttpHeaders httpHeaders = new HttpHeaders();
             httpHeaders.set("message", "No Default Device Selected");
             //  return  new ResponseEntity<List<BundyClockLogItem>>(httpHeaders, HttpStatus.CONFLICT);
@@ -132,7 +157,6 @@ public class BundyClockResource {
             //  return new  ResponseEntity<List<BundyClockLogItem>>(responseHeaders,HttpStatus.CONFLICT);
         }
 
-        List<BundyClockLogItem> logs = zKemKeeperService.getBundyClockLogItems(settings,enrollno);
         Map<String, List<BundyClockLogItem>> studlistGrouped =
                 logs.stream().collect(Collectors.groupingBy(w -> w.getDate()));
 
@@ -140,36 +164,69 @@ public class BundyClockResource {
 
         for(String key1: studlistGrouped.keySet()){
             for(BundyClockLogItem log: studlistGrouped.get(key1)){
-                if(!mapdto.isEmpty()){
-                    if(mapdto.containsKey(key1)){
-                        if(StringUtils.equalsIgnoreCase(log.getDate(),mapdto.get(log.getDate()).getDate())){
-                            if(StringUtils.equalsIgnoreCase(log.getDwInoutMode(),"time in")){
-                                mapdto.get(log.getDate()).setTimein(log.getTime());
-                            }else if(StringUtils.equalsIgnoreCase(log.getDwInoutMode(),"time out")){
-                                mapdto.get(log.getDate()).setTimeout(log.getTime());
-                            }
-                        }
-                    }else{
-                        if(StringUtils.equalsIgnoreCase(log.getDwInoutMode(),"time in")){
-                            log.setTimein(log.getTime());
-                        }else if(StringUtils.equalsIgnoreCase(log.getDwInoutMode(),"time out")){
-                            log.setTimeout(log.getTime());
-                        }
-                        mapdto.put(log.getDate(),log);
-
-                    }
-
-                }else{
                     mapdto.put(log.getDate(), log);
-                }
-
-
-
             }
         }
 
 
         return mapdto;
+
+    }
+
+    @RequestMapping("/getlogsbyenrollnoForSirJohn")
+    public List<GroupedBundyClockLog> getlogsbyenrollnoForSirJohn(@RequestParam String enrollno){
+
+        List<Device> devices = deviceRepository.findAll();
+        List<BundyClockLogItem> logs = new ArrayList<>();
+        List<GroupedBundyClockLog> groupedBundyClockLogs = new ArrayList<>();
+
+
+        for (Device device:devices) {
+            try{
+                logs.addAll(zKemKeeperService.getBundyClockLogItems(device,enrollno));
+            }
+            catch (Exception e)
+            {
+                e.printStackTrace();
+            }
+        }
+
+        if(devices.size()==0){
+            HttpHeaders httpHeaders = new HttpHeaders();
+            httpHeaders.set("message", "No Default Device Selected");
+            //  return  new ResponseEntity<List<BundyClockLogItem>>(httpHeaders, HttpStatus.CONFLICT);
+
+        }
+
+        if(!SystemUtils.IS_OS_WINDOWS){
+
+            HttpHeaders responseHeaders = new HttpHeaders();
+            responseHeaders.set("message", "This resource is only for Windows");
+
+            //  return new  ResponseEntity<List<BundyClockLogItem>>(responseHeaders,HttpStatus.CONFLICT);
+        }
+
+        Map<String, List<BundyClockLogItem>> studlistGrouped =
+                logs.stream().collect(Collectors.groupingBy(w -> w.getDate()));
+
+        Map<String ,BundyClockLogItem> mapdto =  new HashMap<>();
+        DateTimeFormatter formatter = DateTimeFormat.forPattern("MM/dd/yyyy");
+
+        for(String key1: studlistGrouped.keySet()){
+            GroupedBundyClockLog group = new GroupedBundyClockLog();
+
+            List<BundyClockLogItem> currentLogs = new ArrayList<>();
+
+            group.setDate(key1);
+            group.setDateTime(formatter.parseDateTime(key1));
+            for(BundyClockLogItem log: studlistGrouped.get(key1)){
+                currentLogs.add(log);
+            }
+            group.setLogs(currentLogs);
+            groupedBundyClockLogs.add(group);
+        }
+        Collections.sort(groupedBundyClockLogs,(o1, o2) -> o1.getDateTime().isBefore(o2.getDateTime())?1:-1);
+        return groupedBundyClockLogs;
 
     }
 
@@ -627,8 +684,6 @@ public class BundyClockResource {
 
             }
         }
-
-
         httpHeaders.set("message","Device successfully set as default");
         return new ResponseEntity(httpHeaders,HttpStatus.OK);
 

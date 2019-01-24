@@ -20,6 +20,7 @@ class Profile extends React.Component{
     this.state = {
       filter: '',
         logs: [],
+        groupedLogs: [],
         isLoading: false
     }
   }
@@ -28,12 +29,12 @@ class Profile extends React.Component{
       this.setState({
           isLoading: true
       })
-      get('/api/bundyclock/getlogsbyenrollnov2?enrollno=' + this.props.params.id).then((response)=>{
+      get('/api/bundyclock/getlogsbyenrollnoForSirJohn?enrollno=' + this.props.params.id).then((response)=>{
 
           var records = response.data;
 
           this.setState({
-              logs: records,
+              groupedLogs: records,
               isLoading:false
           })
 
@@ -49,54 +50,53 @@ class Profile extends React.Component{
   goBack=()=>{
     this.props.routerActions.goBack();
   }
+    expandedRowRender = (record) => {
+        const columns = [
+            { title: 'Type', dataIndex: 'dwInoutMode', key: 'dwInoutMode' },
+            { title: 'Time', dataIndex: 'time', key: 'time' }
+        ];
+        console.log("RECORD",record)
+        var list = record.logs.map((log, i)=>{
+            return {
+                dwInoutMode: log.dwInoutMode,
+                time: log.time
+            }
+        })
+        console.log("LIST",list)
+        if(list.length>0)
+        {
+            return (
+                <Table
+                    columns={columns}
+                    dataSource={list}
+                    pagination={false}
+                    size="small"
+                    bordered
+                />
+            );
+        }
+        else {
+            return <span>No data on this date.</span>;
+        }
+    };
 
   render(){
 
     var keys = Object.keys(this.state.logs)
-    const datas = []
-      if(keys)
-      for (let i = 0; i <= keys.length; i++) {
-          var item = this.state.logs[keys[i]];
-          if(item){
-              console.log(item, "item")
-              datas.push({
-                  key: i,
-                  date: item.date,
-                  timein: item.timein,
-                  timeout:item.timeout,
-              });
-          }
 
-      }
-
-      console.log(datas, "item")
 
       const columns = [{
-          title: 'Name',
-          key: 'name',
-          render:()=> <a href="#">{this.props.params.name}</a>,
-      },{
           title: 'Date',
           dataIndex: 'date',
-          key: 'date',
-          sortOrder:"descend",
-          sorter: (a, b) => moment.utc(moment(a.date, "MM/DD/YYYY")).diff(moment.utc(moment(b.date,"MM/DD/YYYY"))),
-      }, {
-          title: 'Time in',
-          dataIndex: 'timein',
-          key: 'timein',
-      }, {
-          title: 'Time out',
-          dataIndex: 'timeout',
-          key: 'timeout',
-      }];
+          key: 'date'
+            }];
     return(
         <div >
             <h1 style={{marginLeft: "10px"}}> {this.props.params.name}</h1>
             <Row>
                 <Col span={24}>
                     <Spin spinning={this.state.isLoading}>
-                        <Table columns={columns} rowKey={(item)=> item.key} dataSource={datas} />
+                        <Table columns={columns} dataSource={this.state.groupedLogs}  expandedRowRender={this.expandedRowRender}/>
                     </Spin>
                 </Col>
             </Row>

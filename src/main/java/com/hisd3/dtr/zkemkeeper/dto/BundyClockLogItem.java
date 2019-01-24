@@ -1,6 +1,7 @@
 package com.hisd3.dtr.zkemkeeper.dto;
 
 import org.joda.time.DateTime;
+import org.joda.time.LocalDateTime;
 
 /**
  * Created by albertoclarit on 9/2/16.
@@ -22,6 +23,15 @@ public class BundyClockLogItem {
     String time;
     String timein;
     String timeout;
+    LocalDateTime dateTime;
+
+    public LocalDateTime getDateTime() {
+        return dateTime;
+    }
+
+    public void setDateTime(LocalDateTime dateTime) {
+        this.dateTime = dateTime;
+    }
 
     public String getTimein() {
         return timein;

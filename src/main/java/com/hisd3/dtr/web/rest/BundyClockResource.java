@@ -27,10 +27,10 @@ import java.util.stream.Collectors;
 public class BundyClockResource {
 
 
- @Autowired
+    @Autowired
     ZKemKeeperService zKemKeeperService;
 
- @Autowired
+    @Autowired
     DeviceRepository deviceRepository;
 
 
@@ -69,15 +69,15 @@ public class BundyClockResource {
         }
 
 
-       return new ResponseEntity<List<BundyClockLogItem>>(zKemKeeperService.getBundyClockLogItemsAll(settings),
-               HttpStatus.OK);
+        return new ResponseEntity<List<BundyClockLogItem>>(zKemKeeperService.getBundyClockLogItemsAll(settings),
+                HttpStatus.OK);
 
     }
 
     @RequestMapping("/getAllDeviceLogs")
     public ResponseEntity<List<BundyClockLogItem>>getAllDeviceLogs(){
 
-        List<Device> devices = deviceRepository.getAllByDefault_device();
+        List<Device> devices = deviceRepository.findAll();
         List<BundyClockLogItem> list = new ArrayList<>();
 
         if(devices.size()==0){
@@ -106,8 +106,8 @@ public class BundyClockResource {
 
         }
 
-       return new ResponseEntity<List<BundyClockLogItem>>(list,
-               HttpStatus.OK);
+        return new ResponseEntity<List<BundyClockLogItem>>(list,
+                HttpStatus.OK);
 
     }
 
@@ -120,7 +120,7 @@ public class BundyClockResource {
         if(settings==null){
             HttpHeaders httpHeaders = new HttpHeaders();
             httpHeaders.set("message", "No Default Device Selected");
-          //  return  new ResponseEntity<List<BundyClockLogItem>>(httpHeaders, HttpStatus.CONFLICT);
+            //  return  new ResponseEntity<List<BundyClockLogItem>>(httpHeaders, HttpStatus.CONFLICT);
 
         }
 
@@ -139,7 +139,72 @@ public class BundyClockResource {
         Map<String ,BundyClockLogItem> mapdto =  new HashMap<>();
 
         for(String key1: studlistGrouped.keySet()){
-               for(BundyClockLogItem log: studlistGrouped.get(key1)){
+            for(BundyClockLogItem log: studlistGrouped.get(key1)){
+                if(!mapdto.isEmpty()){
+                    if(mapdto.containsKey(key1)){
+                        if(StringUtils.equalsIgnoreCase(log.getDate(),mapdto.get(log.getDate()).getDate())){
+                            if(StringUtils.equalsIgnoreCase(log.getDwInoutMode(),"time in")){
+                                mapdto.get(log.getDate()).setTimein(log.getTime());
+                            }else if(StringUtils.equalsIgnoreCase(log.getDwInoutMode(),"time out")){
+                                mapdto.get(log.getDate()).setTimeout(log.getTime());
+                            }
+                        }
+                    }else{
+                        if(StringUtils.equalsIgnoreCase(log.getDwInoutMode(),"time in")){
+                            log.setTimein(log.getTime());
+                        }else if(StringUtils.equalsIgnoreCase(log.getDwInoutMode(),"time out")){
+                            log.setTimeout(log.getTime());
+                        }
+                        mapdto.put(log.getDate(),log);
+
+                    }
+
+                }else{
+                    mapdto.put(log.getDate(), log);
+                }
+
+
+
+            }
+        }
+
+
+        return mapdto;
+
+    }
+
+    @RequestMapping("/getlogsbyenrollnov3")
+    public Map<String, BundyClockLogItem> getLogsv3(@RequestParam String enrollno){
+
+
+        List<Device> devices = deviceRepository.findAll();
+
+
+
+        if(devices.size()==0){
+            HttpHeaders httpHeaders = new HttpHeaders();
+            httpHeaders.set("message", "No Default Device Selected");
+            //  return  new ResponseEntity<List<BundyClockLogItem>>(httpHeaders, HttpStatus.CONFLICT);
+
+        }
+
+        if(!SystemUtils.IS_OS_WINDOWS){
+
+            HttpHeaders responseHeaders = new HttpHeaders();
+            responseHeaders.set("message", "This resource is only for Windows");
+
+            //  return new  ResponseEntity<List<BundyClockLogItem>>(responseHeaders,HttpStatus.CONFLICT);
+        }
+
+
+        Map<String ,BundyClockLogItem> mapdto =  new HashMap<>();
+
+        for (Device settings : devices) {
+            List<BundyClockLogItem> logs = zKemKeeperService.getBundyClockLogItems(settings,enrollno);
+            Map<String, List<BundyClockLogItem>> studlistGrouped =
+                    logs.stream().collect(Collectors.groupingBy(w -> w.getDate()));
+            for(String key1: studlistGrouped.keySet()){
+                for(BundyClockLogItem log: studlistGrouped.get(key1)){
                     if(!mapdto.isEmpty()){
                         if(mapdto.containsKey(key1)){
                             if(StringUtils.equalsIgnoreCase(log.getDate(),mapdto.get(log.getDate()).getDate())){
@@ -151,26 +216,21 @@ public class BundyClockResource {
                             }
                         }else{
                             if(StringUtils.equalsIgnoreCase(log.getDwInoutMode(),"time in")){
-                              log.setTimein(log.getTime());
+                                log.setTimein(log.getTime());
                             }else if(StringUtils.equalsIgnoreCase(log.getDwInoutMode(),"time out")){
-                              log.setTimeout(log.getTime());
+                                log.setTimeout(log.getTime());
                             }
                             mapdto.put(log.getDate(),log);
-
                         }
-
                     }else{
                         mapdto.put(log.getDate(), log);
                     }
+                }
+            }
 
-
-
-               }
         }
 
-
         return mapdto;
-
     }
 
 
@@ -193,7 +253,7 @@ public class BundyClockResource {
             HttpHeaders responseHeaders = new HttpHeaders();
             responseHeaders.set("message", "This resource is only for Windows");
 
-          return new  ResponseEntity<List<BundyClockLogItem>>(responseHeaders,HttpStatus.CONFLICT);
+            return new  ResponseEntity<List<BundyClockLogItem>>(responseHeaders,HttpStatus.CONFLICT);
         }
 
 
@@ -295,6 +355,36 @@ public class BundyClockResource {
         return dto;
     }
 
+
+    @RequestMapping("/findbyid")
+    public List<BundyClockUserItems> findbyid(@RequestParam String enrollno){
+        List<BundyClockUserItems> dtos = new ArrayList<>();
+
+        HttpHeaders httpHeaders = new HttpHeaders();
+        List<Device> devices = deviceRepository.findAll();
+        if(devices.size()==0){
+            httpHeaders.set("message", "No Default Device Selected");
+
+        }
+
+        for (Device settings : devices) {
+
+            List<BundyClockUserItems> users = zKemKeeperService.getUserAllUser(settings);
+
+            BundyClockUserItems dto = new BundyClockUserItems();
+
+            for(BundyClockUserItems u: users){
+                if(StringUtils.equalsIgnoreCase(u.getDwEnrollNumber(), enrollno)){
+                    dto = u;
+                    dto.setDevicename(settings.getDevice_name());
+                }
+
+            }
+            dtos.add(dto);
+        }
+        return dtos;
+    }
+
     @RequestMapping("addfingerprint")
     public ResponseEntity addfingerprint(@RequestParam Integer enrollno, @RequestParam Integer fingerIndex){
         HttpHeaders httpHeaders = new HttpHeaders();
@@ -312,13 +402,13 @@ public class BundyClockResource {
             if(StringUtils.equals(u.getDwEnrollNumber(), enrollno.toString())){
 
 
-               if( zKemKeeperService.addUserFingerPrint(settings,enrollno, fingerIndex, 2)){
-                   httpHeaders.set("message", "Success");
-                   return new ResponseEntity(httpHeaders,HttpStatus.OK);
-               }else{
-                   httpHeaders.set("message", "Error");
-                   return new ResponseEntity(httpHeaders,HttpStatus.OK);
-               }
+                if( zKemKeeperService.addUserFingerPrint(settings,enrollno, fingerIndex, 2)){
+                    httpHeaders.set("message", "Success");
+                    return new ResponseEntity(httpHeaders,HttpStatus.OK);
+                }else{
+                    httpHeaders.set("message", "Error");
+                    return new ResponseEntity(httpHeaders,HttpStatus.OK);
+                }
 
 
             }
@@ -354,13 +444,13 @@ public class BundyClockResource {
         Integer largest = Collections.max(max);
         if(enrollno==null || enrollno.trim().equals("")){
             //
-           for(BundyClockUserItems u: users){
-               if(StringUtils.equals(u.getName(), name)){
+            for(BundyClockUserItems u: users){
+                if(StringUtils.equals(u.getName(), name)){
 
-                   return new ResponseEntity<>(u.getDwEnrollNumber(), HttpStatus.OK);
+                    return new ResponseEntity<>(u.getDwEnrollNumber(), HttpStatus.OK);
 
-               }
-           }
+                }
+            }
 
 
 
@@ -528,8 +618,8 @@ public class BundyClockResource {
         List<Device> devices = deviceRepository.findAll();
         for(Device d:devices){
             if(d.getId().equals(body.getId())){
-                    d.setDefault_device(true);
-                    deviceRepository.save(d);
+                d.setDefault_device(true);
+                deviceRepository.save(d);
 
             }else{
                 d.setDefault_device(false);

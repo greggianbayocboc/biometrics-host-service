@@ -10,6 +10,7 @@ public class BundyClockUserItems {
     String Name,Password;
     int Privilege;
     boolean dwEnable;
+    String devicename;
 
     public String getDwEnrollNumber() {
         return dwEnrollNumber;
@@ -49,5 +50,13 @@ public class BundyClockUserItems {
 
     public void setDwEnable(boolean dwEnable) {
         this.dwEnable = dwEnable;
+    }
+
+    public String getDevicename() {
+        return devicename;
+    }
+
+    public void setDevicename(String devicename) {
+        this.devicename = devicename;
     }
 }
